@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jeff Bourdier on GitHub</title>
+    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
+    <meta name="author" content="Jeff Bourdier" />
+    <link rel="stylesheet" type="text/css" />
+    <script src="../stylesheet.js"></script>
+    <script src="../graphics.js"></script>
+    <script src="telco.js"></script>
+    <script type="text/javascript">
+      <!--
+
+      function initPage()
+      {
+        initStylesheet(true);
+
+        drawTimeGrid("timelineSVG", 5, "silver");
+
+        /* AT&T */
+        drawTimeBar("timelineSVG", 2, 1885, 1899, 1, 0, "blue");
+
+        /* Bell */
+        drawTimeBar("timelineSVG", 1, 1877, 1899, 0, 2, "navy");
+
+        /* Bell Labs > Lucent > Alcatel-Lucent > Nokia */
+        drawTimeBar("timelineSVG", 1, 1925, 2017, 2, 0, "purple");
+
+        /* Bell Atlantic */
+        drawTimeBar("timelineSVG", 9, 1984, 1996, 2, 0, "aqua");
+
+        /* NYNEX */
+        drawTimeBar("timelineSVG", 8, 1984, 1996, 2, 9, "maroon");
+
+        /* Bell Atlantic */
+        drawTimeBar("timelineSVG", 9, 1996, 2000, 0, 13, "aqua");
+
+        /* US West */
+        drawTimeBar("timelineSVG", 7, 1984, 2000, 2, 10, "gray");
+
+        /* BellSouth */
+        drawTimeBar("timelineSVG", 6, 1984, 2006, 2, 3, "teal");
+
+        /* Ameritech */
+        drawTimeBar("timelineSVG", 5, 1984, 1999, 2, 3, "purple");
+
+        /* Pacific Telesis */
+        drawTimeBar("timelineSVG", 4, 1984, 1997, 2, 3, "orange");
+
+        /* Southwestern Bell */
+        drawTimeBar("timelineSVG", 3, 1984, 2005, 2, 0, "navy");
+
+        /* AT&T */
+        drawTimeBar("timelineSVG", 2, 1899, 2005, 0, 3, "blue");
+        drawTimeBar("timelineSVG", 3, 2005, 2017, 0, 0, "blue");
+
+        /* Qwest */
+        drawTimeBar("timelineSVG", 10, 1996, 2011, 0, 11, "olive");
+
+        /* Century */
+        drawTimeBar("timelineSVG", 11, 1968, 2017, 0, 0, "green");
+
+        /* Sprint */
+        drawTimeBar("timelineSVG", 12, 1978, 1983, 0, 13, "yellow");
+        drawTimeBar("timelineSVG", 14, 1983, 1991, 13, 15, "yellow");
+
+        /* GTE > Verizon */
+        drawTimeBar("timelineSVG", 13, 1935, 2017, 0, 0, "red");
+
+        /* Brown > United */
+        drawTimeBar("timelineSVG", 15, 1899, 1991, 0, 0, "brown");
+
+        /* Sprint */
+        drawTimeBar("timelineSVG", 15, 1991, 2017, 0, 0, "yellow");
+
+        /* Rochester */
+        drawTimeBar("timelineSVG", 17, 1899, 2001, 0, 16, "fuchsia");
+
+        /* Citizens > Frontier */
+        drawTimeBar("timelineSVG", 16, 1935, 2017, 0, 0, "red");
+
+        createArrowheadMarker("timelineSVG", "red");
+        drawLineTransfer("timelineSVG", 1993, 13, 16, "red");
+        drawLineTransfer("timelineSVG", 2009, 13, 16, "red");
+        drawLineTransfer("timelineSVG", 2015, 13, 16, "red");
+        createArrowheadMarker("timelineSVG", "blue");
+        drawLineTransfer("timelineSVG", 2014, 3, 16, "blue");
+
+        labelEvent("timelineSVG", 1, 1877, 12, -12, "Bell Telephone Company founded", "start", "black");
+        labelEvent("timelineSVG", 1, 1885, 20, -24, "American Telephone and Telegraph (AT&T) established as Bell subsidiary", "start", "black");
+        labelEvent("timelineSVG", 2, 1899, 16, -20, "AT&T assumes ownership of Bell", "start", "black");
+        labelEvent("timelineSVG", 15, 1899, -8, -20, "Brown Telephone Company founded", "end", "black");
+        labelEvent("timelineSVG", 17, 1899, -8, -40, "Rochester Telephone company (a.k.a. RTC and Rotelcom) founded", "end", "black");
+        labelEvent("timelineSVG", 15, 1911, -16, -28, "Brown becomes United Telephone", "end", "black");
+        labelEvent("timelineSVG", 2, 1925, 16, -24, "AT&T creates Bell Labs (R&D unit)", "start", "black");
+        labelEvent("timelineSVG", 13, 1935, -16, -24, "General Telephone company founded", "end", "black");
+        labelEvent("timelineSVG", 16, 1935, -64, -44, "Citizens Utilities Company founded", "end", "black");
+        labelEvent("timelineSVG", 1, 1937, 64, -12, "Bell Labs invents vocoder", "start", "black");
+        labelEvent("timelineSVG", 1, 1947, 64, -32, "Bell Labs invents transistor", "start", "black");
+        labelEvent("timelineSVG", 1, 1954, 64, -40, "Bell Labs invents solar cell", "start", "black");
+        labelEvent("timelineSVG", 1, 1957, 64, -32, "Bell Labs develops MUSIC software", "start", "black");
+        labelEvent("timelineSVG", 1, 1958, 64, -16, "Bell Labs invents laser", "start", "black");
+        labelEvent("timelineSVG", 13, 1959, -24, -60, "General Telephone becomes General Telephone & Electric (GTE)", "middle", "black");
+        labelEvent("timelineSVG", 11, 1968, -16, -16, "Century Telephone (CenturyTel) company founded", "end", "black");
+        labelEvent("timelineSVG", 1, 1969, 64, 8, "Bell Labs develops UNIX", "start", "black");
+        labelEvent("timelineSVG", 1, 1972, 64, 16, "Bell Labs develops C (programming language)", "start", "black");
+        labelEvent("timelineSVG", 1, 1976, 64, 20, "Bell Labs tests first optical fiber system", "start", "black");
+        labelEvent("timelineSVG", 12, 1978, -16, -76, "Southern Pacific begins providing phone service", "end", "black");
+        labelEvent("timelineSVG", 1, 1980, 62, 20, "Bell Labs demonstrates first single-chip 32-bit microprocessor", "start", "black");
+        labelEvent("timelineSVG", 13, 1983, 24, -28, "GTE acquires Southern Pacific, thence known as Sprint", "middle", "black");
+        labelEvent("timelineSVG", 2, 1984, 16, -16, "Bell System broken up into \"Baby Bells\"", "start", "black");
+        labelEvent("timelineSVG", 17, 1984, -24, 20, "RTC begins acquisition of 35 phone companies", "end", "black");
+        labelEvent("timelineSVG", 1, 1985, 96, -16, "Bell Labs develops C++ (programming language)", "start", "black");
+        labelEvent("timelineSVG", 15, 1991, -52, -40, "United Telephone acquires Sprint and adopts Sprint name", "middle", "black");
+        labelEvent("timelineSVG", 14, 1993, 0, -12, "Citizens acquires many lines from GTE", "middle", "black");
+        labelEvent("timelineSVG", 3, 1995, 12, -16, "Southwestern Bell becomes SBC", "start", "black");
+        labelEvent("timelineSVG", 17, 1995, -12, 10, "RTC becomes Frontier", "end", "black");
+        labelEvent("timelineSVG", 9, 1996, 12, -20, "Bell Atlantic acquires NYNEX", "start", "black");
+        labelEvent("timelineSVG", 10, 1996, 8, 8, "Qwest founded", "start", "black");
+        labelEvent("timelineSVG", 3, 1997, 12, -16, "SBC acquires Pacific Telesis", "start", "black");
+        labelEvent("timelineSVG", 3, 1999, 24, 4, "SBC acquires Ameritech", "start", "black");
+        labelEvent("timelineSVG", 17, 1999, -16, -10, "Global Crossing acquires Frontier", "end", "black");
+        labelEvent("timelineSVG", 13, 2000, -30, 24, "Bell Atlantic merges with GTE to become Verizon", "end", "black");
+        labelEvent("timelineSVG", 10, 2000, -34, 8, "Qwest acquires US West", "end", "black");
+        labelEvent("timelineSVG", 16, 2001, -16, 24, "Citizens acquires local exchanges (and rights to Frontier name) from Global Crossing", "end", "black");
+        labelEvent("timelineSVG", 3, 2005, 16, -12, "SBC acquires AT&T and adopts AT&T name", "start", "black");
+        labelEvent("timelineSVG", 3, 2006, 16, 12, "AT&T acquires BellSouth", "start", "black");
+        labelEvent("timelineSVG", 1, 2006, 16, 28, "Lucent merges with Alcatel to become Alcatel-Lucent", "start", "black");
+        labelEvent("timelineSVG", 16, 2008, -12, -12, "Citizens adopts Frontier name", "end", "black");
+        labelEvent("timelineSVG", 14, 2009, 12, 24, "Frontier acquires many lines from Verizon", "middle", "black");
+        labelEvent("timelineSVG", 11, 2009, -16, 4, "CenturyTel becomes CenturyLink", "end", "black");
+        labelEvent("timelineSVG", 11, 2011, -24, 4, "CenturyLink acquires Qwest", "end", "black");
+        labelEvent("timelineSVG", 10, 2014, -8, -14, "Frontier acquires all AT&T lines in Connecticut", "end", "black");
+        labelEvent("timelineSVG", 14, 2015, -16, 12, "Frontier acquires all Verizon lines in California, Texas, and Florida", "end", "black");
+        labelEvent("timelineSVG", 1, 2015, 16, -62, "Nokia acquires Alcatel-Lucent", "start", "black");
+
+        labelCompany("timelineSVG", 1, "Nokia", "black");
+        labelCompany("timelineSVG", 3, "AT&T", "black");
+        labelCompany("timelineSVG", 11, "CenturyLink", "black");
+        labelCompany("timelineSVG", 13, "Verizon", "black");
+        labelCompany("timelineSVG", 15, "Sprint", "black");
+        labelCompany("timelineSVG", 16, "Frontier", "black");
+      }
+
+      //-->
+    </script>
+  </head>
+  <body onload="initPage()">
+    <noscript>
+      <div style="border: 8px solid fuchsia; background-color: aqua; color: navy; padding: 16px; font-size: 1.25em;">
+        <p>This page requires JavaScript in order to function properly.  Either your browser does not support JavaScript, or JavaScript is disabled.  Please use a browser that supports JavaScript and make sure that JavaScript is enabled.</p>
+        <p>
+          With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b>
+            <u>A</u>llow blocked content
+          </b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)
+        </p>
+        <img src="../ie-blocked.png" alt="Internet Explorer restricted this webpage from running scripts or ActiveX controls.  (Allow blocked content)" style="display: block; margin: auto; width: 960px; height: 50px;" />
+      </div>
+    </noscript>
+    <header>
+      <h1>Jeff Bourdier on GitHub</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="..">Home</a>
+          </li>
+          <li>
+            <a href="../geodesy">Geodesy</a>
+          </li>
+          <li>Telcos</li>
+          <li>
+            <a href="../about">About</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <p>
+      Working for a telephone company (or "telco," if you like) has given me a new appreciation for the telecom industry.  After all, it was a telco (<a href="http://www.bell-labs.com/">Bell Labs</a>, to be specfic) that gave us <a href="http://opengroup.org/unix">UNIX</a>, <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>, <a href="https://isocpp.org/">C++</a>, and even some of the earliest <a href="https://en.wikipedia.org/wiki/MUSIC-N">music software</a>.  It has also led to some <a href="http://sspinnovations.com/blog/2013/08/09/why-telecoms-need-gis">interesting developments in GIS</a> (not to mention, of course, providing the essential services of long-distance communication and data transfer).
+    </p>
+    <p>Given this newfound interest in telcos, I thought it might be instructive also to have some knowledge of the industry's fascinating history.  This page is the summary of what I have learned, shared here (like my software) for the benefit of anyone else who might appreciate it.  Enjoy!  (Note: the scale of the timeline changes at 1980; horizontal lines mark 5-year intervals.)</p>
+    <figure>
+      <svg id="timelineSVG" />
+    </figure>
+    <!--<h4>Sources:</h4>
+    <ul>
+      <li>
+        Brooks, John. <i><a href="https://books.google.com/books?id=H4NjAAAAIAAJ">Telephone: The First Hundred Years</a></i>, Harper &amp; Row, 1976.
+      </li>
+      <li>
+        Pizer, Russell A. <i><a href="https://books.google.com/books?id=4Vjyz9fgs6sC">The Tangled Web of Patent #174465</a></i>, AuthorHouse, 2009.
+      </li>
+      <li>
+        Bruce, Robert V. <i>Bell: Alexander Bell and the Conquest of Solitude</i>, Cornell University Press, 1990.
+      </li>
+      <li>
+        Block, Melissa; Neff, Brijet (2012-10-15). <a href="http://www.npr.org/2012/10/15/162963607/sprint-born-from-railroad-telephone-businesses">"Sprint Born From Railroad, Telephone Businesses"</a>. NPR.
+      </li>
+      <li>
+        <a href="http://newsroom.sprint.com/news-releases/sprint-and-softbank-announce-completion-of-merger.htm">"Sprint and SoftBank Announce Completion of Merger"</a>
+      </li>
+      <li>
+        <a href="http://www.fundinguniverse.com/company-histories/frontier-corp-history/">Frontier Corp. - Company History, Funding Universe</a>
+      </li>
+    </ul>-->
+    <footer>
+      <p>
+        Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version
+      </p>
+      <small>Copyright &copy; 2016 Jeffrey Paul Bourdier</small>
+    </footer>
+  </body>
+</html>

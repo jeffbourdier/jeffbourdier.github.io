@@ -1,24 +1,60 @@
 <!DOCTYPE html>
-
 <html lang="en-US">
-
   <head>
-
     <meta charset="UTF-8" />
-    <meta name="description" content="Jeff Bourdier's stupid GitHub website" />
+    <title>Jeff Bourdier on GitHub</title>
+    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
-    <meta name="keywords" content="Jeff, Bourdier, GitHub" />
+    <link rel="stylesheet" type="text/css" />
+    <script src="stylesheet.js"></script>
+    <script type="text/javascript">
+      <!--
 
-    <title>Jeff Bourdier's stupid GitHub website</title>
+      function initPage() { initStylesheet(false); }
 
+      //-->
+    </script>
   </head>
-
-  <body>
-
-    <h1>Jeff Bourdier's GitHub website</h1>
-
-    <p>Welcome to Jeff Bourdier's stupid GitHub website.</p>
-
+  <body onload="initPage()">
+    <noscript>
+      <div style="border: 8px solid fuchsia; background-color: aqua; color: navy; padding: 16px; font-size: 1.25em;">
+        <p>This page requires JavaScript in order to function properly.  Either your browser does not support JavaScript, or JavaScript is disabled.  Please use a browser that supports JavaScript and make sure that JavaScript is enabled.</p>
+        <p>
+          With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b>
+            <u>A</u>llow blocked content
+          </b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)
+        </p>
+        <img src="ie-blocked.png" alt="Internet Explorer restricted this webpage from running scripts or ActiveX controls.  (Allow blocked content)" style="display: block; margin: auto; width: 960px; height: 50px;" />
+      </div>
+    </noscript>
+    <header>
+      <h1>Jeff Bourdier on GitHub</h1>
+      <nav>
+        <ul>
+          <li>Home</li>
+          <li>
+            <a href="geodesy">Geodesy</a>
+          </li>
+          <li>
+            <a href="telcos">Telcos</a>
+          </li>
+          <li>
+            <a href="about">About</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <p>
+      Welcome to the home of Jeff Bourdier on GitHub.  The main purpose of this site is for me to experiment with <a href="http://www.w3.org/TR/html/">HTML</a>, <a href="http://www.w3.org/TR/CSS22/">CSS</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a>, and <a href="http://www.w3.org/Graphics/SVG/">SVG</a>.
+    </p>
+    <p>
+      Other than this site, I have only one active project on GitHub at the moment, and that is <a href="https://github.com/jeffbourdier/plunge">Plunge</a>, a file synchronization utility similar to <a href="https://rsync.samba.org/">rsync</a>, for <a href="https://www.linux.com/">Linux</a> and <a href="https://www.microsoft.com/en-us/windows">Windows</a>.
+    </p>
+    <footer>
+      <p>
+        Switch to <a id="switchA" href="#" onclick="switchStylesheet(false)"></a> version
+      </p>
+      <small>Copyright &copy; 2016 Jeffrey Paul Bourdier</small>
+    </footer>
   </body>
-
 </html>

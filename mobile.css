@@ -1,0 +1,78 @@
+header
+{
+  margin: auto;
+  text-align: center;
+  font-family: Verdana, sans-serif;
+}
+
+h1
+{
+  font-size: 64px;
+  color: teal;
+}
+
+nav
+{
+  width: 80%;
+  margin: auto;
+}
+
+nav ul
+{
+  list-style-type: none;
+  font-size: 64px;
+  padding: 0;
+}
+
+nav ul li
+{
+  color: yellow;
+  background-color: maroon;
+  border: 4px solid maroon;
+}
+
+nav ul li a
+{
+  display: block;
+  padding: 16px;
+  color: yellow;
+  background-color: maroon;
+}
+
+nav ul li a:hover
+{
+  color: maroon;
+  background-color: yellow;
+}
+
+nav ul li a:active
+{
+  color: maroon;
+  background-color: aqua;
+}
+
+p, h4, ul, ol, dt
+{
+  font-size: 3em;
+}
+
+figure
+{
+  text-align: center;
+}
+
+figcaption
+{
+  font-size: 2em;
+}
+
+svg
+{
+  padding: 16px;
+}
+
+footer
+{
+  border-top: 1px solid;
+  text-align: center;
+}

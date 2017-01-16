@@ -1,0 +1,95 @@
+body
+{
+  min-width: 768px;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header
+{
+  width: 768px;
+  height: 80px;
+  margin: auto;
+  padding: 16px;
+  text-align: center;
+  font-family: Verdana, sans-serif;
+}
+
+h1
+{
+  float: left;
+  width: 256px;
+  height: 100%;
+  margin: auto;
+  font-size: 32px;
+  color: teal;
+}
+
+nav
+{
+  float: right;
+  width: 508px;
+  height: 100%;
+}
+
+nav ul
+{
+  list-style-type: none;
+  height: 100%;
+  font-size: 24px;
+  margin: auto;
+  padding: 0;
+}
+
+nav ul li
+{
+  float: left;
+  width: 119px;
+  height: 100%;
+  line-height: 300%;
+  color: yellow;
+  background-color: maroon;
+  border: 4px solid maroon;
+}
+
+nav ul li a
+{
+  display: block;
+  height: 100%;
+  color: yellow;
+  background-color: maroon;
+}
+
+nav ul li a:hover
+{
+  color: maroon;
+  background-color: yellow;
+}
+
+nav ul li a:active
+{
+  color: maroon;
+  background-color: aqua;
+}
+
+figure
+{
+  text-align: center;
+}
+
+figcaption
+{
+  font-size: 0.8em;
+}
+
+svg
+{
+  padding: 16px;
+}
+
+footer
+{
+  border-top: 1px solid;
+  text-align: center;
+}
