@@ -51,7 +51,7 @@ nav ul li a:active
   background-color: aqua;
 }
 
-p, h4, ul, ol, dt
+p, h4, ul, ol, dt, table
 {
   font-size: 3em;
 }
@@ -69,6 +69,29 @@ figcaption
 svg
 {
   padding: 16px;
+}
+
+table
+{
+  margin: auto;
+  border-collapse: collapse;
+}
+
+table, th, td
+{
+  border: 1px solid;
+  padding: 4px;
+}
+
+th
+{
+  background-color: silver;
+}
+
+table ul
+{
+  margin: auto;
+  font-size: 1em;
 }
 
 footer
