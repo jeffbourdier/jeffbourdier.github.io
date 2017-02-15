@@ -16,22 +16,22 @@
       {
         initStylesheet(true);
 
-        drawGlobe("sphereSVG", 64, 64, 6, "teal", "aqua");
-        drawGlobe("spheroidSVG", 80, 48, 6, "teal", "aqua");
+        drawGlobe("sphereSVG", 128, 128, 12, "teal", "aqua");
+        drawGlobe("spheroidSVG", 144, 112, 12, "teal", "aqua");
 
-        drawGlobe("LatitudeSVG", 128, 128, 12, "teal", "aqua");
+        drawGlobe("LatitudeSVG", 256, 256, 12, "teal", "aqua");
         drawHorizontal("LatitudeSVG", "teal");
         drawRadial("LatitudeSVG", 150, true, "black");
         createArrowheadMarker("LatitudeSVG", "black");
-        drawLabel("LatitudeSVG", 172, 128, true, 156, 164, "equator", "middle", "black");
+        drawLabel("LatitudeSVG", 342, 256, true, 332, 296, "equator", 18, "middle", "black");
 
-        drawGlobePolar("LongitudeSVG", 128, 12, "teal", "aqua");
+        drawGlobePolar("LongitudeSVG", 256, 9, "teal", "aqua");
         drawHorizontal("LongitudeSVG", "teal");
         drawRadial("LongitudeSVG", -96, false, "black");
         createArrowheadMarker("LongitudeSVG", "black");
-        drawLabel("LongitudeSVG", 216, 128, true, 200, 80, "prime meridian", "middle", "black");
-        drawLabel("LongitudeSVG", 40, 128, true, 56, 80, "antimeridian", "middle", "black");
-        drawLabel("LongitudeSVG", 128, 128, true, 118, 108, "north pole", "middle", "black");
+        drawLabel("LongitudeSVG", 432, 256, true, 422, 216, "prime meridian", 18, "middle", "black");
+        drawLabel("LongitudeSVG", 80, 256, true, 90, 216, "antimeridian", 18, "middle", "black");
+        drawLabel("LongitudeSVG", 256, 256, true, 246, 216, "north pole", 18, "middle", "black");
       }
 
       //-->
@@ -318,7 +318,7 @@
       Some common spatial reference systems are summarized below:
     </p>
     <table>
-      <thead>
+      <thead style="font-size: 0.8em;">
         <tr>
           <th>Name</th>
           <th>Description</th>
@@ -328,17 +328,17 @@
           <th>SRID(s)</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="font-size: 0.8em;">
         <tr>
           <td style="text-align: center;">
             <a href="https://www.ngs.noaa.gov/TOOLS/utm.shtml">Universal Transverse Mercator (UTM)</a>
           </td>
-          <td style="font-size: 0.8em;">
+          <td>
             Earth is divided into 60 zones, each 6&deg; wide (30 different cylinder orientations).  Each zone is split at equator into North (N) and South (S).
           </td>
           <td style="text-align: center;">WGS 84<sup>1</sup></td>
           <td style="text-align: center;">Transverse Mercator</td>
-          <td style="font-size: 0.8em;">
+          <td>
             <ul>
               <li><b>Central meridian:</b> depends on zone</li>
               <li><b>Origin (X):</b> 500 km W of central meridian</li>
@@ -354,12 +354,12 @@
           <td style="text-align: center;">
             <a href="https://www.ngs.noaa.gov/TOOLS/spc.shtml">State Plane Coordinate System (SPCS)</a>
           </td>
-          <td style="font-size: 0.8em;">
+          <td>
             Each state (in the U.S.) is divided into zones, each of which has its own parameters.
           </td>
           <td style="text-align: center;">NAD 83</td>
           <td style="text-align: center;">depends on zone; most use Lambert Conformal Conic</td>
-          <td style="font-size: 0.8em;">
+          <td>
             <ul>
               <li><b>Standard parallels:</b> depends on zone</li>
               <li><b>Central meridian:</b> depends on zone</li>
@@ -376,7 +376,7 @@
           <td></td>
           <td style="text-align: center;">NAD 83</td>
           <td style="text-align: center;">Lambert Conformal Conic</td>
-          <td style="font-size: 0.8em;">
+          <td>
             <ul>
               <li><b>Standard parallels:</b> 27&deg;25'N and 34&deg;55'N</li>
               <li><b>Central meridian:</b> 100&deg;W</li>
@@ -391,7 +391,7 @@
           <td style="text-align: center;">
             <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a><sup>3</sup>
           </td>
-          <td style="font-size: 0.8em;">Used by most modern GPS devices.</td>
+          <td>Used by most modern GPS devices.</td>
           <td style="text-align: center;">WGS 84</td>
           <td style="text-align: center;">none/geographic<sup>4</sup></td>
           <td style="text-align: center;">(not applicable)</td>
@@ -401,12 +401,12 @@
           <td style="text-align: center;">
             Pseudo-Mercator (a.k.a. <a href="https://en.wikipedia.org/wiki/Web_Mercator">Web Mercator</a>)
           </td>
-          <td style="font-size: 0.8em;">
+          <td>
             Used by many web mapping applications, including <a href="https://www.google.com/maps/">Google Maps</a>.
           </td>
           <td style="text-align: center;">WGS 84</td>
           <td style="text-align: center;">Mercator</td>
-          <td style="font-size: 0.8em;">
+          <td>
             <ul>
               <li><b>Standard parallel:</b> 0&deg; (equator)</li>
               <li><b>Central meridian:</b> 0&deg; (prime meridian)</li>

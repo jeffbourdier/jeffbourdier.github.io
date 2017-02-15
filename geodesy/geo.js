@@ -1,3 +1,20 @@
+/**
+ * @file Functionality unique to the Geodesy page.
+ */
+
+
+/**
+ * Draw a "globe" (an ellipse with lines of latitude and longitude) within an SVG element.
+ * The SVG element is sized automatically to fit the dimensions of the globe.
+ * The globe will be oriented such that the equator is centered and horizontal.  To
+ * draw a globe oriented such that one of the poles is centered, call drawGlobePolar.
+ * @param {string} svgElementId Identifer of the SVG element to contain the globe.
+ * @param {number} equatorialRadius Equatorial radius of the globe, in pixels.
+ * @param {number} polarRadius Polar radius of the globe, in pixels.
+ * @param {number} n Number of lines (of latitude/longitude) to draw within each hemisphere.
+ * @param {string} strokeColor Color to use for the outline, parallels, and meridians.
+ * @param {string} fillColor Color to use for the area within the globe.
+ */
 function drawGlobe(svgElementId, equatorialRadius, polarRadius, n, strokeColor, fillColor)
 {
   var i;
@@ -23,6 +40,16 @@ function drawGlobe(svgElementId, equatorialRadius, polarRadius, n, strokeColor, 
 }
 
 
+/**
+ * Draw a pair of meridians (lines of longitude) on a globe within an SVG element.
+ * The SVG element is assumed to be sized to fit the globe, and the globe is assumed to be
+ * oriented such that the equator is centered and horizontal.  (See also drawMeridiansPolar.)
+ * @param {string} svgElementId Identifer of the SVG element containing the globe on which to draw the meridians.
+ * @param {number} equatorialRadius Equatorial radius of the globe, in pixels.
+ * @param {number} polarRadius Polar radius of the globe, in pixels.
+ * @param {number} angle Angle (of longitude) at which to draw the meridians, in radians.
+ * @param {string} color Color to use for the meridians.
+ */
 function drawMeridians(svgElement, equatorialRadius, polarRadius, angle, color)
 {
   var nodeName;
@@ -56,6 +83,16 @@ function drawMeridians(svgElement, equatorialRadius, polarRadius, angle, color)
 }
 
 
+/**
+ * Draw a pair of parallels (lines of latitude) on a globe within an SVG element.
+ * The SVG element is assumed to be sized to fit the globe, and the globe is assumed to be
+ * oriented such that the equator is centered and horizontal.  (See also drawParallelsPolar.)
+ * @param {string} svgElementId Identifer of the SVG element containing the globe on which to draw the parallels.
+ * @param {number} equatorialRadius Equatorial radius of the globe, in pixels.
+ * @param {number} polarRadius Polar radius of the globe, in pixels.
+ * @param {number} angle Angle (of latitude) at which to draw the parallels, in radians.
+ * @param {string} color Color to use for the parallels.
+ */
 function drawParallels(svgElement, equatorialRadius, polarRadius, angle, color)
 {
   var d;
@@ -90,6 +127,17 @@ function drawParallels(svgElement, equatorialRadius, polarRadius, angle, color)
 }
 
 
+/**
+ * Draw a "globe" (an ellipse with lines of latitude and longitude) within an SVG element.
+ * The SVG element is sized automatically to fit the dimensions of the globe.
+ * The globe will be oriented such that one of the poles is centered.  To
+ * draw a globe oriented such that the equator is centered, call drawGlobe.
+ * @param {string} svgElementId Identifer of the SVG element to contain the globe.
+ * @param {number} radius Radius of the globe, in pixels.
+ * @param {number} n Number of lines (of latitude/longitude) to draw within each hemisphere.
+ * @param {string} strokeColor Color to use for the outline, parallels, and meridians.
+ * @param {string} fillColor Color to use for the area within the globe.
+ */
 function drawGlobePolar(svgElementId, radius, n, strokeColor, fillColor)
 {
   var i;
@@ -115,6 +163,15 @@ function drawGlobePolar(svgElementId, radius, n, strokeColor, fillColor)
 }
 
 
+/**
+ * Draw a pair of meridians (lines of longitude) on a globe within an SVG element.
+ * The SVG element is assumed to be sized to fit the globe, and the globe is assumed
+ * to be oriented such that one of the poles is centered.  (See also drawMeridians.)
+ * @param {string} svgElementId Identifer of the SVG element containing the globe on which to draw the meridians.
+ * @param {number} radius Radius of the globe, in pixels.
+ * @param {number} angle Angle (of longitude) at which to draw the meridians, in radians.
+ * @param {string} color Color to use for the meridians.
+ */
 function drawMeridiansPolar(svgElement, radius, angle, color)
 {
   var d;
@@ -161,6 +218,15 @@ function drawMeridiansPolar(svgElement, radius, angle, color)
 }
 
 
+/**
+ * Draw a parallel (line of latitude) on a globe within an SVG element.
+ * The SVG element is assumed to be sized to fit the globe, and the globe is assumed
+ * to be oriented such that one of the poles is centered.  (See also drawParallels.)
+ * @param {string} svgElementId Identifer of the SVG element containing the globe on which to draw the parallel.
+ * @param {number} radius Radius of the globe, in pixels.
+ * @param {number} angle Angle (of latitude) at which to draw the parallel, in radians.
+ * @param {string} color Color to use for the parallel.
+ */
 function drawParallelsPolar(svgElement, radius, angle, color)
 {
   var r;
@@ -178,6 +244,14 @@ function drawParallelsPolar(svgElement, radius, angle, color)
 }
 
 
+/**
+ * Draw elliptical outline of a "globe" within an SVG element.
+ * @param {string} svgElementId Identifer of the SVG element to contain the globe.
+ * @param {number} equatorialRadius Equatorial radius of the globe, in pixels.
+ * @param {number} polarRadius Polar radius of the globe, in pixels.
+ * @param {string} strokeColor Color to use for the outline.
+ * @param {string} fillColor Color to use for the area within the globe.
+ */
 function drawGlobeOutline(svgElement, equatorialRadius, polarRadius, strokeColor, fillColor)
 {
   var element;
@@ -194,6 +268,11 @@ function drawGlobeOutline(svgElement, equatorialRadius, polarRadius, strokeColor
 }
 
 
+/**
+ * Draw a horizontal line across an SVG element.
+ * @param {string} svgElementId Identifer of the SVG element across which to draw the horizontal line.
+ * @param {string} color Color to use for the horizontal line.
+ */
 function drawHorizontal(svgElementId, color)
 {
   var y;
@@ -208,13 +287,19 @@ function drawHorizontal(svgElementId, color)
 }
 
 
-/* Note:  This angle should be passed in degrees (the others should be passed in radians). */
+/**
+ * Draw a radial line from the center of a "globe" within an SVG element.
+ * The SVG element is assumed to be sized to fit the globe.
+ * @param {string} svgElementId Identifer of the SVG element containing the globe on which to draw the radial.
+ * @param {number} angle Angle (with respect to the horizontal) at which to draw the radial, in degrees.
+ * @param {string} color Color to use for the radial.
+ */
 function drawRadial(svgElementId, angle, supplementary, color)
 {
   var STROKE_WIDTH = 2;
   var ARC_FACTOR = 7 / 16;
   var ANNO_FACTOR = 3 / 4;
-  var FONT_SIZE = 18;
+  var FONT_SIZE = 24;
 
   var x;
   var y;
@@ -230,6 +315,7 @@ function drawRadial(svgElementId, angle, supplementary, color)
   var sinAngle;
   var supFactor;
 
+  /* Get the SVG element and the sine and cosine of the angle, which will be needed throughout. */
   svgElement = document.getElementById(svgElementId);
   cosAngle = Math.cos(degreesToRadians(angle));
   sinAngle = Math.sin(degreesToRadians(angle));

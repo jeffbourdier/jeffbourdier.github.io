@@ -1,9 +1,30 @@
+/**
+ * @file Generic drawing functions.
+ */
+
+
+/**
+ * Namespace to be used when creating SVG elements (with createElementNS).
+ * @constant {string}
+ */
 var NS = "http://www.w3.org/2000/svg";
 
 
-function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, textAnchor, color)
+/**
+ * Label a particular point within an SVG element by drawing text and a leader line.
+ * @param {string} svgElementId Identifer of the SVG element in which the label should be drawn.
+ * @param {number} x X-coordinate of the point where the leader line should end.
+ * @param {number} y Y-coordinate of the point where the leader line should end.
+ * @param {boolean} arrowhead Indicates whether or not to put an arrowhead marker at the end of the leader line.
+ * @param {number} labelX X-coordinate where the leader line should begin and the text should be anchored.
+ * @param {number} labelY Y-coordinate where the leader line should begin and the text should be anchored.
+ * @param {string} text Text to draw for the label.
+ * @param {number} fontSize Font size to use when drawing the text, in pixels.
+ * @param {string} textAnchor Value to use for the "text-anchor" attribute of the text element.
+ * @param {string} color Color to use for the label.
+ */
+function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, fontSize, textAnchor, color)
 {
-  var FONT_SIZE = 12;
   var FACTOR = 3 / 4;
 
   var v;
@@ -11,6 +32,7 @@ function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, textAnch
   var svgElement;
   var pathElement;
 
+  /* Get the SVG element. */
   svgElement = document.getElementById(svgElementId);
 
   /* If applicable, draw the leader line. */
@@ -29,42 +51,58 @@ function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, textAnch
   textNode = document.createTextNode(text);
   element = document.createElementNS(NS, "text");
   element.setAttribute("x", labelX ? labelX : x);
-  v = labelY ? (labelY + (FACTOR - ((labelY > y) ? 0 : 1)) * FONT_SIZE) : (y + FONT_SIZE / 2 - 1);
+  v = labelY ? (labelY + (FACTOR - ((labelY > y) ? 0 : 1)) * fontSize) : (y + fontSize / 2 - 1);
   element.setAttribute("y", v);
   element.setAttribute("text-anchor", textAnchor);
   element.setAttribute("fill", color);
-  element.setAttribute("font-size", FONT_SIZE + "px");
+  element.setAttribute("font-size", fontSize + "px");
   element.appendChild(textNode);
   svgElement.appendChild(element);
 }
 
 
+/**
+ * Create an arrowhead marker within an SVG element.
+ * @param {string} svgElementId Identifer of the SVG element in which the marker should be created.
+ * @param {string} color Color to use for the marker.
+ */
 function createArrowheadMarker(svgElementId, color)
 {
   var element;
   var svgElement;
   var pathElement;
 
+  /* Get the SVG element. */
   svgElement = document.getElementById(svgElementId);
 
+  /* Create a path element for the arrowhead, triangular and filled with the color. */
   pathElement = document.createElementNS(NS, "path");
   pathElement.setAttribute("d", "M 0 0 L 8 3 L 0 6 Z");
   pathElement.setAttribute("stroke", "none");
   pathElement.setAttribute("fill", color);
 
+  /* Create the marker element and add it to the SVG element. */
   element = document.createElementNS(NS, "marker");
   element.id = nameArrowheadMarker(color, false);
   element.setAttribute("markerWidth", "8");
   element.setAttribute("markerHeight", "6");
   element.setAttribute("refX", "8");
   element.setAttribute("refY", "3");
-  element.setAttribute("viewBox", "0 0 12 9");
+  element.setAttribute("viewBox", "0 0 8 6");
   element.setAttribute("orient", "auto");
   element.appendChild(pathElement);
   svgElement.appendChild(element);
 }
 
 
+/**
+ * Build a name for an arrowhead marker (based on its color).
+ * @private
+ * @param {string} color Color of the marker (which will be incorporated into its name).
+ * @param {boolean} withURL Indicates whether or not to build the name as a URL.  In general, this should
+ * be set to true when setting the "marker-end" attribute of the line; otherwise, it can be set to false.
+ * @returns {string} A name for an arrowhead marker (based on its color).
+ */
 function nameArrowheadMarker(color, withURL)
 {
   var s;
@@ -75,18 +113,40 @@ function nameArrowheadMarker(color, withURL)
 }
 
 
+/**
+ * Convert degrees to radians.
+ * @private
+ * @param {number} degrees
+ * @returns {number} The value equivalent to degrees, in radians.
+ */
 function degreesToRadians(degrees)
 {
   return degrees * Math.PI / 180;
 }
 
 
+/**
+ * Convert radians to degrees.
+ * @private
+ * @param {number} radians
+ * @returns {number} The value equivalent to radians, in degrees.
+ */
 function radiansToDegrees(radians)
 {
   return radians * 180 / Math.PI;
 }
 
 
+/**
+ * Initialize an SVG line element.
+ * @private
+ * @param {number} x1 X-coordinate where the line should begin.
+ * @param {number} y1 Y-coordinate where the line should begin.
+ * @param {number} x2 X-coordinate where the line should end.
+ * @param {number} y2 Y-coordinate where the line should end.
+ * @param {string} color Color to use for the line.
+ * @returns {Element} An initialized SVG line element to be drawn from (x1, y1) to (x2, y2) in the specified color.
+ */
 function initLine(x1, y1, x2, y2, color)
 {
   var element;
