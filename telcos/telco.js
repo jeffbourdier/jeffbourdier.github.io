@@ -28,6 +28,12 @@ var CHANNEL_WIDTH = 8;
 var CHANNEL_SPACE = 40;
 
 /**
+ * Radius of a circle used as an endpoint marker for a leader line, in pixels.
+ * @constant {number}
+ */
+var MARKER_RADIUS = CHANNEL_WIDTH / 4;
+
+/**
  * Year at which the timeline begins.
  * @constant {number}
  */
@@ -220,7 +226,7 @@ function labelEvent(svgElementId, channel, year, dx, dy, text, textAnchor, color
 
   x = channelToX(channel);
   y = yearToY(year);
-  drawLabel(svgElementId, x, y, false, x + dx, y + dy, year + " - " + text, TELCO_FONT_SIZE, textAnchor, color);
+  drawLabel(svgElementId, x, y, MARKER_RADIUS, x + dx, y + dy, year + " - " + text, TELCO_FONT_SIZE, textAnchor, color);
 }
 
 
@@ -238,7 +244,7 @@ function labelCompany(svgElementId, channel, text, color)
 
   x = channelToX(channel);
   y = yearToY(2017);
-  drawLabel(svgElementId, x, y, false, x, y + 16, text, TELCO_FONT_SIZE, "middle", color);
+  drawLabel(svgElementId, x, y, MARKER_RADIUS, x, y + 16, text, TELCO_FONT_SIZE, "middle", color);
 }
 
 
@@ -254,10 +260,10 @@ function labelYear(svgElementId, year, width)
   var x;
   var y;
 
-  y = yearToY(year);
+  y = yearToY(year) - 1;
   x = (CHANNEL_SPACE - CHANNEL_WIDTH) / 2;
-  drawLabel(svgElementId, x, y, false, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
-  drawLabel(svgElementId, width - x, y, false, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
+  drawLabel(svgElementId, x, y, 0, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
+  drawLabel(svgElementId, width - x, y, 0, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
 }
 
 

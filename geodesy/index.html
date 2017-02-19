@@ -14,24 +14,38 @@
 
       function initPage()
       {
+        var LINE_COUNT = 12;
+        var GLOBE_RADIUS = 256;
+        var GLOBE_STROKE_COLOR = "teal";
+        var GLOBE_FILL_COLOR = "aqua";
+        var LABEL_FONT_SIZE = 24;
+        var LABEL_TEXT_ANCHOR = "middle";
+        var LABEL_COLOR = "black";
+
+        var n;
+        var s;
+
         initStylesheet(true);
 
-        drawGlobe("sphereSVG", 128, 128, 12, "teal", "aqua");
-        drawGlobe("spheroidSVG", 144, 112, 12, "teal", "aqua");
+        n = GLOBE_RADIUS / 2;
+        drawGlobe("sphereSVG", n, n, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
+        drawGlobe("spheroidSVG", (9/8)*n, (7/8)*n, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
 
-        drawGlobe("LatitudeSVG", 256, 256, 12, "teal", "aqua");
-        drawHorizontal("LatitudeSVG", "teal");
-        drawRadial("LatitudeSVG", 150, true, "black");
-        createArrowheadMarker("LatitudeSVG", "black");
-        drawLabel("LatitudeSVG", 342, 256, true, 332, 296, "equator", 18, "middle", "black");
+        s = "LatitudeSVG";
+        drawGlobe(s, GLOBE_RADIUS, GLOBE_RADIUS, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
+        drawHorizontal(s, GLOBE_STROKE_COLOR);
+        drawRadial(s, 150, true, LABEL_COLOR);
+        createArrowheadMarker(s, LABEL_COLOR);
+        drawLabel(s, 342, GLOBE_RADIUS, -1, 332, 296, "equator", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
 
-        drawGlobePolar("LongitudeSVG", 256, 9, "teal", "aqua");
-        drawHorizontal("LongitudeSVG", "teal");
-        drawRadial("LongitudeSVG", -96, false, "black");
-        createArrowheadMarker("LongitudeSVG", "black");
-        drawLabel("LongitudeSVG", 432, 256, true, 422, 216, "prime meridian", 18, "middle", "black");
-        drawLabel("LongitudeSVG", 80, 256, true, 90, 216, "antimeridian", 18, "middle", "black");
-        drawLabel("LongitudeSVG", 256, 256, true, 246, 216, "north pole", 18, "middle", "black");
+        s = "LongitudeSVG";
+        drawGlobePolar(s, GLOBE_RADIUS, 9, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
+        drawHorizontal(s, GLOBE_STROKE_COLOR);
+        drawRadial(s, -96, false, LABEL_COLOR);
+        createArrowheadMarker(s, LABEL_COLOR);
+        drawLabel(s, 432, GLOBE_RADIUS, -1, 422, 216, "prime meridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, 80, GLOBE_RADIUS, -1, 90, 216, "antimeridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, GLOBE_RADIUS, GLOBE_RADIUS, -1, 246, 216, "north pole", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
       }
 
       //-->
@@ -261,7 +275,7 @@
       </tbody>
     </table>
     <p>
-      In addition, every projection has an <i>origin</i> (where the x and y axes converge) and a (linear) <i>unit of measurement</i> (such as meters, feet, or miles).  The term <i>origin</i> may be somewhat misleading here, as the coordinates of the origin are not necessarily 0, 0.  It may be easiest to imagine the origin as the point having coordinates (0, 0) -- and indeed, this is often the case -- but sometimes, the origin is considered to be a point with nonzero coordinates, in which case it is said to have a "false easting" and a "false northing" (essentially, offsets from some "other origin" whose coordinates are 0, 0).  The important thing is where the point (0, 0) is with respect to the features on the map, and it is pretty much always at the lower left-hand corner, such that all x and y values are positive.
+      In addition, every projection has an <i>origin</i> (where the x and y axes converge) and a (linear) <i>unit of measure</i> (such as meters, feet, or miles).  The term <i>origin</i> may be somewhat misleading here, as the coordinates of the origin are not necessarily 0, 0.  It may be easiest to imagine the origin as the point having coordinates (0, 0) -- and indeed, this is often the case -- but sometimes, the origin is considered to be a point with nonzero coordinates, in which case it is said to have a "false easting" and a "false northing" (essentially, offsets from some "other origin" whose coordinates are 0, 0).  The important thing is where the point (0, 0) is with respect to the features on the map, and it is pretty much always at the lower left-hand corner, such that all x and y values are positive.
     </p>
     <p>
       Some common map projections are summarized below:
@@ -343,11 +357,11 @@
               <li><b>Central meridian:</b> depends on zone</li>
               <li><b>Origin (X):</b> 500 km W of central meridian</li>
               <li><b>Origin (Y):</b> equator (N) or 10,000 km S of equator (S)</li>
-              <li><b>Unit of Measurement:</b> meter</li>
+              <li><b>Unit of Measure:</b> meter</li>
             </ul>
           </td>
           <td style="text-align: center;">
-            <a href="https://epsg.io/32601">32601</a>..<a href="https://epsg.io/32660">32660</a>, <a href="https://epsg.io/32701">32701</a>..<a href="https://epsg.io/32760">32760</a><sup>2</sup>
+            <a href="https://epsg.io/32601">32601</a> .. <a href="https://epsg.io/32660">32660</a>, <a href="https://epsg.io/32701">32701</a> .. <a href="https://epsg.io/32760">32760</a><sup>2</sup>
           </td>
         </tr>
         <tr>
@@ -364,11 +378,11 @@
               <li><b>Standard parallels:</b> depends on zone</li>
               <li><b>Central meridian:</b> depends on zone</li>
               <li><b>Origin:</b> depends on zone</li>
-              <li><b>Unit of Measurement:</b> meter or foot</li>
+              <li><b>Unit of Measure:</b> meter or foot</li>
             </ul>
           </td>
           <td style="text-align: center;">
-            <a href="https://epsg.io/102629">102629</a>..<a href="https://epsg.io/102758">102758</a>
+            <a href="https://epsg.io/102629">102629</a> .. <a href="https://epsg.io/102758">102758</a>
           </td>
         </tr>
         <tr>
@@ -382,7 +396,7 @@
               <li><b>Central meridian:</b> 100&deg;W</li>
               <li><b>Origin (X):</b> 100&deg;W  (False Easting: 1,000 km)</li>
               <li><b>Origin (Y):</b> 31&deg;10'N  (False Northing: 1,000 km)</li>
-              <li><b>Unit of Measurement:</b> meter</li>
+              <li><b>Unit of Measure:</b> meter</li>
             </ul>
           </td>
           <td style="text-align: center;"><a href="https://epsg.io/3081">3081</a></td>
@@ -393,7 +407,7 @@
           </td>
           <td>Used by most modern GPS devices.</td>
           <td style="text-align: center;">WGS 84</td>
-          <td style="text-align: center;">none/geographic<sup>4</sup></td>
+          <td style="text-align: center;">none / geographic<sup>4</sup></td>
           <td style="text-align: center;">(not applicable)</td>
           <td style="text-align: center;"><a href="https://epsg.io/4326">4326</a></td>
         </tr>

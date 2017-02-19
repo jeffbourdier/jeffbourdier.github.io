@@ -14,133 +14,137 @@
 
       function initPage()
       {
+        var SVG_ID = "timelineSVG";
+        var LABEL_COLOR = "black";
+
         initStylesheet(true);
 
-        drawTimeGrid("timelineSVG", 5, "silver");
+        drawTimeGrid(SVG_ID, 5, "silver");
 
         /* AT&T */
-        drawTimeBar("timelineSVG", 2, 1885, 1899, 1, 0, "blue");
+        drawTimeBar(SVG_ID, 2, 1885, 1899, 1, 0, "blue");
 
         /* Bell */
-        drawTimeBar("timelineSVG", 1, 1877, 1899, 0, 2, "navy");
+        drawTimeBar(SVG_ID, 1, 1877, 1899, 0, 2, "navy");
 
         /* Bell Labs > Lucent > Alcatel-Lucent > Nokia */
-        drawTimeBar("timelineSVG", 1, 1925, 2017, 2, 0, "purple");
+        drawTimeBar(SVG_ID, 1, 1925, 2017, 2, 0, "purple");
 
         /* Bell Atlantic */
-        drawTimeBar("timelineSVG", 9, 1984, 1996, 2, 0, "aqua");
+        drawTimeBar(SVG_ID, 9, 1984, 1996, 2, 0, "aqua");
 
         /* NYNEX */
-        drawTimeBar("timelineSVG", 8, 1984, 1996, 2, 9, "maroon");
+        drawTimeBar(SVG_ID, 8, 1984, 1996, 2, 9, "maroon");
 
         /* Bell Atlantic */
-        drawTimeBar("timelineSVG", 9, 1996, 2000, 0, 13, "aqua");
+        drawTimeBar(SVG_ID, 9, 1996, 2000, 0, 13, "aqua");
 
         /* US West */
-        drawTimeBar("timelineSVG", 7, 1984, 2000, 2, 10, "gray");
+        drawTimeBar(SVG_ID, 7, 1984, 2000, 2, 10, "gray");
 
         /* BellSouth */
-        drawTimeBar("timelineSVG", 6, 1984, 2006, 2, 3, "teal");
+        drawTimeBar(SVG_ID, 6, 1984, 2006, 2, 3, "teal");
 
         /* Ameritech */
-        drawTimeBar("timelineSVG", 5, 1984, 1999, 2, 3, "purple");
+        drawTimeBar(SVG_ID, 5, 1984, 1999, 2, 3, "purple");
 
         /* Pacific Telesis */
-        drawTimeBar("timelineSVG", 4, 1984, 1997, 2, 3, "orange");
+        drawTimeBar(SVG_ID, 4, 1984, 1997, 2, 3, "orange");
 
         /* Southwestern Bell */
-        drawTimeBar("timelineSVG", 3, 1984, 2005, 2, 0, "navy");
+        drawTimeBar(SVG_ID, 3, 1984, 2005, 2, 0, "navy");
 
         /* AT&T */
-        drawTimeBar("timelineSVG", 2, 1899, 2005, 0, 3, "blue");
-        drawTimeBar("timelineSVG", 3, 2005, 2017, 0, 0, "blue");
+        drawTimeBar(SVG_ID, 2, 1899, 2005, 0, 3, "blue");
+        drawTimeBar(SVG_ID, 3, 2005, 2017, 0, 0, "blue");
 
         /* Qwest */
-        drawTimeBar("timelineSVG", 10, 1996, 2011, 0, 11, "olive");
+        drawTimeBar(SVG_ID, 10, 1996, 2011, 0, 11, "olive");
 
         /* Century */
-        drawTimeBar("timelineSVG", 11, 1968, 2017, 0, 0, "green");
+        drawTimeBar(SVG_ID, 11, 1968, 2017, 0, 0, "green");
 
         /* Sprint */
-        drawTimeBar("timelineSVG", 12, 1978, 1983, 0, 13, "yellow");
-        drawTimeBar("timelineSVG", 14, 1983, 1991, 13, 15, "yellow");
+        drawTimeBar(SVG_ID, 12, 1978, 1983, 0, 13, "yellow");
+        drawTimeBar(SVG_ID, 14, 1983, 1991, 13, 15, "yellow");
 
         /* GTE > Verizon */
-        drawTimeBar("timelineSVG", 13, 1935, 2017, 0, 0, "red");
+        drawTimeBar(SVG_ID, 13, 1935, 2017, 0, 0, "red");
 
         /* Brown > United */
-        drawTimeBar("timelineSVG", 15, 1899, 1991, 0, 0, "brown");
+        drawTimeBar(SVG_ID, 15, 1899, 1991, 0, 0, "brown");
 
         /* Sprint */
-        drawTimeBar("timelineSVG", 15, 1991, 2017, 0, 0, "yellow");
+        drawTimeBar(SVG_ID, 15, 1991, 2017, 0, 0, "yellow");
 
         /* Rochester */
-        drawTimeBar("timelineSVG", 17, 1899, 2001, 0, 16, "fuchsia");
+        drawTimeBar(SVG_ID, 17, 1899, 2001, 0, 16, "fuchsia");
 
         /* Citizens > Frontier */
-        drawTimeBar("timelineSVG", 16, 1935, 2017, 0, 0, "red");
+        drawTimeBar(SVG_ID, 16, 1935, 2017, 0, 0, "red");
 
-        createArrowheadMarker("timelineSVG", "red");
-        drawLineTransfer("timelineSVG", 1993, 13, 16, "red");
-        drawLineTransfer("timelineSVG", 2009, 13, 16, "red");
-        drawLineTransfer("timelineSVG", 2015, 13, 16, "red");
-        createArrowheadMarker("timelineSVG", "blue");
-        drawLineTransfer("timelineSVG", 2014, 3, 16, "blue");
+        createArrowheadMarker(SVG_ID, "red");
+        drawLineTransfer(SVG_ID, 1993, 13, 16, "red");
+        drawLineTransfer(SVG_ID, 2009, 13, 16, "red");
+        drawLineTransfer(SVG_ID, 2015, 13, 16, "red");
+        createArrowheadMarker(SVG_ID, "blue");
+        drawLineTransfer(SVG_ID, 2014, 3, 16, "blue");
 
-        labelEvent("timelineSVG", 1, 1877, 12, -12, "Bell Telephone Company founded", "start", "black");
-        labelEvent("timelineSVG", 1, 1885, 20, -24, "American Telephone and Telegraph (AT&T) established as Bell subsidiary", "start", "black");
-        labelEvent("timelineSVG", 2, 1899, 16, -20, "AT&T assumes ownership of Bell", "start", "black");
-        labelEvent("timelineSVG", 15, 1899, -8, -20, "Brown Telephone Company founded", "end", "black");
-        labelEvent("timelineSVG", 17, 1899, -8, -40, "Rochester Telephone company (a.k.a. RTC and Rotelcom) founded", "end", "black");
-        labelEvent("timelineSVG", 15, 1911, -16, -28, "Brown becomes United Telephone", "end", "black");
-        labelEvent("timelineSVG", 2, 1925, 16, -24, "AT&T creates Bell Labs (R&D unit)", "start", "black");
-        labelEvent("timelineSVG", 13, 1935, -16, -24, "General Telephone company founded", "end", "black");
-        labelEvent("timelineSVG", 16, 1935, -64, -44, "Citizens Utilities Company founded", "end", "black");
-        labelEvent("timelineSVG", 1, 1937, 64, -12, "Bell Labs invents vocoder", "start", "black");
-        labelEvent("timelineSVG", 1, 1947, 64, -32, "Bell Labs invents transistor", "start", "black");
-        labelEvent("timelineSVG", 1, 1954, 64, -40, "Bell Labs invents solar cell", "start", "black");
-        labelEvent("timelineSVG", 1, 1957, 64, -32, "Bell Labs develops MUSIC software", "start", "black");
-        labelEvent("timelineSVG", 1, 1958, 64, -16, "Bell Labs invents laser", "start", "black");
-        labelEvent("timelineSVG", 13, 1959, -24, -60, "General Telephone becomes General Telephone & Electric (GTE)", "middle", "black");
-        labelEvent("timelineSVG", 11, 1968, -16, -16, "Century Telephone (CenturyTel) company founded", "end", "black");
-        labelEvent("timelineSVG", 1, 1969, 64, 8, "Bell Labs develops UNIX", "start", "black");
-        labelEvent("timelineSVG", 1, 1972, 64, 16, "Bell Labs develops C (programming language)", "start", "black");
-        labelEvent("timelineSVG", 1, 1976, 64, 20, "Bell Labs tests first optical fiber system", "start", "black");
-        labelEvent("timelineSVG", 12, 1978, -16, -76, "Southern Pacific begins providing phone service", "end", "black");
-        labelEvent("timelineSVG", 1, 1980, 62, 20, "Bell Labs demonstrates first single-chip 32-bit microprocessor", "start", "black");
-        labelEvent("timelineSVG", 13, 1983, 24, -28, "GTE acquires Southern Pacific, thence known as Sprint", "middle", "black");
-        labelEvent("timelineSVG", 2, 1984, 16, -16, "Bell System broken up into \"Baby Bells\"", "start", "black");
-        labelEvent("timelineSVG", 17, 1984, -24, 20, "RTC begins acquisition of 35 phone companies", "end", "black");
-        labelEvent("timelineSVG", 1, 1985, 96, -16, "Bell Labs develops C++ (programming language)", "start", "black");
-        labelEvent("timelineSVG", 15, 1991, -52, -40, "United Telephone acquires Sprint and adopts Sprint name", "middle", "black");
-        labelEvent("timelineSVG", 14, 1993, 0, -12, "Citizens acquires many lines from GTE", "middle", "black");
-        labelEvent("timelineSVG", 3, 1995, 12, -16, "Southwestern Bell becomes SBC", "start", "black");
-        labelEvent("timelineSVG", 17, 1995, -12, 10, "RTC becomes Frontier", "end", "black");
-        labelEvent("timelineSVG", 9, 1996, 12, -20, "Bell Atlantic acquires NYNEX", "start", "black");
-        labelEvent("timelineSVG", 10, 1996, 8, 8, "Qwest founded", "start", "black");
-        labelEvent("timelineSVG", 3, 1997, 12, -16, "SBC acquires Pacific Telesis", "start", "black");
-        labelEvent("timelineSVG", 3, 1999, 24, 4, "SBC acquires Ameritech", "start", "black");
-        labelEvent("timelineSVG", 17, 1999, -16, -10, "Global Crossing acquires Frontier", "end", "black");
-        labelEvent("timelineSVG", 13, 2000, -30, 24, "Bell Atlantic merges with GTE to become Verizon", "end", "black");
-        labelEvent("timelineSVG", 10, 2000, -34, 8, "Qwest acquires US West", "end", "black");
-        labelEvent("timelineSVG", 16, 2001, -16, 24, "Citizens acquires local exchanges (and rights to Frontier name) from Global Crossing", "end", "black");
-        labelEvent("timelineSVG", 3, 2005, 16, -12, "SBC acquires AT&T and adopts AT&T name", "start", "black");
-        labelEvent("timelineSVG", 3, 2006, 16, 12, "AT&T acquires BellSouth", "start", "black");
-        labelEvent("timelineSVG", 1, 2006, 16, 28, "Lucent merges with Alcatel to become Alcatel-Lucent", "start", "black");
-        labelEvent("timelineSVG", 16, 2008, -12, -12, "Citizens adopts Frontier name", "end", "black");
-        labelEvent("timelineSVG", 14, 2009, 12, 24, "Frontier acquires many lines from Verizon", "middle", "black");
-        labelEvent("timelineSVG", 11, 2009, -16, 4, "CenturyTel becomes CenturyLink", "end", "black");
-        labelEvent("timelineSVG", 11, 2011, -24, 4, "CenturyLink acquires Qwest", "end", "black");
-        labelEvent("timelineSVG", 10, 2014, -8, -14, "Frontier acquires all AT&T lines in Connecticut", "end", "black");
-        labelEvent("timelineSVG", 14, 2015, -16, 12, "Frontier acquires all Verizon lines in California, Texas, and Florida", "end", "black");
-        labelEvent("timelineSVG", 1, 2015, 16, -62, "Nokia acquires Alcatel-Lucent", "start", "black");
+        labelEvent(SVG_ID, 1, 1877, 12, -12, "Bell Telephone Company founded", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1885, 20, -24, "American Telephone and Telegraph (AT&T) established as Bell subsidiary", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 2, 1899, 16, -20, "AT&T assumes ownership of Bell", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 15, 1899, -8, -20, "Brown Telephone Company founded", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 17, 1899, -8, -40, "Rochester Telephone company (a.k.a. RTC and Rotelcom) founded", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 15, 1911, -16, -28, "Brown becomes United Telephone", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 2, 1925, 16, -24, "AT&T creates Bell Labs (R&D unit)", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 13, 1935, -16, -24, "General Telephone company founded", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 16, 1935, -64, -44, "Citizens Utilities Company founded", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1937, 64, -12, "Bell Labs invents vocoder", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1947, 64, -32, "Bell Labs invents transistor", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1954, 64, -40, "Bell Labs invents solar cell", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1957, 64, -32, "Bell Labs develops MUSIC software", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1958, 64, -16, "Bell Labs invents laser", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 13, 1959, -24, -60, "General Telephone becomes General Telephone & Electric (GTE)", "middle", LABEL_COLOR);
+        labelEvent(SVG_ID, 11, 1968, -16, -16, "Century Telephone (CenturyTel) company founded", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1969, 64, 8, "Bell Labs develops UNIX", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1972, 64, 16, "Bell Labs develops C (programming language)", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1976, 64, 20, "Bell Labs tests first optical fiber system", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 12, 1978, -16, -76, "Southern Pacific begins providing phone service", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1980, 62, 20, "Bell Labs demonstrates first single-chip 32-bit microprocessor", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 13, 1983, 24, -28, "GTE acquires Southern Pacific, thence known as Sprint", "middle", LABEL_COLOR);
+        labelEvent(SVG_ID, 2, 1984, 16, -16, "Bell System broken up into \"Baby Bells\"", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 17, 1984, -24, 20, "RTC begins acquisition of 35 phone companies", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1985, 96, -16, "Bell Labs develops C++ (programming language)", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 15, 1991, -52, -40, "United Telephone acquires Sprint and adopts Sprint name", "middle", LABEL_COLOR);
+        labelEvent(SVG_ID, 14, 1993, 0, -12, "Citizens acquires many lines from GTE", "middle", LABEL_COLOR);
+        labelEvent(SVG_ID, 3, 1995, 12, -16, "Southwestern Bell becomes SBC", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 17, 1995, -12, 10, "RTC becomes Frontier", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 9, 1996, 12, -20, "Bell Atlantic acquires NYNEX", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 1996, 12, -48, "Bell Labs becomes Lucent", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 10, 1996, 8, 8, "Qwest founded", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 3, 1997, 12, -16, "SBC acquires Pacific Telesis", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 3, 1999, 24, 4, "SBC acquires Ameritech", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 17, 1999, -16, -10, "Global Crossing acquires Frontier", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 13, 2000, -30, 24, "Bell Atlantic merges with GTE to become Verizon", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 10, 2000, -34, 8, "Qwest acquires US West", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 16, 2001, -16, 24, "Citizens acquires local exchanges (and rights to Frontier name) from Global Crossing", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 3, 2005, 16, -12, "SBC acquires AT&T and adopts AT&T name", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 3, 2006, 16, 12, "AT&T acquires BellSouth", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 2006, 16, 28, "Lucent merges with Alcatel to become Alcatel-Lucent", "start", LABEL_COLOR);
+        labelEvent(SVG_ID, 16, 2008, -12, -12, "Citizens adopts Frontier name", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 14, 2009, 12, 24, "Frontier acquires many lines from Verizon", "middle", LABEL_COLOR);
+        labelEvent(SVG_ID, 11, 2009, -16, 4, "CenturyTel becomes CenturyLink", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 11, 2011, -24, 4, "CenturyLink acquires Qwest", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 10, 2014, -8, -14, "Frontier acquires all AT&T lines in Connecticut", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 14, 2015, -16, 12, "Frontier acquires all Verizon lines in California, Texas, and Florida", "end", LABEL_COLOR);
+        labelEvent(SVG_ID, 1, 2015, 16, -62, "Nokia acquires Alcatel-Lucent", "start", LABEL_COLOR);
 
-        labelCompany("timelineSVG", 1, "Nokia", "black");
-        labelCompany("timelineSVG", 3, "AT&T", "black");
-        labelCompany("timelineSVG", 11, "CenturyLink", "black");
-        labelCompany("timelineSVG", 13, "Verizon", "black");
-        labelCompany("timelineSVG", 15, "Sprint", "black");
-        labelCompany("timelineSVG", 16, "Frontier", "black");
+        labelCompany(SVG_ID, 1, "Nokia", LABEL_COLOR);
+        labelCompany(SVG_ID, 3, "AT&T", LABEL_COLOR);
+        labelCompany(SVG_ID, 11, "CenturyLink", LABEL_COLOR);
+        labelCompany(SVG_ID, 13, "Verizon", LABEL_COLOR);
+        labelCompany(SVG_ID, 15, "Sprint", LABEL_COLOR);
+        labelCompany(SVG_ID, 16, "Frontier", LABEL_COLOR);
       }
 
       //-->

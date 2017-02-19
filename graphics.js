@@ -15,7 +15,9 @@ var NS = "http://www.w3.org/2000/svg";
  * @param {string} svgElementId Identifer of the SVG element in which the label should be drawn.
  * @param {number} x X-coordinate of the point where the leader line should end.
  * @param {number} y Y-coordinate of the point where the leader line should end.
- * @param {boolean} arrowhead Indicates whether or not to put an arrowhead marker at the end of the leader line.
+ * @param {number} marker If positive (> 0), the radius of a circular point marker to put
+ * at the end of the leader line.  If negative (< 0), an arrowhead marker is put at the
+ * end of the leader line.  Otherwise (0), nothing is put at the end of the leader line.
  * @param {number} labelX X-coordinate where the leader line should begin and the text should be anchored.
  * @param {number} labelY Y-coordinate where the leader line should begin and the text should be anchored.
  * @param {string} text Text to draw for the label.
@@ -23,7 +25,7 @@ var NS = "http://www.w3.org/2000/svg";
  * @param {string} textAnchor Value to use for the "text-anchor" attribute of the text element.
  * @param {string} color Color to use for the label.
  */
-function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, fontSize, textAnchor, color)
+function drawLabel(svgElementId, x, y, marker, labelX, labelY, text, fontSize, textAnchor, color)
 {
   var FACTOR = 3 / 4;
 
@@ -39,12 +41,13 @@ function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, fontSize
   if (labelX && labelY)
   {
     element = initLine(labelX, labelY, x, y, color);
-    if (arrowhead)
+    if (marker < 0)
     {
       v = nameArrowheadMarker(color, true);
       element.setAttribute("marker-end", v);
     }
     svgElement.appendChild(element);
+    if (marker > 0) drawCircle(svgElement, x, y, marker, color);
   }
 
   /* Draw the text. */
@@ -57,6 +60,27 @@ function drawLabel(svgElementId, x, y, arrowhead, labelX, labelY, text, fontSize
   element.setAttribute("fill", color);
   element.setAttribute("font-size", fontSize + "px");
   element.appendChild(textNode);
+  svgElement.appendChild(element);
+}
+
+
+/**
+ * Draw a filled circle within an SVG element (often used to mark a point).
+ * @param {string} svgElement SVG element to contain the circle (point marker).
+ * @param {number} x X-coordinate of the point where the circle should be centered.
+ * @param {number} y Y-coordinate of the point where the circle should be centered.
+ * @param {number} radius Radius of the circle, in pixels.
+ * @param {string} color Color to use for filling the circle.
+ */
+function drawCircle(svgElement, x, y, radius, color)
+{
+  var element;
+
+  element = document.createElementNS(NS, "circle");
+  element.setAttribute("cx", x);
+  element.setAttribute("cy", y);
+  element.setAttribute("r", radius);
+  element.setAttribute("fill", color);
   svgElement.appendChild(element);
 }
 
