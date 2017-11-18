@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jeff Bourdier on GitHub</title>
+    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
+    <meta name="author" content="Jeff Bourdier" />
+    <link rel="stylesheet" type="text/css" />
+    <script src="../stylesheet.js"></script>
+    <script type="text/javascript">
+      <!--
+
+      function initPage() { initStylesheet(true); }
+
+      //-->
+    </script>
+  </head>
+  <body onload="initPage()">
+    <noscript>
+      <div style="border: 8px solid fuchsia; background-color: aqua; color: navy; padding: 16px; font-size: 1.25em;">
+        <p>This page requires JavaScript in order to function properly.  Either your browser does not support JavaScript, or JavaScript is disabled.  Please use a browser that supports JavaScript and make sure that JavaScript is enabled.</p>
+        <p>With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b><u>A</u>llow blocked content</b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)</p>
+        <img src="../ie-blocked.png" alt="Internet Explorer restricted this webpage from running scripts or ActiveX controls.  (Allow blocked content)" style="display: block; margin: auto; width: 960px; height: 50px;" />
+      </div>
+    </noscript>
+    <header>
+      <h1>Jeff Bourdier on GitHub</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="#">Home</a>
+          </li>
+          <li>
+            <a href="#">Geodesy</a>
+          </li>
+          <li>Oracle</li>
+          <li>
+            <a href="#">Telcos</a>
+          </li>
+          <li>
+            <a href="#">About</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <p>
+      For pretty much my entire career as a <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> developer, I have worked with <a href="http://www.oracle.com/technetwork/database/index.html">Oracle Database</a>, and increasingly with <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> and <a href="http://www.oracle.com/technetwork/database/features/plsql/index.html">PL/SQL</a>.  As frequently as I find myself doing the same things repeatedly in Oracle, I find it very handy to have a "cheat sheet" such as this to remind me of syntax, object names, etc..  Here it is, in case it may happen to be useful to anyone else.  Links to Oracle documentation throughout this text are for version <a href="http://docs.oracle.com/cd/E11882_01/index.htm">11g Release 2 (11.2)</a>.
+    </p>
+    <h3>Oracle Database (general)</h3>
+    <p>
+      It's always good to know which version of Oracle you're dealing with, as there can be significant differences between versions.  Below are two different ways to get the Oracle Database version.
+    </p>
+    <pre>
+
+      SELECT * FROM PRODUCT_COMPONENT_VERSION;
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>PRODUCT</th>
+          <th>VERSION</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>NLSRTL </td>
+          <td>11.2.0.4.0</td>
+          <td>Production</td>
+        </tr>
+        <tr>
+          <td>Oracle Database 11g Enterprise Edition </td>
+          <td>11.2.0.4.0</td>
+          <td>64bit Production</td>
+        </tr>
+        <tr>
+          <td>PL/SQL </td>
+          <td>11.2.0.4.0</td>
+          <td>Production</td>
+        </tr>
+        <tr>
+          <td>TNS for Solaris: </td>
+          <td>11.2.0.4.0</td>
+          <td>Production</td>
+        </tr>
+      </tbody>
+    </table>
+    <pre>
+
+      SELECT * FROM V$VERSION;
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>BANNER</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production</td>
+        </tr>
+        <tr>
+          <td>PL/SQL Release 11.2.0.4.0 - Production</td>
+        </tr>
+        <tr>
+          <td>CORE	11.2.0.4.0	Production</td>
+        </tr>
+        <tr>
+          <td>TNS for Solaris: Version 11.2.0.4.0 - Production</td>
+        </tr>
+        <tr>
+          <td>NLSRTL Version 11.2.0.4.0 - Production</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      There are at least four different ways to get the name of the database: from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5127.htm">GLOBAL_NAME</a> data dictionary view,
+    </p>
+    <pre>
+
+      SELECT * FROM GLOBAL_NAME;
+    </pre>
+    <p>
+      using the (undocumented) ORA_DATABASE_NAME event attribute function,
+    </p>
+    <pre>
+
+      SELECT ORA_DATABASE_NAME FROM DUAL;
+    </pre>
+    <p>
+      from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions184.htm">DB_NAME parameter of the USERENV namespace</a>,
+    </p>
+    <pre>
+
+      SELECT SYS_CONTEXT('USERENV', 'DB_NAME') AS DB_NAME FROM DUAL;
+    </pre>
+    <p>
+      and from the <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/dynviews_1097.htm">V$DATABASE</a> view (which can provide a lot more than just the database name).
+    </p>
+    <pre>
+
+      SELECT "NAME" FROM V$DATABASE;
+    </pre>
+    <p>
+      The <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions150.htm">REGEXP_SUBSTR</a> function can be used to "transpose" a comma-separated list to a recordset.
+    </p>
+    <pre>
+
+      SELECT TRIM(REGEXP_SUBSTR('One, Two, Three', '[^,]+', 1, LEVEL)) AS "VALUE"
+      FROM DUAL
+      CONNECT BY (REGEXP_SUBSTR('One, Two, Three', '[^,]+', 1, LEVEL) IS NOT NULL);
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>VALUE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>One</td>
+        </tr>
+        <tr>
+          <td>Two</td>
+        </tr>
+        <tr>
+          <td>Three</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Data Dictionary Views</h4>
+    <p>
+      Below are several of the more commonly used <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/toc.htm">data dictionary views</a> and their more interesting fields.  Most of these views have three versions, each of which begins with one of the following prefixes:
+    </p>
+    <ul>
+      <li><code>USER_</code> - describes all objects of a given type <u>owned by the current user</u></li>
+      <li><code>ALL_</code> - describes all objects of a given type <u>accessible to the current user</u></li>
+      <li><code>DBA_</code> - describes all objects of a given type <u>in the database</u></li>
+    </ul>
+    <p>
+      In most cases, each version of the views has the same set of fields, except that the <code>USER_</code> version does not have the <code>OWNER</code> field.  Typically, Oracle documentation is found only under the <code>ALL_</code> version of each view, however this text uses the <code>DBA_</code> version in its examples.
+    </p>
+    <p>
+      USER_TABLES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2117.htm">ALL_TABLES</a> / DBA_TABLES
+    </p>
+    <pre>
+
+      SELECT OWNER, TABLE_NAME, NUM_ROWS FROM DBA_TABLES;
+    </pre>
+    <p>
+      USER_VIEWS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2133.htm">ALL_VIEWS</a> / DBA_VIEWS
+    </p>
+    <pre>
+
+      SELECT OWNER, VIEW_NAME, TEXT FROM DBA_VIEWS;
+    </pre>
+    <p>
+      USER_TAB_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2104.htm">ALL_TAB_COMMENTS</a> / DBA_TAB_COMMENTS (covers both tables and views)
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_TAB_COMMENTS;
+    </pre>
+    <p>
+      USER_MVIEWS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1153.htm">ALL_MVIEWS</a> / DBA_MVIEWS (materialized views)
+    </p>
+    <pre>
+
+      SELECT OWNER, VIEW_NAME, "QUERY" FROM DBA_MVIEWS;
+    </pre>
+    <p>
+      USER_MVIEW_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1145.htm">ALL_MVIEW_COMMENTS</a> / DBA_MVIEW_COMMENTS
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_MVIEW_COMMENTS;
+    </pre>
+    <p>
+      USER_SYNONYMS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2100.htm">ALL_SYNONYMS</a> / DBA_SYNONYMS
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_SYNONYMS;
+    </pre>
+    <p>
+      USER_DB_LINKS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1067.htm">ALL_DB_LINKS</a> / DBA_DB_LINKS
+    </p>
+    <pre>
+
+      SELECT OWNER, DB_LINK, USERNAME, HOST FROM DBA_DB_LINKS;
+    </pre>
+    <p>
+      USER_TAB_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2103.htm">ALL_TAB_COLUMNS</a> / DBA_TAB_COLUMNS
+    </p>
+    <pre>
+
+      SELECT COLUMN_NAME, DATA_TYPE, DATA_PRECISION, DATA_SCALE, CHAR_LENGTH
+      FROM DBA_TAB_COLUMNS
+      WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
+      ORDER BY COLUMN_ID;
+    </pre>
+    <p>
+      USER_COL_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1039.htm">ALL_COL_COMMENTS</a> / DBA_COL_COMMENTS
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_COL_COMMENTS;
+    </pre>
+    <p>
+      The following query is useful for seeing the attributes (including comments) of all columns of a table:
+    </p>
+    <pre>
+
+      SELECT TC.*, CC.COMMENTS
+      FROM
+      (
+        SELECT COLUMN_ID, COLUMN_NAME, DATA_TYPE, DATA_PRECISION, DATA_SCALE, CHAR_LENGTH
+        FROM DBA_TAB_COLUMNS
+        WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
+      ) TC
+      INNER JOIN
+      (
+        SELECT *
+        FROM DBA_COL_COMMENTS
+        WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
+      ) CC
+      ON (TC.COLUMN_NAME = CC.COLUMN_NAME)
+      ORDER BY COLUMN_ID;
+    </pre>
+    <p>
+      USER_CONS_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1045.htm">ALL_CONS_COLUMNS</a> / DBA_CONS_COLUMNS
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_CONS_COLUMNS;
+    </pre>
+    <p>
+      USER_CONSTRAINTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1047.htm">ALL_CONSTRAINTS</a> / DBA_CONSTRAINTS
+    </p>
+    <pre>
+
+      SELECT OWNER, CONSTRAINT_NAME, CONSTRAINT_TYPE, R_CONSTRAINT_NAME, INDEX_NAME
+      FROM DBA_CONSTRAINTS;
+    </pre>
+    <p>
+      USER_IND_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1103.htm">ALL_IND_COLUMNS</a> / DBA_IND_COLUMNS
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_IND_COLUMNS;
+    </pre>
+    <p>
+      USER_INDEXES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1109.htm">ALL_INDEXES</a> / DBA_INDEXES
+    </p>
+    <pre>
+
+      SELECT OWNER, INDEX_NAME, INDEX_TYPE, UNIQUENESS FROM DBA_INDEXES;
+    </pre>
+    <p>
+      USER_PROCEDURES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2013.htm">ALL_PROCEDURES</a> / DBA_PROCEDURES (covers packages, procedures, functions, triggers, and types)
+    </p>
+    <pre>
+
+      SELECT OWNER, OBJECT_NAME, PROCEDURE_NAME, OBJECT_TYPE FROM DBA_PROCEDURES;
+    </pre>
+    <p>
+      USER_SOURCE / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2064.htm">ALL_SOURCE</a> / DBA_SOURCE (covers packages, procedures, functions, triggers, and types)
+    </p>
+    <pre>
+
+      SELECT LINE, TEXT
+      FROM DBA_SOURCE
+      WHERE
+        (OWNER = 'schema') AND
+        ("NAME" = 'package_name') AND
+        ("TYPE" = 'PACKAGE BODY')
+      ORDER BY LINE ASC;
+    </pre>
+    <p>
+      USER_SCHEDULER_JOBS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2046.htm">ALL_SCHEDULER_JOBS</a> / DBA_SCHEDULER_JOBS
+    </p>
+    <pre>
+
+      SELECT
+        OWNER, JOB_NAME, PROGRAM_NAME, JOB_TYPE, JOB_ACTION, SCHEDULE_NAME,
+        REPEAT_INTERVAL, ENABLED, AUTO_DROP, STATE, LAST_START_DATE,
+        LAST_RUN_DURATION, NEXT_RUN_DATE, REPEAT_INTERVAL, COMMENTS
+      FROM DBA_SCHEDULER_JOBS;
+    </pre>
+    <p>
+      <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1078.htm">ALL_DIRECTORIES</a> / DBA_DIRECTORIES  (there is no USER_DIRECTORIES)
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_DIRECTORIES;
+    </pre>
+    <p>
+      USER_USERS / ALL_USERS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5081.htm">DBA_USERS</a><br />
+      (In this case, USER_USERS shows only the current user, and DBA_USERS has many more fields than ALL_USERS.)
+    </p>
+    <pre>
+
+      SELECT USERNAME FROM DBA_USERS;
+    </pre>
+    <p>
+      <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4220.htm">DBA_ROLES</a>  (there is no USER_ROLES or ALL_ROLES)
+    </p>
+    <pre>
+
+      SELECT "ROLE" FROM DBA_ROLES;
+    </pre>
+    <p>
+      USER_ROLE_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4219.htm">DBA_ROLE_PRIVS</a><br />
+      (USER_ROLE_PRIVS describes roles granted to the current user.  There is no ALL_ROLE_PRIVS view.)
+    </p>
+    <pre>
+
+      SELECT GRANTEE, GRANTED_ROLE FROM DBA_ROLE_PRIVS;
+    </pre>
+    <p>
+      USER_SYS_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5041.htm">DBA_SYS_PRIVS</a><br />
+      (USER_SYS_PRIVS describes system privileges granted to the current user.  There is no ALL_SYS_PRIVS view.)
+    </p>
+    <pre>
+
+      SELECT GRANTEE, "PRIVILEGE" FROM DBA_SYS_PRIVS;
+    </pre>
+    <p>
+      USER_TAB_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2110.htm">ALL_TAB_PRIVS</a> / DBA_TAB_PRIVS (covers all objects, not just tables)
+    </p>
+    <pre>
+
+      SELECT GRANTEE, OWNER, TABLE_NAME, "PRIVILEGE" FROM DBA_TAB_PRIVS;
+    </pre>
+    <p>
+      USER_OBJECTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1158.htm">ALL_OBJECTS</a> / DBA_OBJECTS
+    </p>
+    <pre>
+
+      SELECT OWNER, OBJECT_NAME, OBJECT_TYPE FROM DBA_OBJECTS;
+    </pre>
+    <p>
+      USER_DEPENDENCIES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1069.htm">ALL_DEPENDENCIES</a> / DBA_DEPENDENCIES
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_DEPENDENCIES;
+    </pre>
+    <p>
+      <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5157.htm">PUBLIC_DEPENDENCY</a>
+    </p>
+    <pre>
+
+      SELECT * FROM PUBLIC_DEPENDENCY;
+    </pre>
+    <p>
+      USER_FREE_SPACE / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_3194.htm">DBA_FREE_SPACE</a>  (there is no ALL_FREE_SPACE)
+    </p>
+    <pre>
+
+      SELECT * FROM DBA_FREE_SPACE;
+    </pre>
+    <p>
+      <code>DBA_VIEWS.TEXT</code>, <code>DBA_MVIEWS."QUERY"</code>, and <code>DBA_SOURCE.TEXT</code> can be used to get the DDL of a view, materialized view, or package/procedure/function/trigger/type (respectively).  The <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/d_metada.htm#ARPLS66885">DBMS_METADATA.GET_DDL</a> function can be used to get the DDL of any object.
+    </p>
+    <pre>
+
+      SELECT DBMS_METADATA.GET_DDL(OBJECT_TYPE, OBJECT_NAME, OWNER) AS TEXT
+      FROM (SELECT * FROM DBA_OBJECTS WHERE (OBJECT_NAME = 'name'));
+    </pre>
+    <p>
+      The following query is useful for displaying column definitions as in a <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/statements_7002.htm">CREATE TABLE</a> statement (and is also a good demonstration of the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/expressions004.htm">CASE</a> expression).
+    </p>
+    <pre>
+
+      SELECT
+        COLUMN_NAME,
+        CASE
+          WHEN (CHAR_LENGTH > 0)
+          THEN DATA_TYPE || '(' || CHAR_LENGTH || ')'
+          WHEN (DATA_PRECISION IS NULL)
+          THEN CASE WHEN (DATA_SCALE IS NULL) THEN DATA_TYPE ELSE 'INTEGER' END
+          ELSE
+            DATA_TYPE || '(' || DATA_PRECISION ||
+            CASE WHEN (DATA_SCALE > 0) THEN ',' || DATA_SCALE END || ')'
+        END AS DATATYPE
+      FROM DBA_TAB_COLUMNS
+      WHERE (TABLE_NAME = 'table')
+      ORDER BY COLUMN_ID;
+    </pre>
+    <p>
+      And speaking of...
+    </p>
+    <h4>Table Management</h4>
+    <p>
+      The following example goes through the process of creating and altering tables, illustrating the following concepts:
+    </p>
+    <ul>
+      <li>default value</li>
+      <li>primary key constraint</li>
+      <li>foreign key constraint</li>
+      <li>check constraint</li>
+      <li>adding a field</li>
+      <li>modifying a field</li>
+      <li>dropping a field</li>
+    </ul>
+    <p>
+      We'll start by creating two tables: one for artists, and another for albums released by those artists.  In these tables:
+    </p>
+    <ul>
+      <li>ARTIST has a single primary key field (also called ARTIST).</li>
+      <li>ALBUM has a composite primary key (consisting of both the ARTIST and TITLE fields), so it must be defined out-of-line.</li>
+      <li>ALBUM.ARTIST is a foreign key that references the ARTIST table (and since we did not specify a field, this foreign key implicitly references the primary key field of the ARTIST table).</li>
+      <li>ALBUM has a check constraint to ensure that RELEASE_YEAR is between 1 and 9999.</li>
+    </ul>
+    <pre>
+
+      CREATE TABLE ARTIST (ARTIST VARCHAR2(50) PRIMARY KEY);
+
+      CREATE TABLE ALBUM
+      (
+        ARTIST VARCHAR2(50) REFERENCES ARTIST,
+        TITLE VARCHAR2(100),
+        RELEASE_YEAR INTEGER CHECK(RELEASE_YEAR BETWEEN 1 AND 9999),
+        PRIMARY KEY (ARTIST, TITLE)
+      );
+    </pre>
+    <p>
+      Note that above, the constraints are defined without names, which means that Oracle generates a cryptic name (like SYS_C0062877) for each of them.  If the constraints are to be referred to programatically, it is probably better to name them.  Below are the same two CREATE TABLE statements with names given to the constraints.
+    </p>
+    <pre>
+
+      CREATE TABLE ARTIST (ARTIST VARCHAR2(50) CONSTRAINT ARTIST_PKC PRIMARY KEY);
+
+      CREATE TABLE ALBUM
+      (
+        ARTIST VARCHAR2(50) CONSTRAINT ALBUM_ARTIST_FKC REFERENCES ARTIST,
+        TITLE VARCHAR2(100),
+        RELEASE_YEAR INTEGER
+          CONSTRAINT ALBUM_RELEASE_YEAR_CKC CHECK(RELEASE_YEAR BETWEEN 1 AND 9999),
+        CONSTRAINT ALBUM_PKC PRIMARY KEY (ARTIST, TITLE)
+      );
+    </pre>
+    <p>
+      Suppose you decide it makes more sense for ALBUM.RELEASE_YEAR to be a number with a precision (maximum number of significant digits) of 4, rather than an ANSI integer with a check constraint:
+    </p>
+    <pre>
+
+      ALTER TABLE ALBUM MODIFY (RELEASE_YEAR NUMBER(4));
+    </pre>
+    <p>
+      Say you also want to store the genre of each album, so you create a new GENRE table and modify ALBUM as follows:
+    </p>
+    <pre>
+
+      CREATE TABLE GENRE (GENRE VARCHAR2(25) CONSTRAINT GENRE_PKC PRIMARY KEY);
+
+      ALTER TABLE ALBUM ADD
+      (
+        GENRE VARCHAR2(25) DEFAULT 'Rock'
+          CONSTRAINT ALBUM_GENRE_FKC REFERENCES GENRE,
+        NOTES VARCHAR2(100)
+      );
+    </pre>
+    <p>
+      The syntax of each column definition is essentially the same as in a CREATE TABLE statement.  Note here that ALBUM.GENRE has a default value of 'Rock' (which means that the GENRE table must have a record with a GENRE value of 'Rock').
+    </p>
+    <p>
+      Now let's say you want to track whether or not each artist is still living.
+    </p>
+    <pre>
+
+      ALTER TABLE ARTIST ADD (ALIVE CHAR(1) CHECK (ALIVE IN ('Y', 'N')));
+    </pre>
+    <p>
+      On second thought, never mind, that was a silly idea.  Who cares if the artist is <a style="text-decoration: none;" href="https://www.youtube.com/watch?v=PGNiXGX2nLU">dead or alive</a>?
+    </p>
+    <pre>
+
+      ALTER TABLE ARTIST DROP COLUMN ALIVE;
+    </pre>
+    <p>
+      Note the above syntax works only for single fields.  The following syntax could also have been used (multiple fields would be comma-separated).
+    </p>
+    <pre>
+
+      ALTER TABLE ARTIST DROP (ALIVE);
+    </pre>
+    <h3>Oracle Spatial</h3>
+    <p>
+      It's always good to know which version of Oracle Spatial you're dealing with, as there can be significant differences between versions.
+    </p>
+    <pre>
+
+      SELECT SDO_VERSION FROM DUAL;
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>SDO_VERSION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>11.2.0.4.0</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      The <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_util.htm#SPATL1237">SDO_UTIL.GETVERTICES</a> function is very useful for examining the coordinates of a geometry.
+    </p>
+    <pre>
+
+      SELECT GV."ID", GV.X, GV.Y
+      FROM table, TABLE(SDO_UTIL.GETVERTICES(field)) GV
+      WHERE (condition)
+      ORDER BY GV."ID";
+    </pre>
+    <p>
+      This is how Oracle recommends to validate spatial geometries.
+    </p>
+    <pre>
+
+      SELECT
+        table.ROWID,
+        SDO_GEOM.VALIDATE_GEOMETRY_WITH_CONTEXT(table.field, GM.SDO_DIMINFO) AS VALID
+      FROM
+        schema.table,
+        (
+          SELECT SDO_DIMINFO
+          FROM MDSYS.SDO_GEOM_METADATA_TABLE
+          WHERE (SDO_OWNER = 'schema') AND (SDO_TABLE_NAME = 'table')
+        ) GM;
+    </pre>
+    <h4>Spatialization</h4>
+    <p>
+      If a table has an SDO_GEOMETRY field, the following steps can be used to "spatialize" it so that it can be used by Oracle Spatial and other software.
+    </p>
+    <p>
+      Determine the extents of the geometry.
+    </p>
+    <pre>
+
+      SELECT MIN(X), MAX(X), MIN(Y), MAX(Y)
+      FROM table, TABLE(SDO_UTIL.GETVERTICES(field));
+    </pre>
+    <p>
+      To add a 5% buffer at each boundary (to allow for potential expansion):
+    </p>
+    <pre>
+
+      SELECT
+        (MIN_X - DX) AS MIN_X1, (MAX_X + DX) AS MAX_X1,
+        (MIN_Y - DY) AS MIN_Y1, (MAX_Y + DY) AS MAX_Y1
+      FROM
+        (
+          SELECT
+            MIN_X, MAX_X, (0.05 * (MAX_X - MIN_X)) AS DX,
+            MIN_Y, MAX_Y, (0.05 * (MAX_Y - MIN_Y)) AS DY
+          FROM
+          (
+            SELECT
+              MIN(X) AS MIN_X, MAX(X) AS MAX_X,
+              MIN(Y) AS MIN_Y, MAX(Y) AS MAX_Y
+            FROM table, TABLE(SDO_UTIL.GETVERTICES(field))
+          )
+        );
+    </pre>
+    <p>
+      Insert a record into MDSYS.SDO_GEOM_METADATA_TABLE.
+    </p>
+    <pre>
+
+      INSERT INTO MDSYS.SDO_GEOM_METADATA_TABLE
+      VALUES
+      (
+        'schema',
+        'table',
+        'field',
+        SDO_DIM_ARRAY
+        (
+          SDO_DIM_ELEMENT('X', min_x, max_x, 0.05),
+          SDO_DIM_ELEMENT('Y', min_y, max_y, 0.05)
+        ),
+        srid
+      );
+    </pre>
+    <p>
+      Create a spatial index on the SDO_GEOMETRY field.
+    </p>
+    <pre>
+
+      CREATE INDEX index ON table(field) INDEXTYPE IS MDSYS.SPATIAL_INDEX;
+    </pre>
+    <h4>SRIDs</h4>
+    <p>
+      <a href="http://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_objrelschema.htm#SPATL492">According to Oracle</a>: "All geometries in a geometry column must have the same SDO_SRID value if a spatial index will be built on that column."  Oracle stores spatial reference systems (identified by SRID) in the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL652">SDO_COORD_REF_SYS</a> table.  This table includes many well-known <a href="http://www.epsg.org/">EPSG</a> SRIDs, as well as some that are specific to Oracle (most of which can be thought of as Oracle-specific versions of their EPSG counterparts).  For example, the following EPSG SRIDs, along with their Oracle-specific equivalents, can be found in the table.
+    </p>
+    <pre>
+
+      SELECT SRID, COORD_REF_SYS_NAME,
+        CASE WHEN (IS_LEGACY = 'TRUE') THEN INFORMATION_SOURCE ELSE DATA_SOURCE
+        END AS "SOURCE"
+      FROM SDO_COORD_REF_SYS
+      WHERE (SRID IN (4269, 4326, 8265, 8307))
+      ORDER BY SRID;
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>SRID</th>
+          <th>COORD_REF_SYS_NAME</th>
+          <th>SOURCE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>4269</td>
+          <td>NAD83</td>
+          <td>EPSG</td>
+        </tr>
+        <tr>
+          <td>4326</td>
+          <td>WGS 84</td>
+          <td>EPSG</td>
+        </tr>
+        <tr>
+          <td>8265</td>
+          <td>Longitude / Latitude (NAD 83)</td>
+          <td>Oracle</td>
+        </tr>
+        <tr>
+          <td>8307</td>
+          <td>Longitude / Latitude (WGS 84)</td>
+          <td>Oracle</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Note that Oracle does not store the <a href="https://www.esri.com/en-us/home">ESRI</a> SRIDs for <a href="https://www.ngs.noaa.gov/TOOLS/spc.shtml">State Plane Coordinate System (SPCS)</a> spatial references.  For example, if we try to look up the three SRIDs for the Texas South Central Zone (FIPS 4204, in feet), we get results for the <a href="https://epsg.io/2278">EPSG SRID (2278)</a> and its Oracle-specific equivalent (41153), but not the <a href="https://epsg.io/102740">ESRI SRID (102740)</a>.
+    </p>
+    <pre>
+
+      SELECT SRID, COORD_REF_SYS_NAME,
+        CASE WHEN (IS_LEGACY = 'TRUE') THEN INFORMATION_SOURCE ELSE DATA_SOURCE
+        END AS "SOURCE"
+      FROM SDO_COORD_REF_SYS
+      WHERE (SRID IN (2278, 41153, 102740))
+      ORDER BY SRID;
+    </pre>
+    <table>
+      <thead>
+        <tr>
+          <th>SRID</th>
+          <th>COORD_REF_SYS_NAME</th>
+          <th>SOURCE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2278</td>
+          <td>NAD83 / Texas South Central (ftUS)</td>
+          <td>EPSG</td>
+        </tr>
+        <tr>
+          <td>41153</td>
+          <td>Texas 4204, South Central Zone (1983, US Survey feet)</td>
+          <td>Oracle</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Data on units can be found by joining with the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL636">SDO_COORD_AXES</a> and <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL687">SDO_UNITS_OF_MEASURE</a> tables.
+    </p>
+    <pre>
+
+      SELECT
+        RS.SRID, RS.COORD_REF_SYS_NAME AS "NAME", RS.COORD_REF_SYS_KIND AS KIND,
+        AU.AXES, AU.UNIT_OF_MEAS_TYPE AS UOM_TYPE, AU.UNIT_OF_MEAS_NAME AS UOM_NAME
+      FROM
+        (
+          SELECT SRID, COORD_REF_SYS_NAME, COORD_REF_SYS_KIND, COORD_SYS_ID
+          FROM SDO_COORD_REF_SYS
+          WHERE (SRID IN (2278, 3857, 4269, 4326, 32615))
+        ) RS
+        INNER JOIN
+        (
+          SELECT
+            SDO_COORD_AXES.COORD_SYS_ID,
+            (
+              LISTAGG(SDO_COORD_AXES.COORD_AXIS_ABBREVIATION, ', ')
+              WITHIN GROUP (ORDER BY COORD_AXIS_ABBREVIATION)
+            ) AS AXES,
+            SDO_UNITS_OF_MEASURE.UNIT_OF_MEAS_TYPE,
+            SDO_UNITS_OF_MEASURE.UNIT_OF_MEAS_NAME
+          FROM
+            SDO_COORD_AXES
+            INNER JOIN SDO_UNITS_OF_MEASURE
+            ON (SDO_COORD_AXES.UOM_ID = SDO_UNITS_OF_MEASURE.UOM_ID)
+          GROUP BY
+            SDO_COORD_AXES.COORD_SYS_ID,
+            SDO_UNITS_OF_MEASURE.UNIT_OF_MEAS_TYPE,
+            SDO_UNITS_OF_MEASURE.UNIT_OF_MEAS_NAME
+        ) AU
+        ON (RS.COORD_SYS_ID = AU.COORD_SYS_ID)
+      ORDER BY RS.COORD_REF_SYS_KIND, RS.SRID;
+    </pre>
+    <table>
+      <thead style="font-size: 0.8em;">
+        <tr>
+          <th>SRID</th>
+          <th>NAME</th>
+          <th>KIND</th>
+          <th>AXES</th>
+          <th>UOM_TYPE</th>
+          <th>UOM_NAME</th>
+        </tr>
+      </thead>
+      <tbody style="font-size: 0.8em;">
+        <tr>
+          <td>4269</td>
+          <td>NAD83</td>
+          <td>GEOGRAPHIC2D</td>
+          <td>Lat, Long</td>
+          <td>angle</td>
+          <td>degree (supplier to define representation)</td>
+        </tr>
+        <tr>
+          <td>4326</td>
+          <td>WGS 84</td>
+          <td>GEOGRAPHIC2D</td>
+          <td>Lat, Long</td>
+          <td>angle</td>
+          <td>degree (supplier to define representation)</td>
+        </tr>
+        <tr>
+          <td>2278</td>
+          <td>NAD83 / Texas South Central (ftUS)</td>
+          <td>PROJECTED</td>
+          <td>X, Y</td>
+          <td>length</td>
+          <td>US survey foot</td>
+        </tr>
+        <tr>
+          <td>3857</td>
+          <td>WGS 84 / Pseudo-Mercator</td>
+          <td>PROJECTED</td>
+          <td>X, Y</td>
+          <td>length</td>
+          <td>metre</td>
+        </tr>
+        <tr>
+          <td>32615</td>
+          <td>WGS 84 / UTM zone 15N</td>
+          <td>PROJECTED</td>
+          <td>E, N</td>
+          <td>length</td>
+          <td>metre</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>PL/SQL</h3>
+    <p>
+      <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS319">PLS_INTEGER</a> is the recommended integral data type, as long as the value can be stored in 32 bits.  Below are some examples of operations with PLS_INTEGER, including division and the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions067.htm">FLOOR</a> and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions024.htm">CEIL</a> functions.
+    </p>
+    <pre>
+
+      DECLARE
+        n PLS_INTEGER;
+      BEGIN
+        n := 400 / 400;
+        DBMS_OUTPUT.PUT_LINE('400 / 400 = ' || n);
+
+        n := CEIL(400 / 400);
+        DBMS_OUTPUT.PUT_LINE('CEIL(400 / 400) = ' || n);
+
+        n := 401 / 400;
+        DBMS_OUTPUT.PUT_LINE('401 / 400 = ' || n);
+
+        n := CEIL(401 / 400);
+        DBMS_OUTPUT.PUT_LINE('CEIL(401 / 400) = ' || n);
+
+        n := 599 / 400;
+        DBMS_OUTPUT.PUT_LINE('599 / 400 = ' || n);
+
+        n := CEIL(599 / 400);
+        DBMS_OUTPUT.PUT_LINE('CEIL(599 / 400) = ' || n);
+
+        n := 600 / 400;
+        DBMS_OUTPUT.PUT_LINE('600 / 400 = ' || n);
+
+        n := FLOOR(600 / 400);
+        DBMS_OUTPUT.PUT_LINE('FLOOR(600 / 400) = ' || n);
+
+        n := 799 / 400;
+        DBMS_OUTPUT.PUT_LINE('799 / 400 = ' || n);
+
+        n := FLOOR(799 / 400);
+        DBMS_OUTPUT.PUT_LINE('FLOOR(799 / 400) = ' || n);
+
+        n := 800 / 400;
+        DBMS_OUTPUT.PUT_LINE('800 / 400 = ' || n);
+      END;
+      /
+
+      /* Output:
+       *
+       * 400 / 400 = 1
+       * CEIL(400 / 400) = 1
+       * 401 / 400 = 1
+       * CEIL(401 / 400) = 2
+       * 599 / 400 = 1
+       * CEIL(599 / 400) = 2
+       * 600 / 400 = 2
+       * FLOOR(600 / 400) = 1
+       * 799 / 400 = 2
+       * FLOOR(799 / 400) = 1
+       * 800 / 400 = 2
+       */
+    </pre>
+    <p>
+      Below is a demonstration of the BOOLEAN data type.
+    </p>
+    <pre>
+
+      DECLARE
+        bt BOOLEAN;
+        bf BOOLEAN;
+        bn BOOLEAN;
+      BEGIN
+        bt := TRUE;
+        bf := FALSE;
+        bn := NULL;
+
+        IF bt THEN DBMS_OUTPUT.PUT_LINE('bt'); END IF;
+        IF bf THEN DBMS_OUTPUT.PUT_LINE('bf'); END IF;
+        IF bn THEN DBMS_OUTPUT.PUT_LINE('bn'); END IF;
+
+        IF NOT bt THEN DBMS_OUTPUT.PUT_LINE('NOT bt'); END IF;
+        IF NOT bf THEN DBMS_OUTPUT.PUT_LINE('NOT bf'); END IF;
+        IF NOT bn THEN DBMS_OUTPUT.PUT_LINE('NOT bn'); END IF;
+
+        IF bt IS NULL THEN DBMS_OUTPUT.PUT_LINE('bt IS NULL'); END IF;
+        IF bf IS NULL THEN DBMS_OUTPUT.PUT_LINE('bf IS NULL'); END IF;
+        IF bn IS NULL THEN DBMS_OUTPUT.PUT_LINE('bn IS NULL'); END IF;
+      END;
+      /
+
+      /* Output:
+       *
+       * bt
+       * NOT bf
+       * bn IS NULL
+       */
+    </pre>
+    <p>
+      Below is a demonstration of <a href="https://tools.ietf.org/html/rfc4122">GUID/UUID</a> processing.
+    </p>
+    <pre>
+
+      DECLARE
+        s_guid RAW(32);
+        f_guid CHAR(38);
+      BEGIN
+        /* Generate a "raw" system GUID. */
+        s_guid := SYS_GUID();
+
+        /* Format it for user-friendly display. */
+        f_guid := '{' ||
+          SUBSTR(s_guid, 1, 8) || '-' ||
+          SUBSTR(s_guid, 9, 4) || '-' ||
+          SUBSTR(s_guid, 13, 4) || '-' ||
+          SUBSTR(s_guid, 17, 4) || '-' ||
+          SUBSTR(s_guid, 21, 12) || '}';
+      END;
+      /
+    </pre>
+    <p>
+      Below are a few different ways to use the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/tuning.htm#LNPLS891">BULK COLLECT</a> clause to retrieve a list of roles granted to the current user.
+    </p>
+    <pre>
+
+      DECLARE
+        TYPE ROLE_TABLE IS TABLE OF USER_ROLE_PRIVS%ROWTYPE;
+        role_records ROLE_TABLE;
+      BEGIN
+        SELECT *
+        BULK COLLECT INTO role_records
+        FROM USER_ROLE_PRIVS
+        ORDER BY GRANTED_ROLE;
+
+        FOR i IN role_records.FIRST .. role_records.LAST LOOP
+          DBMS_OUTPUT.PUT_LINE(role_records(i).GRANTED_ROLE);
+        END LOOP;
+      END;
+      /
+    </pre>
+    <pre>
+
+      DECLARE
+        CURSOR ROLE_CURSOR IS SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS;
+        TYPE ROLE_TABLE IS TABLE OF ROLE_CURSOR%ROWTYPE;
+        role_records ROLE_TABLE;
+      BEGIN
+        SELECT GRANTED_ROLE
+        BULK COLLECT INTO role_records
+        FROM USER_ROLE_PRIVS
+        ORDER BY GRANTED_ROLE;
+
+        FOR i IN role_records.FIRST .. role_records.LAST LOOP
+          DBMS_OUTPUT.PUT_LINE(role_records(i).GRANTED_ROLE);
+        END LOOP;
+      END;
+      /
+    </pre>
+    <pre>
+
+      DECLARE
+        TYPE ROLE_TABLE IS TABLE OF USER_ROLE_PRIVS.GRANTED_ROLE%TYPE;
+        role_records ROLE_TABLE;
+      BEGIN
+        SELECT GRANTED_ROLE
+        BULK COLLECT INTO role_records
+        FROM USER_ROLE_PRIVS
+        ORDER BY GRANTED_ROLE;
+
+        FOR i IN role_records.FIRST .. role_records.LAST LOOP
+          DBMS_OUTPUT.PUT_LINE(role_records(i));
+        END LOOP;
+      END;
+      /
+    </pre>
+    <p>
+      Building on the previous example, the following shows how to pass a table as an argument to a procedure in order to determine which object privileges are granted to the current user (including those granted through roles, up to 3 levels deep).
+    </p>
+    <pre>
+
+      /* This is necessary in order to use the collection type in SQL (below). */
+      CREATE TYPE NAME_TABLE IS TABLE OF VARCHAR2(30);
+      /
+
+      DECLARE
+        TYPE PRIV_TABLE IS TABLE OF DBA_TAB_PRIVS%ROWTYPE;
+
+        s VARCHAR2(128);
+        names0 NAME_TABLE;
+        names1 NAME_TABLE;
+        names2 NAME_TABLE;
+        privs PRIV_TABLE;
+
+        PROCEDURE GET_OBJ_PRIVS
+        (
+          grantees IN NAME_TABLE,
+          obj_privs IN OUT NOCOPY PRIV_TABLE
+        ) IS
+        BEGIN
+          SELECT *
+          BULK COLLECT INTO obj_privs
+          FROM DBA_TAB_PRIVS
+          WHERE (GRANTEE IN (SELECT * FROM TABLE(grantees)))
+          ORDER BY OWNER, TABLE_NAME, "PRIVILEGE";
+        END;
+
+        PROCEDURE GET_ROLES
+        (
+          grantees IN NAME_TABLE,
+          granted_roles IN OUT NOCOPY NAME_TABLE
+        ) IS
+        BEGIN
+          SELECT DISTINCT GRANTED_ROLE
+          BULK COLLECT INTO granted_roles
+          FROM DBA_ROLE_PRIVS
+          WHERE (GRANTEE IN (SELECT * FROM TABLE(grantees)))
+          ORDER BY GRANTED_ROLE;
+        END;
+      BEGIN
+        DBMS_OUTPUT.PUT_LINE('Object privileges granted directly:');
+        FOR r IN
+        (
+          SELECT DISTINCT OWNER, TABLE_NAME, "PRIVILEGE"
+          FROM USER_TAB_PRIVS
+          ORDER BY OWNER, TABLE_NAME, "PRIVILEGE"
+        ) LOOP
+          s := r."PRIVILEGE" || ' on ' || r.OWNER || '.' || r.TABLE_NAME;
+          DBMS_OUTPUT.PUT_LINE(s);
+          END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Roles granted directly (level 0):');
+        SELECT GRANTED_ROLE BULK COLLECT INTO names0 FROM USER_ROLE_PRIVS ORDER BY GRANTED_ROLE;
+        FOR i IN 1 .. names0.COUNT LOOP
+          DBMS_OUTPUT.PUT_LINE(names0(i));
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Object privileges granted through those roles:');
+        GET_OBJ_PRIVS(names0, privs);
+        FOR i IN 1 .. privs.COUNT LOOP
+          s := privs(i)."PRIVILEGE" || ' on ' || privs(i).OWNER || '.' || privs(i).TABLE_NAME;
+          DBMS_OUTPUT.PUT_LINE(s);
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Roles granted through those roles (level 1):');
+        GET_ROLES(names0, names1);
+        FOR i IN 1 .. names1.COUNT LOOP
+          DBMS_OUTPUT.PUT_LINE(names1(i));
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Object privileges granted through those roles:');
+        GET_OBJ_PRIVS(names1, privs);
+        FOR i IN 1 .. privs.COUNT LOOP
+          s := privs(i)."PRIVILEGE" || ' on ' || privs(i).OWNER || '.' || privs(i).TABLE_NAME;
+          DBMS_OUTPUT.PUT_LINE(s);
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Roles granted through those roles (level 2):');
+        GET_ROLES(names1, names2);
+        FOR i IN 1 .. names2.COUNT LOOP
+          DBMS_OUTPUT.PUT_LINE(names2(i));
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE(' ');
+
+        DBMS_OUTPUT.PUT_LINE('Object privileges granted through those roles:');
+        GET_OBJ_PRIVS(names2, privs);
+        FOR i IN 1 .. privs.COUNT LOOP
+          s := privs(i)."PRIVILEGE" || ' on ' || privs(i).OWNER || '.' || privs(i).TABLE_NAME;
+          DBMS_OUTPUT.PUT_LINE(s);
+        END LOOP;
+      END;
+      /
+    </pre>
+    <p>
+      The following example shows how to write text output to a file on the database server using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/u_file.htm">UTL_FILE</a> package.  It also demonstrates error handling for both user-defined exceptions (using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/errors.htm#LNPLS99960">RAISE_APPLICATION_ERROR</a> procedure) and internally defined exceptions (using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/sqlerrm_function.htm">SQLERRM</a> and <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/d_util.htm#ARPLS73241">DBMS_UTILITY.FORMAT_ERROR_BACKTRACE</a> functions).
+    </p>
+    <pre>
+
+      DECLARE
+        s VARCHAR2(512);
+        not_jeff EXCEPTION;
+        file_handle UTL_FILE.FILE_TYPE;
+      BEGIN
+        IF (USER &lt;&gt; 'JEFF') THEN RAISE not_jeff; END IF;
+
+        /* Open a text file in "append text" mode.  (Note: FOO_DIR is a
+         * directory object that must appear in the ALL_DIRECTORIES view.)
+         */
+        file_handle := UTL_FILE.FOPEN('FOO_DIR', 'bar.txt', 'a');
+
+        /* Write a line of text to the file. */
+        UTL_FILE.PUT_LINE(file_handle, 'This is a line of text.');
+
+        /* Close the file. */
+        UTL_FILE.FCLOSE(file_handle);
+      EXCEPTION
+        WHEN not_jeff THEN
+          RAISE_APPLICATION_ERROR(-20001, 'You are not allowed to run this.');
+        WHEN OTHERS THEN
+          s := SQLERRM;
+          DBMS_OUTPUT.PUT_LINE(s);
+          DBMS_OUTPUT.PUT_LINE(DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+      END;
+      /
+    </pre>
+    <footer>
+      <p>
+        Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version
+      </p>
+      <small>Copyright &copy; 2017 Jeffrey Paul Bourdier</small>
+    </footer>
+  </body>
+</html>
