@@ -1,0 +1,72 @@
+header
+{
+  margin: auto;
+  text-align: center;
+  font-family: Verdana, sans-serif;
+}
+
+h1 { color: teal; }
+
+nav ul
+{
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li
+{
+  color: yellow;
+  background-color: maroon;
+  border: 4px solid maroon;
+}
+
+nav ul li a
+{
+  display: block;
+  color: yellow;
+  background-color: maroon;
+}
+
+nav ul li a:hover
+{
+  color: maroon;
+  background-color: yellow;
+}
+
+nav ul li a:active
+{
+  color: maroon;
+  background-color: aqua;
+}
+
+figure { text-align: center; }
+
+svg { padding: 16px; }
+
+table
+{
+  margin: auto;
+  border-collapse: collapse;
+}
+
+table, th, td
+{
+  border: 1px solid;
+  padding: 4px;
+}
+
+th { background-color: silver; }
+
+table ul { margin: auto; }
+
+pre, code
+{
+  background-color: #EFEFEF;
+  font-weight: bold;
+}
+
+footer
+{
+  border-top: 1px solid;
+  text-align: center;
+}

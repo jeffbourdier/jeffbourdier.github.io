@@ -1,15 +1,6 @@
-header
-{
-  margin: auto;
-  text-align: center;
-  font-family: Verdana, sans-serif;
-}
+@import url("common.css");
 
-h1
-{
-  font-size: 64px;
-  color: teal;
-}
+h1 { font-size: 64px; }
 
 nav
 {
@@ -17,97 +8,16 @@ nav
   margin: auto;
 }
 
-nav ul
-{
-  list-style-type: none;
-  font-size: 64px;
-  padding: 0;
-}
+nav ul { font-size: 64px; }
 
-nav ul li
-{
-  color: yellow;
-  background-color: maroon;
-  border: 4px solid maroon;
-}
+nav ul li a { padding: 16px; }
 
-nav ul li a
-{
-  display: block;
-  padding: 16px;
-  color: yellow;
-  background-color: maroon;
-}
+h3 { font-size: 4em; }
 
-nav ul li a:hover
-{
-  color: maroon;
-  background-color: yellow;
-}
+p, h4, ul, ol, dt, table, pre { font-size: 3em; }
 
-nav ul li a:active
-{
-  color: maroon;
-  background-color: aqua;
-}
+figcaption { font-size: 2em; }
 
-h3
-{
-  font-size: 4em;
-}
+table ul { font-size: 1em; }
 
-p, h4, ul, ol, dt, table, pre
-{
-  font-size: 3em;
-}
-
-figure
-{
-  text-align: center;
-}
-
-figcaption
-{
-  font-size: 2em;
-}
-
-svg
-{
-  padding: 16px;
-}
-
-table
-{
-  margin: auto;
-  border-collapse: collapse;
-}
-
-table, th, td
-{
-  border: 1px solid;
-  padding: 4px;
-}
-
-th
-{
-  background-color: silver;
-}
-
-table ul
-{
-  margin: auto;
-  font-size: 1em;
-}
-
-pre, code
-{
-  overflow: auto;
-  background-color: #EFEFEF;
-  font-weight: bold;
-}
-
-footer
-{
-  border-top: 1px solid;
-  text-align: center;
-}
+pre, code { overflow: auto; }
