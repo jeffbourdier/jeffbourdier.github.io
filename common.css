@@ -41,7 +41,7 @@ nav ul li a:active
 
 figure { text-align: center; }
 
-svg { padding: 16px; }
+svg, pre { padding: 16px; }
 
 table
 {
@@ -64,6 +64,12 @@ pre, code
   background-color: #EFEFEF;
   font-weight: bold;
 }
+
+pre span.comment { color: green; }
+pre span.string { color: red; }
+pre span.number { color: fuchsia; }
+pre span.delimiter { color: purple; }
+pre span.keyword { color: blue; }
 
 footer
 {
