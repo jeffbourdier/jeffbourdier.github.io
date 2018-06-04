@@ -44,27 +44,34 @@ var KEYWORDS = [
  */
 function highlightSyntax(element)
 {
-  var nodes, chars, j, i, fn, k, s;
+  var html, nodes, chars, j, i, fn, k, s;
 
   nodes = [];
   chars = [];
   j = 0;
 
+  /* Because "angle brackets" get converted to character reference names, the HTML markup must
+   * be "pre-processed" to "unconvert" them so that they will be parsed and rendered properly.
+   */
+  html = element.innerHTML;
+  html = html.replace(/&lt;/g, "<");
+  html = html.replace(/&gt;/g, ">");
+
   /* Iterate through each character of the HTML markup, looking for highlightable tokens. */
-  for (i = 0; i < element.innerHTML.length; i++)
+  for (i = 0; i < html.length; i++)
   {
     /* Determine if a highlightable token begins at this index. */
-    fn = startComment(element.innerHTML, i);
-    if (fn == null) fn = startString(element.innerHTML, i);
-    if (fn == null) fn = startNumber(element.innerHTML, i);
-    if (fn == null) fn = startDelimiter(element.innerHTML, i);
+    fn = startComment(html, i);
+    if (fn == null) fn = startString(html, i);
+    if (fn == null) fn = startNumber(html, i);
+    if (fn == null) fn = startDelimiter(html, i);
 
     /* If no other highlightable token begins at this index, start/continue
      * building another token, which might (or might not) be a keyword.
      */
     if (fn == null)
     {
-      k = buildToken(chars, element.innerHTML, i);
+      k = buildToken(chars, html, i);
       if (k >= 0) { i = k; continue; }
     }
 
@@ -81,7 +88,7 @@ function highlightSyntax(element)
     }
 
     /* Process any intervening (unhighlighted) text. */
-    processText(element.innerHTML, j, i, nodes);
+    processText(html, j, i, nodes);
 
     /* Process any keyword (from a token in progress), making sure to reset the token (and
      * again, if no other highlightable token was found, move on to the next character).
@@ -96,14 +103,14 @@ function highlightSyntax(element)
     }
 
     /* Finally, process any highlightable token that was found. */
-    j = fn(element.innerHTML, i, nodes);
+    j = fn(html, i, nodes);
     i = j - 1;
   }
 
   /* Process any last bit of (unhighlighted) text.  (This is most likely to
    * be an empty string, since every statement should end with a semicolon.)
    */
-  processText(element.innerHTML, j, -1, nodes);
+  processText(html, j, -1, nodes);
 
   /* Replace the HTML markup of the <pre> element with the resulting set of nodes. */
   element.innerHTML = "";
@@ -211,18 +218,15 @@ function buildToken(chars, html, i)
   }
   else b = isKeywordCharCode(c);
 
-  /* Either we're starting a new token, or there is one already in progress.
-   * Either way, if the character is valid for a keyword, add it to the token.
-   */
-  if (b)
-  {
-    s = String.fromCharCode(c);
-    chars.push(s);
-    return i;
-  }
+  /* If the character is not valid for a keyword, terminate the token. */
+  if (!b) return -1;
 
-  /* The character is not valid for a keyword, so terminate the token. */
-  return -1;
+  /* Either we're starting a new token, or there is one already in progress.
+   * Either way, the character is valid for a keyword, so add it to the token.
+   */
+  s = String.fromCharCode(c);
+  chars.push(s);
+  return i;
 }
 
 
