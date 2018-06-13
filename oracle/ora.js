@@ -26,15 +26,17 @@ var DELIMITER_CHAR_CODES = [0x21, 0x25, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
  * @constant {string[]}
  */
 var KEYWORDS = [
-  "SELECT", "FROM", "END", "IN", "IF", "AS", "TABLE", "VARCHAR2", "LOOP", "THEN", "IS", "NULL", "BY", "WHERE", "ORDER",
-  "BEGIN", "FOR", "INTO", "CREATE", "WHEN", "ON", "ELSE", "DECLARE", "AND", "COUNT", "NUMBER", "CONSTRAINT",
-  "BULK", "COLLECT", "TYPE", "TRIM", "NOT", "DUAL", "CASE", "UPPER", "SUBSTR", "ALTER", "KEY", "PRIMARY", "OF",
-  "MIN", "MAX", "CHECK", "INSERT", "OR", "JOIN", "INNER", "BOOLEAN", "RETURN", "PROCEDURE", "ROWTYPE", "REFERENCES",
-  "DEFAULT", "INTEGER", "CEIL", "FIRST", "LAST", "BITAND", "VALUES", "GROUP", "DISTINCT", "OUT", "PLS_INTEGER",
-  "BETWEEN", "ADD", "DROP", "EXCEPTION", "CHAR", "EXTEND", "FLOOR", "NOCOPY", "REPLACE", "REGEXP_SUBSTR", "LEVEL",
-  "UPDATE", "LIKE", "ASC", "FUNCTION", "OTHERS", "INDEX", "INDEXTYPE", "COLUMN", "TRIGGER", "ROW",
-  "CURSOR", "SYS_CONTEXT", "LISTAGG", "TRUE", "FALSE", "SQLERRM", "RAISE", "RAISE_APPLICATION_ERROR",
-  "CONNECT", "MODIFY", "EACH", "BEFORE", "WITHIN", "SIGN", "SIGNTYPE", "RAW", "SYS_GUID"];
+  /*     f > 20    */  "FROM", "SELECT", "END", "IN", "IF", "AS", "LOOP", "THEN", "VARCHAR2",
+  /* 20 >= f >= 10 */  "IS", "TABLE", "BY", "ORDER", "WHERE", "NULL", "FOR", "BEGIN", "INTO", "CREATE",
+  /*  10 > f > 5   */  "WHEN", "AND", "DECLARE", "ELSE", "COUNT", "CONSTRAINT", "BULK", "TRIM", "TYPE", "COLLECT",
+  /*     f = 5     */  "OF", "ON", "KEY", "NOT", "CASE", "DUAL", "ALTER", "UPPER", "NUMBER", "SUBSTR", "PRIMARY",
+  /*   5 > f > 2   */  "MAX", "MIN", "CHECK", "OR", "CEIL", "JOIN", "LAST", "FIRST", "INNER", "BITAND",
+  /*   5 > f > 2   */  "INSERT", "RETURN", "BOOLEAN", "DEFAULT", "INTEGER", "ROWTYPE", "PROCEDURE", "REFERENCES",
+  /*     f = 2     */  "ADD", "OUT", "CHAR", "DROP", "FLOOR", "GROUP", "LEVEL", "EXTEND", "NOCOPY", "VALUES",
+  /*     f = 2     */  "BETWEEN", "REPLACE", "DISTINCT", "EXCEPTION", "PLS_INTEGER", "REGEXP_SUBSTR",
+  /*     f = 1     */  "ASC", "RAW", "ROW", "EACH", "LIKE", "SIGN", "TRUE", "INDEX", "RAISE", "FALSE", "BEFORE", "COLUMN",
+  /*     f = 1     */  "CURSOR", "MODIFY", "OTHERS", "UPDATE", "WITHIN", "CONNECT", "LISTAGG", "SQLERRM", "TRIGGER",
+  /*     f = 1     */  "FUNCTION", "SIGNTYPE", "SYS_GUID", "INDEXTYPE", "SYS_CONTEXT", "RAISE_APPLICATION_ERROR"];
 
 
 /**
@@ -76,16 +78,17 @@ function highlightSyntax(element)
     }
 
     /* Either a highlightable token begins at this index, or another token (which might be a keyword) was explicitly
-     * terminated (when a non-keyword character was encountered).  Either way, if the token in progress does indeed
-     * represent a keyword, it becomes a highlightable token, so prepare to process it as such.  Otherwise (the token
-     * is not a keyword), reset the token (and if no other highlightable token was found, move on to the next character).
+     * terminated (when a non-keyword character was encountered).  Either way, if the token in progress does not
+     * represent a keyword, reset the token (and if no other highlightable token was found, move on to the next character).
+     * Otherwise, the token is indeed a keyword, which is a highlightable token, so prepare to process it as such.
      */
-    if (isKeyword(chars)) i -= chars.length;
-    else
+    k = getKeywordIndex(chars);
+    if (k < 0)
     {
       chars.splice(0);
       if (fn == null) continue;
     }
+    else i -= chars.length;
 
     /* Process any intervening (unhighlighted) text. */
     processText(html, j, i, nodes);
@@ -97,6 +100,10 @@ function highlightSyntax(element)
     {
       s = chars.join("");
       addElement("keyword", s, nodes);
+
+      /* Uncomment this to track keyword frequency (see index.html). */
+      //keywordFrequency[k]++;
+
       i += chars.length;
       chars.splice(0);
       if (fn == null) { j = i; continue; }
@@ -256,15 +263,15 @@ function isKeywordCharCode(c)
  * Determine whether or not an array of characters represents a keyword.
  * @private
  * @param {string} chars  Array of characters (potential keyword).
- * @returns {boolean}     True if array of characters represents a keyword; otherwise, false.
+ * @returns {number}      If array of characters represents a keyword, its index in the global KEYWORDS array; otherwise, -1.
  */
-function isKeyword(chars)
+function getKeywordIndex(chars)
 {
   var s;
 
-  if (chars.length < 1) return false;
+  if (chars.length < 1) return -1;
   s = chars.join("");
-  return (KEYWORDS.indexOf(s) >= 0);
+  return KEYWORDS.indexOf(s);
 }
 
 
