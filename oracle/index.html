@@ -134,7 +134,7 @@ SELECT * FROM V$VERSION;</pre>
     <pre>
 SELECT * FROM GLOBAL_NAME;</pre>
     <p>
-      using the (undocumented) ORA_DATABASE_NAME event attribute function,
+      using the (undocumented) <code>ORA_DATABASE_NAME</code> event attribute function,
     </p>
     <pre>
 SELECT ORA_DATABASE_NAME FROM DUAL;</pre>
@@ -303,6 +303,33 @@ WHERE
   ("TYPE" = 'PACKAGE BODY')
 ORDER BY LINE ASC;</pre>
     <p>
+      USER_PLSQL_OBJECT_SETTINGS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2009.htm">ALL_PLSQL_OBJECT_SETTINGS</a> / DBA_PLSQL_OBJECT_SETTINGS (covers packages, procedures, functions, triggers, and types)
+    </p>
+    <pre>
+SELECT OWNER, "NAME", "TYPE", "PLSQL_OPTIMIZE_LEVEL"
+FROM DBA_PLSQL_OBJECT_SETTINGS
+WHERE ("PLSQL_DEBUG" = 'TRUE')
+ORDER BY OWNER, "TYPE", "NAME";</pre>
+    <p>
+      There's also the undocumented <a href="https://asktom.oracle.com/pls/apex/asktom.search?tag=all-probe-objects">SYS.ALL_PROBE_OBJECTS</a> view, which reports similar information (though I consider the <code>_PLSQL_OBJECT_SETTINGS</code> views more reliable).  If installed, it can be queried thus:
+    </p>
+    <pre>
+SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, CREATED, LAST_DDL_TIME
+FROM SYS.ALL_PROBE_OBJECTS
+WHERE (DEBUGINFO = 'T')
+ORDER BY OWNER, OBJECT_TYPE, OBJECT_NAME;</pre>
+    <p>
+      Note some key differences between this and the <code>_PLSQL_OBJECT_SETTINGS</code> views:
+    </p>
+    <ul>
+      <li>The <code>SYS.</code> schema qualifier is required, as there is no public synonym for <code>ALL_PROBE_OBJECTS</code>.</li>
+      <li><code>SYS.ALL_PROBE_OBJECTS</code> does not provide optimization level (whereas the <code>_PLSQL_OBJECT_SETTINGS</code> views do).</li>
+      <li><code>SYS.ALL_PROBE_OBJECTS</code> uses <code>'T'</code> and <code>'F'</code> (for <code>DEBUGINFO</code>), whereas the <code>_PLSQL_OBJECT_SETTINGS</code> views use <code>'TRUE'</code> and <code>'FALSE'</code> (for <code>PLSQL_DEBUG</code>).</li>
+    </ul>
+    <p>
+      More details about PL/SQL debug settings are given in the <b>Debug Settings</b> section (under <b>PL/SQL</b>, below).
+    </p>
+    <p>
       USER_SCHEDULER_JOBS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2046.htm">ALL_SCHEDULER_JOBS</a> / DBA_SCHEDULER_JOBS
     </p>
     <pre>
@@ -318,7 +345,7 @@ FROM DBA_SCHEDULER_JOBS;</pre>
 SELECT * FROM DBA_DIRECTORIES;</pre>
     <p>
       USER_USERS / ALL_USERS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5081.htm">DBA_USERS</a><br />
-      (In this case, USER_USERS shows only the current user, and DBA_USERS has many more fields than ALL_USERS.)
+      (In this case, <code>USER_USERS</code> shows only the current user, and <code>DBA_USERS</code> has many more fields than <code>ALL_USERS</code>.)
     </p>
     <pre>
 SELECT USERNAME FROM DBA_USERS;</pre>
@@ -329,13 +356,13 @@ SELECT USERNAME FROM DBA_USERS;</pre>
 SELECT "ROLE" FROM DBA_ROLES;</pre>
     <p>
       USER_ROLE_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4219.htm">DBA_ROLE_PRIVS</a><br />
-      (USER_ROLE_PRIVS describes roles granted to the current user.  There is no ALL_ROLE_PRIVS view.)
+      (<code>USER_ROLE_PRIVS</code> describes roles granted to the current user.  There is no ALL_ROLE_PRIVS view.)
     </p>
     <pre>
 SELECT GRANTEE, GRANTED_ROLE FROM DBA_ROLE_PRIVS;</pre>
     <p>
       USER_SYS_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5041.htm">DBA_SYS_PRIVS</a><br />
-      (USER_SYS_PRIVS describes system privileges granted to the current user.  There is no ALL_SYS_PRIVS view.)
+      (<code>USER_SYS_PRIVS</code> describes system privileges granted to the current user.  There is no ALL_SYS_PRIVS view.)
     </p>
     <pre>
 SELECT GRANTEE, "PRIVILEGE" FROM DBA_SYS_PRIVS;</pre>
@@ -409,10 +436,10 @@ ORDER BY COLUMN_ID;</pre>
       We'll start by creating two tables: one for artists, and another for albums released by those artists.  In these tables:
     </p>
     <ul>
-      <li>ARTIST has a single primary key field (also called ARTIST).</li>
-      <li>ALBUM has a composite primary key (consisting of both the ARTIST and TITLE fields), so it must be defined out-of-line.</li>
-      <li>ALBUM.ARTIST is a foreign key that references the ARTIST table (and since we did not specify a field, this foreign key implicitly references the primary key field of the ARTIST table).</li>
-      <li>ALBUM has a check constraint to ensure that RELEASE_YEAR is between 1 and 9999.</li>
+      <li><code>ARTIST</code> has a single primary key field (also called <code>ARTIST</code>).</li>
+      <li><code>ALBUM</code> has a composite primary key (consisting of both the <code>ARTIST</code> and <code>TITLE</code> fields), so it must be defined out-of-line.</li>
+      <li><code>ALBUM.ARTIST</code> is a foreign key that references the <code>ARTIST</code> table (and since we did not specify a field, this foreign key implicitly references the primary key field of the <code>ARTIST</code> table).</li>
+      <li><code>ALBUM</code> has a check constraint to ensure that <code>RELEASE_YEAR</code> is between <code>1</code> and <code>9999</code>.</li>
     </ul>
     <pre>
 CREATE TABLE ARTIST (ARTIST VARCHAR2(50) PRIMARY KEY);
@@ -425,7 +452,7 @@ CREATE TABLE ALBUM
   PRIMARY KEY (ARTIST, TITLE)
 );</pre>
     <p>
-      Note that above, the constraints are defined without names, which means that Oracle generates a cryptic name (like SYS_C0062877) for each of them.  If the constraints are to be referred to programatically, it is probably better to name them.  Below are the same two CREATE TABLE statements with names given to the constraints.
+      Note that above, the constraints are defined without names, which means that Oracle generates a cryptic name (like <code>SYS_C0062877</code>) for each of them.  If the constraints are to be referred to programatically, it is probably better to name them.  Below are the same two <code>CREATE TABLE</code> statements with names given to the constraints.
     </p>
     <pre>
 CREATE TABLE ARTIST (ARTIST VARCHAR2(50) CONSTRAINT ARTIST_PKC PRIMARY KEY);
@@ -439,12 +466,12 @@ CREATE TABLE ALBUM
   CONSTRAINT ALBUM_PKC PRIMARY KEY (ARTIST, TITLE)
 );</pre>
     <p>
-      Suppose you decide it makes more sense for ALBUM.RELEASE_YEAR to be a number with a precision (maximum number of significant digits) of 4, rather than an ANSI integer with a check constraint:
+      Suppose you decide it makes more sense for <code>ALBUM.RELEASE_YEAR</code> to be a number with a precision (maximum number of significant digits) of <code>4</code>, rather than an ANSI integer with a check constraint:
     </p>
     <pre>
 ALTER TABLE ALBUM MODIFY (RELEASE_YEAR NUMBER(4));</pre>
     <p>
-      Say you also want to store the genre of each album, so you create a new GENRE table and modify ALBUM as follows:
+      Say you also want to store the genre of each album, so you create a new <code>GENRE</code> table and modify <code>ALBUM</code> as follows:
     </p>
     <pre>
 CREATE TABLE GENRE
@@ -461,7 +488,7 @@ ALTER TABLE ALBUM ADD
   NOTES VARCHAR2(100)
 );</pre>
     <p>
-      The syntax of each column definition is essentially the same as in a CREATE TABLE statement.  Note here that the GENRE value of all records in the GENRE table must be uppercase (and have no leading or trailing spaces), and ALBUM.GENRE has a default value of 'ROCK' (which means that the GENRE table must have a record with a GENRE value of 'ROCK').
+      The syntax of each column definition is essentially the same as in a <code>CREATE TABLE</code> statement.  Note here that the <code>GENRE</code> value of all records in the <code>GENRE</code> table must be uppercase (and have no leading or trailing spaces), and <code>ALBUM.GENRE</code> has a default value of <code>'ROCK'</code> (which means that the <code>GENRE</code> table must have a record with a <code>GENRE</code> value of <code>'ROCK'</code>).
     </p>
     <p>
       Now let's say you want to track whether or not each artist is still living.
@@ -479,7 +506,7 @@ ALTER TABLE ARTIST DROP COLUMN ALIVE;</pre>
     <pre>
 ALTER TABLE ARTIST DROP (ALIVE);</pre>
     <p>
-      If you want to be able to insert an ALBUM record with a new genre without first having to insert a new GENRE record, you could automate this by <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/create_trigger.htm">creating a trigger</a> on the ALBUM table to insert the new GENRE record for you.
+      If you want to be able to insert an <code>ALBUM</code> record with a new genre without first having to insert a new <code>GENRE</code> record, you could automate this by <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/create_trigger.htm">creating a trigger</a> on the <code>ALBUM</code> table to insert the new <code>GENRE</code> record for you.
     </p>
     <pre>
 CREATE TRIGGER ALBUM_GENRE_TRIGGER
@@ -534,7 +561,7 @@ SELECT SDO_VERSION FROM DUAL;</pre>
       </thead>
       <tbody style="font-size: 0.8em;">
         <tr>
-          <td>SDO_GTYPE</td>
+          <td style="font-size: 0.8em;">SDO_GTYPE</td>
           <td style="font-size: 0.8em;">NUMBER</td>
           <td>
             A 4-digit number in the form <i>DLTT</i>, where:
@@ -552,17 +579,17 @@ SELECT SDO_VERSION FROM DUAL;</pre>
           </td>
         </tr>
         <tr>
-          <td>SDO_SRID</td>
+          <td style="font-size: 0.8em;">SDO_SRID</td>
           <td style="font-size: 0.8em;">NUMBER</td>
           <td>Spatial Reference Identifier (see <b>SRIDs</b>, below)</td>
         </tr>
         <tr>
-          <td>SDO_POINT</td>
+          <td style="font-size: 0.8em;">SDO_POINT</td>
           <td style="font-size: 0.8em;">SDO_POINT_TYPE</td>
           <td>Can be used for optimal storage of point geometries (rarely used in practice)</td>
         </tr>
         <tr>
-          <td>SDO_ELEM_INFO</td>
+          <td style="font-size: 0.8em;">SDO_ELEM_INFO</td>
           <td style="font-size: 0.8em;">SDO_ELEM_INFO_ARRAY</td>
           <td>
             Specifies how to interpret ordinates.  Typically, one set of 3 numbers, as described below.  (For compound elements, there is an additional set for each subelement.)
@@ -574,14 +601,14 @@ SELECT SDO_VERSION FROM DUAL;</pre>
           </td>
         </tr>
         <tr>
-          <td>SDO_ORDINATES</td>
+          <td style="font-size: 0.8em;">SDO_ORDINATES</td>
           <td style="font-size: 0.8em;">SDO_ORDINATE_ARRAY</td>
-          <td>Ordinates (whose interpretation depends on SDO_ELEM_INFO)</td>
+          <td>Ordinates (whose interpretation depends on <code>SDO_ELEM_INFO</code>)</td>
         </tr>
       </tbody>
     </table>
     <p>
-      Common SDO_GTYPE values:
+      Common <code>SDO_GTYPE</code> values:
     </p>
     <table>
       <thead>
@@ -606,7 +633,7 @@ SELECT SDO_VERSION FROM DUAL;</pre>
       </tbody>
     </table>
     <p>
-      Common element type values and corresponding interpretations (from SDO_ELEM_INFO, above):
+      Common element type values and corresponding interpretations (from <code>SDO_ELEM_INFO</code>, above):
     </p>
     <table>
       <thead>
@@ -652,7 +679,7 @@ SELECT SDO_VERSION FROM DUAL;</pre>
       </tbody>
     </table>
     <p>
-      Here's how to construct an SDO_GEOMETRY object:
+      Here's how to construct an <code>SDO_GEOMETRY</code> object:
     </p>
     <pre>
 SELECT
@@ -671,8 +698,8 @@ FROM DUAL;</pre>
     </p>
     <ul>
       <li>The ordinates are "three distinct non-colinear points, all on the circumference of the circle" (see <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_objrelschema.htm#BGHDGCCE">Values and Semantics in SDO_ELEM_INFO</a>).</li>
-      <li><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL624">According to Oracle</a>, a circle cannot be created using a geodetic coordinate system; hence, the SRID must reference a projected coordinate system.</li>
-      <li>The function CREATE_CIRCLE (under <b>PL/SQL</b>, below) shows how to do this programatically.</li>
+      <li><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL624">According to Oracle</a>, a circle cannot be created using a geodetic coordinate system; hence, the <code>SRID</code> must reference a projected coordinate system.</li>
+      <li>The function <code>CREATE_CIRCLE</code> (under <b>PL/SQL</b>, below) shows how to do this programatically.</li>
     </ul>
     <p>
       The <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_util.htm#SPATL1237">SDO_UTIL.GETVERTICES</a> function is very useful for examining the coordinates of a geometry.
@@ -698,7 +725,7 @@ FROM
   ) GM;</pre>
     <h4>Spatialization</h4>
     <p>
-      If a table has an SDO_GEOMETRY field, the following steps can be used to "spatialize" it so that it can be used by Oracle Spatial and other software.
+      If a table has an <code>SDO_GEOMETRY</code> field, the following steps can be used to "spatialize" it so that it can be used by Oracle Spatial and other software.
     </p>
     <p>
       Determine the extents of the geometry.
@@ -727,7 +754,7 @@ FROM
     )
   );</pre>
     <p>
-      Insert a record into MDSYS.SDO_GEOM_METADATA_TABLE.
+      Insert a record into <code>MDSYS.SDO_GEOM_METADATA_TABLE</code>.
     </p>
     <pre>
 INSERT INTO MDSYS.SDO_GEOM_METADATA_TABLE
@@ -744,13 +771,13 @@ VALUES
   srid
 );</pre>
     <p>
-      Create a spatial index on the SDO_GEOMETRY field.
+      Create a spatial index on the <code>SDO_GEOMETRY</code> field.
     </p>
     <pre>
 CREATE INDEX index ON table(field) INDEXTYPE IS MDSYS.SPATIAL_INDEX;</pre>
     <h4>SRIDs</h4>
     <p>
-      <a href="http://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_objrelschema.htm#SPATL492">According to Oracle</a>: "All geometries in a geometry column must have the same SDO_SRID value if a spatial index will be built on that column."  Oracle stores spatial reference systems (identified by SRID) in the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL652">SDO_COORD_REF_SYS</a> table.  This table includes many well-known <a href="http://www.epsg.org/">EPSG</a> SRIDs, as well as some that are specific to Oracle (most of which can be thought of as Oracle-specific versions of their EPSG counterparts).  For example, the following EPSG SRIDs, along with their Oracle-specific equivalents, can be found in the table.
+      <a href="http://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_objrelschema.htm#SPATL492">According to Oracle</a>: "All geometries in a geometry column must have the same SDO_SRID value if a spatial index will be built on that column."  Oracle stores spatial reference systems (identified by <code>SRID</code>) in the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL652">SDO_COORD_REF_SYS</a> table.  This table includes many well-known <a href="http://www.epsg.org/">EPSG</a> SRIDs, as well as some that are specific to Oracle (most of which can be thought of as Oracle-specific versions of their EPSG counterparts).  For example, the following EPSG SRIDs, along with their Oracle-specific equivalents, can be found in the table.
     </p>
     <pre>
 SELECT SRID, COORD_REF_SYS_NAME,
@@ -911,7 +938,7 @@ ORDER BY RS.COORD_REF_SYS_KIND, RS.SRID;</pre>
     </table>
     <h3>PL/SQL</h3>
     <p>
-      <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS319">PLS_INTEGER</a> is the recommended integral data type, as long as the value can be stored in 32 bits.  Below are some examples of operations with PLS_INTEGER, including division and the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions067.htm">FLOOR</a> and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions024.htm">CEIL</a> functions.
+      <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS319">PLS_INTEGER</a> is the recommended integral data type, as long as the value can be stored in 32 bits.  Below are some examples of operations with <code>PLS_INTEGER</code>, including division and the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions067.htm">FLOOR</a> and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions024.htm">CEIL</a> functions.
     </p>
     <pre>
 DECLARE
@@ -967,7 +994,7 @@ END;
  * 800 / 400 = 2
  */</pre>
     <p>
-      Below is a demonstration of the BOOLEAN data type.
+      Below is a demonstration of the <code>BOOLEAN</code> data type.
     </p>
     <pre>
 DECLARE
@@ -1170,7 +1197,7 @@ END;
       The following function demonstrates:
     </p>
     <ul>
-      <li>how to build an SDO_GEOMETRY object programatically</li>
+      <li>how to build an <code>SDO_GEOMETRY</code> object programatically</li>
       <li>how to write text output to a file on the database server using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/u_file.htm">UTL_FILE</a> package</li>
       <li>error handling for user-defined exceptions (using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/errors.htm#LNPLS99960">RAISE_APPLICATION_ERROR</a> procedure)</li>
       <li>error handling for internally defined exceptions (using the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/sqlerrm_function.htm">SQLERRM</a> and <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/d_util.htm#ARPLS73241">DBMS_UTILITY.FORMAT_ERROR_BACKTRACE</a> functions)</li>
@@ -1280,11 +1307,27 @@ BEGIN
   UTL_SMTP.QUIT(cn);
 END;
 /</pre>
+    <h4>Debug Settings</h4>
+    <p>
+      PL/SQL code is compiled with an optimization level of 0, 1, or 2.  (As mentioned above, the <code>_PLSQL_OBJECT_SETTINGS</code> views can be queried to determine with what optimization level a PL/SQL object was compiled.)  The lower the optimization level, the more debug info is generated (but the slower it runs), and vice versa.  In SQL Developer, the default optimization level is zero (maximum debug info, and also maximum slowness).  This setting can be found under <b>Tools > Preferences... > Database > PL/SQL Compiler > Optimization Level</b>:
+    </p>
+    <img style="display: block; margin: auto; width: 700px; height: 500px" src="settings.png" alt="PL/SQL Compiler settings" />
+    <p>
+      Note that this setting applies only when compiling PL/SQL code via the editor buttons.  Compiling via the <b>Compile</b> and <b>Compile for Debug</b> items on the context menu has different results:
+    </p>
+    <img style="display: block; margin: auto; width: 322px; height: 392px" src="menu.png" alt="context menu" />
+    <ul>
+      <li><b>Compile</b> = optimization level 2 (no debug info)</li>
+      <li><b>Compile for Debug</b> = optimization level 1 (some debug info)</li>
+    </ul>
+    <p>
+      <a href="http://www.devshed.com/c/a/oracle/compiling-plsql-code-for-an-oracle-database/">This article</a> and <a href="http://stevenfeuersteinonplsql.blogspot.com/2016/08/plsql-optimization-levels-and-native.html">this blog post</a> explain optimization levels pretty well.
+    </p>
     <footer>
       <p>
         Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version
       </p>
-      <small>Copyright &copy; 2017 Jeffrey Paul Bourdier</small>
+      <small>Copyright &copy; 2017-8 Jeffrey Paul Bourdier</small>
     </footer>
   </body>
 </html>

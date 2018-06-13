@@ -27,7 +27,7 @@ var DELIMITER_CHAR_CODES = [0x21, 0x25, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
  */
 var KEYWORDS = [
   /*     f > 20    */  "FROM", "SELECT", "END", "IN", "IF", "AS", "LOOP", "THEN", "VARCHAR2",
-  /* 20 >= f >= 10 */  "IS", "TABLE", "BY", "ORDER", "WHERE", "NULL", "FOR", "BEGIN", "INTO", "CREATE",
+  /* 20 >= f >= 10 */  "BY", "IS", "TABLE", "ORDER", "WHERE", "NULL", "FOR", "BEGIN", "INTO", "CREATE",
   /*  10 > f > 5   */  "WHEN", "AND", "DECLARE", "ELSE", "COUNT", "CONSTRAINT", "BULK", "TRIM", "TYPE", "COLLECT",
   /*     f = 5     */  "OF", "ON", "KEY", "NOT", "CASE", "DUAL", "ALTER", "UPPER", "NUMBER", "SUBSTR", "PRIMARY",
   /*   5 > f > 2   */  "MAX", "MIN", "CHECK", "OR", "CEIL", "JOIN", "LAST", "FIRST", "INNER", "BITAND",
