@@ -50,6 +50,7 @@
     <p>
       Welcome to the home of Jeff Bourdier on GitHub.  The main purpose of this site is for me to experiment with <a href="http://www.w3.org/TR/html/">HTML</a>, <a href="http://www.w3.org/TR/CSS22/">CSS</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a>, and <a href="http://www.w3.org/Graphics/SVG/">SVG</a>.  Other than this site, I have basically two sets of projects on GitHub, listed below.  They are all free and open-source.
     </p>
+    <h3>Native (C)</h3>
     <p>
       The projects below are native (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>) and portable (tested on <a href="https://www.linux.com/">Linux</a> and <a href="https://www.microsoft.com/en-us/windows">Windows</a>).
     </p>
@@ -94,9 +95,31 @@
           A SCWA that serves <a href="http://sqlite.org/">SQLite</a> database files.
         </p>
       </dd>
+      <dt>
+        <a href="https://github.com/jeffbourdier/midi2sql">MIDI2SQL</a>
+      </dt>
+      <dd>
+        <p>
+          A utility that creates an SQLite database from a <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI file</a>.
+        </p>
+      </dd>
+      <dt>
+        <a href="https://github.com/jeffbourdier/sql2midi">SQL2MIDI</a>
+      </dt>
+      <dd>
+        <p>
+          A utility that exports data from an SQLite database (as created by MIDI2SQL) to a standard MIDI file.
+        </p>
+      </dd>
     </dl>
     <p>
-      The projects below are <a href="https://docs.microsoft.com/en-us/dotnet/">.NET</a> (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>, tested only on <a href="https://www.microsoft.com/en-us/windows">Windows</a>).
+      Apart from a few that require SQLite, these projects have no third-party dependencies.  The following diagram summarizes these projects and their dependencies.
+    </p>
+    <img style="display: block; margin: auto;" src="jb.png" alt="Jeff Bourdier (JB) native software diagram" />
+    <br />
+    <h3>.NET (C#)</h3>
+    <p>
+      The projects below are <a href="https://docs.microsoft.com/en-us/dotnet/">.NET</a> (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>, for <a href="https://www.microsoft.com/en-us/windows">Windows</a>).
     </p>
     <dt>
       <a href="https://github.com/jeffbourdier/JBCore">JBCore</a>
@@ -120,7 +143,7 @@
       <p>
         Switch to <a id="switchA" href="#" onclick="switchStylesheet(false)"></a> version
       </p>
-      <small>Copyright &copy; 2016-7 Jeffrey Paul Bourdier</small>
+      <small>Copyright &copy; 2016-8 Jeffrey Paul Bourdier</small>
     </footer>
   </body>
 </html>

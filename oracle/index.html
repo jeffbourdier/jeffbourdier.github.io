@@ -496,7 +496,7 @@ ALTER TABLE ALBUM ADD
     <pre>
 ALTER TABLE ARTIST ADD (ALIVE CHAR(1) CHECK (ALIVE IN ('Y', 'N')));</pre>
     <p>
-      On second thought, never mind, that was a silly idea.  Who cares if the artist is <a style="text-decoration: none;" href="https://www.youtube.com/watch?v=PGNiXGX2nLU">dead or alive</a>?
+      On second thought, never mind, that was a silly idea.  Who cares if the artist is <a style="text-decoration: none; color: inherit;" href="https://www.youtube.com/watch?v=PGNiXGX2nLU">dead or alive</a>?
     </p>
     <pre>
 ALTER TABLE ARTIST DROP COLUMN ALIVE;</pre>
@@ -1311,11 +1311,11 @@ END;
     <p>
       PL/SQL code is compiled with an optimization level of 0, 1, or 2.  (As mentioned above, the <code>_PLSQL_OBJECT_SETTINGS</code> views can be queried to determine with what optimization level a PL/SQL object was compiled.)  The lower the optimization level, the more debug info is generated (but the slower it runs), and vice versa.  In SQL Developer, the default optimization level is zero (maximum debug info, and also maximum slowness).  This setting can be found under <b>Tools > Preferences... > Database > PL/SQL Compiler > Optimization Level</b>:
     </p>
-    <img style="display: block; margin: auto; width: 700px; height: 500px" src="settings.png" alt="PL/SQL Compiler settings" />
+    <img style="display: block; margin: auto; width: 700px; height: 500px;" src="settings.png" alt="PL/SQL Compiler settings" />
     <p>
       Note that this setting applies only when compiling PL/SQL code via the editor buttons.  Compiling via the <b>Compile</b> and <b>Compile for Debug</b> items on the context menu has different results:
     </p>
-    <img style="display: block; margin: auto; width: 322px; height: 392px" src="menu.png" alt="context menu" />
+    <img style="display: block; margin: auto; width: 322px; height: 392px;" src="menu.png" alt="context menu" />
     <ul>
       <li><b>Compile</b> = optimization level 2 (no debug info)</li>
       <li><b>Compile for Debug</b> = optimization level 1 (some debug info)</li>
