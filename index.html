@@ -48,94 +48,47 @@
       </nav>
     </header>
     <p>
-      Welcome to the home of Jeff Bourdier on GitHub.  The main purpose of this site is for me to experiment with <a href="http://www.w3.org/TR/html/">HTML</a>, <a href="http://www.w3.org/TR/CSS22/">CSS</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a>, and <a href="http://www.w3.org/Graphics/SVG/">SVG</a>.  Other than this site, I have basically two sets of projects on GitHub, described below.  They are all free and open-source.
-    </p>
-    <h3>Native (C)</h3>
-    <p>
-      The projects below are native code (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>) and portable (tested on <a href="https://www.linux.com/">Linux</a> and <a href="https://www.microsoft.com/en-us/windows">Windows</a>).
+      Welcome to the home of Jeff Bourdier on GitHub.  The main purpose of this site is for me to experiment with <a href="http://www.w3.org/TR/html/">HTML</a>, <a href="http://www.w3.org/TR/CSS22/">CSS</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a>, and <a href="http://www.w3.org/Graphics/SVG/">SVG</a>.  Other than this site, I currently have two projects on GitHub, described below.  Of course, they are all <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>.
     </p>
     <dl>
       <dt>
-        <a href="https://github.com/jeffbourdier/stdjb">StdJB</a>
+        <a href="https://github.com/jeffbourdier/MIDIopsy">MIDIopsy</a>
       </dt>
       <dd>
         <p>
-          The "Jeff Bourdier (JB) standard library" -- a collection of functions, macros, etc. that are used frequently throughout my native software.
+          A <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/">WPF</a> application (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>) that is used to view the binary contents of a <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI file</a>, with user-friendly comments.
         </p>
       </dd>
       <dt>
-        <a href="https://github.com/jeffbourdier/plunge">Plunge</a>
+        <a href="https://github.com/jeffbourdier/PortivewareSuite">Portiveware Suite</a>
       </dt>
       <dd>
         <p>
-          A file synchronization utility similar to <a href="https://rsync.samba.org/">rsync</a>.
+          A suite of <u>port</u>able, nat<u>ive</u> soft<u>ware</u> ("portiveware") applications, written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>, supported on <a href="https://www.microsoft.com/en-us/windows">Windows</a> and <a href="https://www.linux.com/">Linux</a>, consisting of the following main components:
         </p>
-      </dd>
-      <dt>
-        <a href="https://github.com/jeffbourdier/scwa">SCWA</a>
-      </dt>
-      <dd>
+        <ul>
+          <li>
+            <b>Plunge</b> - A command-line utility for synchronizing sets of files.
+          </li>
+          <li>
+            <b>IHS</b> (<u>I</u>ntegrated <u>H</u>ypertext <u>S</u>ervice) - A library for building a web application with the <a href="https://tools.ietf.org/html/rfc2616">HTTP</a> server, <a href="http://www.w3.org/TR/html/">HTML</a> and related code (<a href="http://www.w3.org/TR/CSS22/">CSS</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a>, etc.) embedded within the application, rather than as separate entities.
+          </li>
+          <li>
+            <b>SQLaugh</b> (<u>SQL</u>ite <u>a</u>dministration <u>u</u>tility <u>g</u>one <u>h</u>ypertext) - A web application (using the IHS library) for managing <a href="http://sqlite.org/">SQLite</a> database files.
+          </li>
+        </ul>
         <p>
-          A library for building a "self-contained web application" (SCWA).
+          Although developed mainly for my own use, portiveware does offer the following advantages over other applications:
         </p>
-      </dd>
-      <dt>
-        <a href="https://github.com/jeffbourdier/scwakill">SCWAKill</a>
-      </dt>
-      <dd>
+        <ul>
+          <li>Speed</li>
+          <li>Simplicity</li>
+          <li>Portability</li>
+          <li>Small footprint</li>
+          <li>No third-party dependencies</li>
+        </ul>
         <p>
-          A utility that gracefully shuts down a SCWA.
-        </p>
-      </dd>
-      <dt>
-        <a href="https://github.com/jeffbourdier/scwal">SCWAL</a>
-      </dt>
-      <dd>
-        <p>
-          A SCWA that serves <a href="http://sqlite.org/">SQLite</a> database files.
-        </p>
-      </dd>
-      <dt>
-        <a href="https://github.com/jeffbourdier/midi2sql">MIDI2SQL</a>
-      </dt>
-      <dd>
-        <p>
-          A utility that creates an SQLite database from a <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI file</a>.
-        </p>
-      </dd>
-      <dt>
-        <a href="https://github.com/jeffbourdier/sql2midi">SQL2MIDI</a>
-      </dt>
-      <dd>
-        <p>
-          A utility that exports data from an SQLite database (as created by MIDI2SQL) to a standard MIDI file.
-        </p>
-      </dd>
-    </dl>
-    <p>
-      Apart from a few that require SQLite, these projects have no third-party dependencies.  The following diagram summarizes these projects and their dependencies.
-    </p>
-    <img style="display: block; margin: auto;" src="jb.png" alt="Jeff Bourdier (JB) native software diagram" />
-    <br />
-    <h3>Managed (C#)</h3>
-    <p>
-      The projects below are managed code (<a href="https://docs.microsoft.com/en-us/dotnet/">.NET</a>, written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>) for <a href="https://www.microsoft.com/en-us/windows">Windows</a> only.
-    </p>
-    <dt>
-      <a href="https://github.com/jeffbourdier/JBCore">JBCore</a>
-    </dt>
-    <dd>
-      <p>
-        The "Jeff Bourdier (JB) Core library" -- a collection of classes used frequently throughout my .NET software.
-      </p>
-    </dd>
-    <dl>
-      <dt>
-        <a href="https://github.com/jeffbourdier/DataConnectionBuilder">Data Connection Builder</a>
-      </dt>
-      <dd>
-        <p>
-          A <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/">WPF</a> application for building <a href="https://docs.microsoft.com/en-us/sql/ado/microsoft-activex-data-objects-ado">ADO</a> connection strings.
+          (It could be argued that SQLite is a "third-party dependency," but its source code is embedded via <a href="http://sqlite.org/amalgamation.html">the amalgamation</a> (as per the <a href="https://www.sqlite.org/src/doc/trunk/README.md">SQLite recommendation</a>), so there are no third-party dependencies in the sense that nothing outside the source repository is required; everything needed to build portiveware comes bundled with this suite.)
         </p>
       </dd>
     </dl>
@@ -143,7 +96,7 @@
       <p>
         Switch to <a id="switchA" href="#" onclick="switchStylesheet(false)"></a> version
       </p>
-      <small>Copyright &copy; 2016-8 Jeffrey Paul Bourdier</small>
+      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
     </footer>
   </body>
 </html>
