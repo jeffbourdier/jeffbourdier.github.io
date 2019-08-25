@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="57" height="57">
+  <rect x="28" y="0" width="29" height="57" stroke="maroon" fill="maroon" />
+  <rect x="0" y="0" width="29" height="57" stroke="yellow" fill="yellow" />
+  <path d="m 28 53 h 7 l -4,-14 a 11,11 0,1,0 4,-13 a 11,11 0,0,0 -7,-20" fill="yellow" />
+  <path d="m 29 53 h -7 l 4,-14 a 11,11 0,1,1 -4,-13 a 11,11 0,0,1 7,-20" fill="maroon" />
+</svg>
