@@ -1,5 +1,12 @@
 /**
- * @file Generic drawing functions.
+ * @file       Generic drawing functions.
+ *
+ * @copyright  (c) 2016 Jeffrey Paul Bourdier
+ *
+ * @license    MIT
+ * Licensed under the MIT License.  This file may be used only in compliance with this License.
+ * Software distributed under this License is provided "AS IS", WITHOUT WARRANTY OF ANY KIND.
+ * For more information, see the following URL:  {@link https://opensource.org/licenses/MIT}
  */
 
 
@@ -29,10 +36,7 @@ function drawLabel(svgElementId, x, y, marker, labelX, labelY, text, fontSize, t
 {
   var FACTOR = 3 / 4;
 
-  var v;
-  var element;
-  var svgElement;
-  var pathElement;
+  var v, element, svgElement, pathElement;
 
   /* Get the SVG element. */
   svgElement = document.getElementById(svgElementId);
@@ -74,9 +78,7 @@ function drawLabel(svgElementId, x, y, marker, labelX, labelY, text, fontSize, t
  */
 function drawCircle(svgElement, x, y, radius, color)
 {
-  var element;
-
-  element = document.createElementNS(NS, "circle");
+  var element = document.createElementNS(NS, "circle");
   element.setAttribute("cx", x);
   element.setAttribute("cy", y);
   element.setAttribute("r", radius);
@@ -92,21 +94,17 @@ function drawCircle(svgElement, x, y, radius, color)
  */
 function createArrowheadMarker(svgElementId, color)
 {
-  var element;
-  var svgElement;
-  var pathElement;
-
   /* Get the SVG element. */
-  svgElement = document.getElementById(svgElementId);
+  var svgElement = document.getElementById(svgElementId);
 
   /* Create a path element for the arrowhead, triangular and filled with the color. */
-  pathElement = document.createElementNS(NS, "path");
+  var pathElement = document.createElementNS(NS, "path");
   pathElement.setAttribute("d", "M 0 0 L 8 3 L 0 6 Z");
   pathElement.setAttribute("stroke", "none");
   pathElement.setAttribute("fill", color);
 
   /* Create the marker element and add it to the SVG element. */
-  element = document.createElementNS(NS, "marker");
+  var element = document.createElementNS(NS, "marker");
   element.id = nameArrowheadMarker(color, false);
   element.setAttribute("markerWidth", "8");
   element.setAttribute("markerHeight", "6");
@@ -129,9 +127,7 @@ function createArrowheadMarker(svgElementId, color)
  */
 function nameArrowheadMarker(color, withURL)
 {
-  var s;
-
-  s = color + "ArrowheadMarker";
+  var s = color + "ArrowheadMarker";
   if (withURL) s = "url(#" + s + ")";
   return s;
 }
@@ -143,10 +139,7 @@ function nameArrowheadMarker(color, withURL)
  * @param {number} degrees
  * @returns {number} The value equivalent to degrees, in radians.
  */
-function degreesToRadians(degrees)
-{
-  return degrees * Math.PI / 180;
-}
+function degreesToRadians(degrees) { return degrees * Math.PI / 180; }
 
 
 /**
@@ -155,10 +148,7 @@ function degreesToRadians(degrees)
  * @param {number} radians
  * @returns {number} The value equivalent to radians, in degrees.
  */
-function radiansToDegrees(radians)
-{
-  return radians * 180 / Math.PI;
-}
+function radiansToDegrees(radians) { return radians * 180 / Math.PI; }
 
 
 /**
@@ -173,9 +163,7 @@ function radiansToDegrees(radians)
  */
 function initLine(x1, y1, x2, y2, color)
 {
-  var element;
-
-  element = document.createElementNS(NS, "line");
+  var element = document.createElementNS(NS, "line");
   element.setAttribute("x1", x1);
   element.setAttribute("y1", y1);
   element.setAttribute("x2", x2);

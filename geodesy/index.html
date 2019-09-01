@@ -24,16 +24,13 @@
         var LABEL_TEXT_ANCHOR = "middle";
         var LABEL_COLOR = "black";
 
-        var n;
-        var s;
-
         initStylesheet(true);
 
-        n = GLOBE_RADIUS / 2;
+        var n = GLOBE_RADIUS / 2;
         drawGlobe("sphereSVG", n, n, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
         drawGlobe("spheroidSVG", (9/8)*n, (7/8)*n, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
 
-        s = "LatitudeSVG";
+        var s = "LatitudeSVG";
         drawGlobe(s, GLOBE_RADIUS, GLOBE_RADIUS, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
         drawHorizontal(s, GLOBE_STROKE_COLOR);
         drawRadial(s, 150, true, LABEL_COLOR);
@@ -57,11 +54,7 @@
     <noscript>
       <div style="border: 8px solid fuchsia; background-color: aqua; color: navy; padding: 16px; font-size: 1.25em;">
         <p>This page requires JavaScript in order to function properly.  Either your browser does not support JavaScript, or JavaScript is disabled.  Please use a browser that supports JavaScript and make sure that JavaScript is enabled.</p>
-        <p>
-          With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b>
-            <u>A</u>llow blocked content
-          </b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)
-        </p>
+        <p>With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b><u>A</u>llow blocked content</b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)</p>
         <img src="../ie-blocked.png" alt="Internet Explorer restricted this webpage from running scripts or ActiveX controls.  (Allow blocked content)" style="display: block; margin: auto; width: 960px; height: 50px;" />
       </div>
     </noscript>
@@ -69,174 +62,85 @@
       <h1>Jeff Bourdier on GitHub</h1>
       <nav>
         <ul>
-          <li>
-            <a href="..">Home</a>
-          </li>
+          <li><a href="..">Home</a></li>
           <li>Geodesy</li>
-          <li>
-            <a href="../oracle">Oracle</a>
-          </li>
-          <li>
-            <a href="../telcos">Telcos</a>
-          </li>
-          <li>
-            <a href="../about">About</a>
-          </li>
+          <li><a href="../oracle">Oracle</a></li>
+          <li><a href="../telcos">Telcos</a></li>
+          <li><a href="../about">About</a></li>
         </ul>
       </nav>
     </header>
-    <p>
-      <a href="https://en.wikipedia.org/wiki/Geodesy">Geodesy</a> is the study of the spatial representation and measurement (the shape and size, if you like) of our planet (though it could be applied to any planet, but for the purpose of this discussion, it applies to Earth).  A fundamental understanding of geodesy is essential to the <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> work that I do, so I find it instructive to have a "reference guide" of sorts such as this, as these concepts figure frequently into my coding.
-    </p>
+    <p><a href="https://en.wikipedia.org/wiki/Geodesy">Geodesy</a> is the study of the spatial representation and measurement (the shape and size, if you like) of our planet (though it could be applied to any planet, but for the purpose of this discussion, it applies to Earth).  A fundamental understanding of geodesy is essential to the <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> work that I do, so I find it instructive to have a "reference guide" of sorts such as this, as these concepts figure frequently into my coding.</p>
     <h4>The Geoid</h4>
-    <p>
-      As everyone knows, the earth is round.  It is not perfectly round, however.  The earth is often thought of as spherical, which it nearly is, but it also rotates about on an axis.  The inertia of this motion has a "flattening" effect, causing the earth more to resemble a flattened (or <i>oblate</i>) <a href="https://en.wikipedia.org/wiki/Spheroid">spheroid</a> (i.e., an ellipsoid).
-    </p>
+    <p>As everyone knows, the earth is round.  It is not perfectly round, however.  The earth is often thought of as spherical, which it nearly is, but it also rotates about on an axis.  The inertia of this motion has a "flattening" effect, causing the earth more to resemble a flattened (or <i>oblate</i>) <a href="https://en.wikipedia.org/wiki/Spheroid">spheroid</a> (i.e., an ellipsoid).</p>
     <figure>
       <svg id="sphereSVG" />
       <svg id="spheroidSVG" />
       <figcaption>Sphere vs. oblate spheroid</figcaption>
     </figure>
-    <p>
-      What this means is that -- unlike a sphere, which has one radius -- the earth has two different radii: an equatorial radius, of about 6,378 km (3,963 mi), and a polar radius, of about 6,357 km (3,950 mi).  Notice that because the earth resembles an oblate (flattened) spheroid, its polar radius is shorter than its equatorial radius -- ever so slightly, only by about 21 km (13 mi), or about 0.3%.  This also means that at any point on the earth's surface, the radius, diameter, and circumference of the planet vary based on (among other things) distance from the equator, but will be longest at the equator (and shortest at the poles).  The equatorial circumference of Earth is about 40,076 km (24,902 mi).
-    </p>
-    <p>
-      To take it a step further, a shape called the <a href="https://en.wikipedia.org/wiki/Geoid">geoid</a> has been developed.  The geoid is a theoretical surface of the earth that is perpendicular at every point to the direction of gravity; it approximates mean sea-level in open ocean (without tides, waves, or swell).  This figure might be imagined as an ellipsoid (specifically, an oblate spheroid) with a bunch of little bumps on it.  In practice, however, it is not feasible to simulate the geoid computationally, so we settle for a spheroid (also called a <a href="https://en.wikipedia.org/wiki/Reference_ellipsoid">reference ellipsoid</a>, or an <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid">Earth ellipsoid</a>) that closely approximates the geoid.
-    </p>
-    <p>
-      Several spheroids (or <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid#Historical_Earth_ellipsoids">Earth ellipsoids</a>) have been developed over the years.  The first in wide use in North America was developed by British geodesist <a href="https://en.wikipedia.org/wiki/Alexander_Ross_Clarke">Alexander Clarke</a> in 1866.  The two most commonly used today are <a href="http://www.gfy.ku.dk/~iag/HB2000/part4/grs80_corr.htm">Geodetic Reference System 1980 (GRS 80)</a> and <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a>, which is used by most modern <a href="http://www.gps.gov/">GPS</a> devices.  These last two ellipsoids are nearly identical (the latter being largely based on the former); both are generally accurate (to the geoid) to within a hundred meters, or about 0.00002% of Earth's (shorter) polar radius.
-    </p>
+    <p>What this means is that -- unlike a sphere, which has one radius -- the earth has two different radii: an equatorial radius, of about 6,378 km (3,963 mi), and a polar radius, of about 6,357 km (3,950 mi).  Notice that because the earth resembles an oblate (flattened) spheroid, its polar radius is shorter than its equatorial radius -- ever so slightly, only by about 21 km (13 mi), or about 0.3%.  This also means that at any point on the earth's surface, the radius, diameter, and circumference of the planet vary based on (among other things) distance from the equator, but will be longest at the equator (and shortest at the poles).  The equatorial circumference of Earth is about 40,076 km (24,902 mi).</p>
+    <p>To take it a step further, a shape called the <a href="https://en.wikipedia.org/wiki/Geoid">geoid</a> has been developed.  The geoid is a theoretical surface of the earth that is perpendicular at every point to the direction of gravity; it approximates mean sea-level in open ocean (without tides, waves, or swell).  This figure might be imagined as an ellipsoid (specifically, an oblate spheroid) with a bunch of little bumps on it.  In practice, however, it is not feasible to simulate the geoid computationally, so we settle for a spheroid (also called a <a href="https://en.wikipedia.org/wiki/Reference_ellipsoid">reference ellipsoid</a>, or an <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid">Earth ellipsoid</a>) that closely approximates the geoid.</p>
+    <p>Several spheroids (or <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid#Historical_Earth_ellipsoids">Earth ellipsoids</a>) have been developed over the years.  The first in wide use in North America was developed by British geodesist <a href="https://en.wikipedia.org/wiki/Alexander_Ross_Clarke">Alexander Clarke</a> in 1866.  The two most commonly used today are <a href="http://www.gfy.ku.dk/~iag/HB2000/part4/grs80_corr.htm">Geodetic Reference System 1980 (GRS 80)</a> and <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a>, which is used by most modern <a href="http://www.gps.gov/">GPS</a> devices.  These last two ellipsoids are nearly identical (the latter being largely based on the former); both are generally accurate (to the geoid) to within a hundred meters, or about 0.00002% of Earth's (shorter) polar radius.</p>
     <h4>Latitude and Longitude</h4>
-    <p>
-      A point on the surface of a reference ellipsoid is measured by three things:
-    </p>
+    <p>A point on the surface of a reference ellipsoid is measured by three things:</p>
     <ol>
       <li>Distance from the center (i.e., radius),</li>
       <li>Angle from the plane that intersects the equator (i.e., latitude), and</li>
       <li>Angle from some fixed plane that intersects the poles (i.e., longitude).</li>
     </ol>
-    <p>
-      Mathematically, these three things are known as <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">spherical coordinates</a>.  Since, as stated earlier, the radius varies with distance from the equator, to be most accurate, we would have to use a different radius depending on the latitude of our surface point.  However, since the variation is so small (about 0.3%, remember), we often use a <a href="http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html">mean Earth radius of 6371 km</a>.
-    </p>
-    <p>
-      There is exactly one plane that intersects the equator; angular distance above (north of) or below (south of) this plane is called <i>latitude</i>.
-    </p>
+    <p>Mathematically, these three things are known as <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">spherical coordinates</a>.  Since, as stated earlier, the radius varies with distance from the equator, to be most accurate, we would have to use a different radius depending on the latitude of our surface point.  However, since the variation is so small (about 0.3%, remember), we often use a <a href="http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html">mean Earth radius of 6371 km</a>.</p>
+    <p>There is exactly one plane that intersects the equator; angular distance above (north of) or below (south of) this plane is called <i>latitude</i>.</p>
     <figure>
       <svg id="LatitudeSVG" />
       <figcaption>Point on surface of spheroid, at 30&deg; (north) latitude</figcaption>
     </figure>
-    <p>
-      There are infinitely many planes that intersect the poles.  Based on <a href="http://gpsinformation.net/main/greenwich.htm">research conducted at a London observatory in the nineteenth century</a>, one has been established as the fixed plane mentioned above.  Angular distance from this plane is called <i>longitude</i>.  The intersection of this plane with the ellipsoid makes a <a href="https://en.wikipedia.org/wiki/Great_ellipse">great ellipse</a> (commonly called a <a href="https://en.wikipedia.org/wiki/Great_circle">great circle</a>, though this term really applies only to spheres and not spheroids) that divides the planet into eastern and western hemispheres.  The half of this great ellipse (or circle) that passes through London is called the <i>prime meridian</i>, which defines zero degrees longitude.  (The other half, which passes mostly through the Pacific Ocean, is called the <i>antimeridian</i>.  Its angle of longitude is 180 degrees, and it corresponds roughly to the <a href="https://en.wikipedia.org/wiki/International_Date_Line">International Date Line</a>.)
-    </p>
+    <p>There are infinitely many planes that intersect the poles.  Based on <a href="http://gpsinformation.net/main/greenwich.htm">research conducted at a London observatory in the nineteenth century</a>, one has been established as the fixed plane mentioned above.  Angular distance from this plane is called <i>longitude</i>.  The intersection of this plane with the ellipsoid makes a <a href="https://en.wikipedia.org/wiki/Great_ellipse">great ellipse</a> (commonly called a <a href="https://en.wikipedia.org/wiki/Great_circle">great circle</a>, though this term really applies only to spheres and not spheroids) that divides the planet into eastern and western hemispheres.  The half of this great ellipse (or circle) that passes through London is called the <i>prime meridian</i>, which defines zero degrees longitude.  (The other half, which passes mostly through the Pacific Ocean, is called the <i>antimeridian</i>.  Its angle of longitude is 180 degrees, and it corresponds roughly to the <a href="https://en.wikipedia.org/wiki/International_Date_Line">International Date Line</a>.)</p>
     <figure>
       <svg id="LongitudeSVG" />
-      <figcaption>
-        Point on surface of spheroid, at -96&deg; (west) longitude<br />
-        (looking down at spheroid from above north pole)
-      </figcaption>
+      <figcaption>Point on surface of spheroid, at -96&deg; (west) longitude<br />(looking down at spheroid from above north pole)</figcaption>
     </figure>
-    <p>
-      Referring to the two figures above, for a given latitude, an infinite number of points could be drawn on the surface of the spheroid.  When connected, these points constitute a line (or circle, as viewed in the latter figure) of equal latitude.  Such lines are called <i>parallels</i> (for presumably obvious reasons).  Likewise, for a given longitude, an infinite number of points could be drawn and connected to make a line (or ellipse/circle, again depending on the viewpoint) of equal longitude.  However, unlike lines of equal latitude, these lines are not parallel; the distances between them vary with latitude.  These distances are greatest at the equator and zero at each pole, where all such lines converge (intersect).  These lines of equal longitude are called (perhaps not surprisingly, from our discussion above) <i>meridians</i>.
-    </p>
+    <p>Referring to the two figures above, for a given latitude, an infinite number of points could be drawn on the surface of the spheroid.  When connected, these points constitute a line (or circle, as viewed in the latter figure) of equal latitude.  Such lines are called <i>parallels</i> (for presumably obvious reasons).  Likewise, for a given longitude, an infinite number of points could be drawn and connected to make a line (or ellipse/circle, again depending on the viewpoint) of equal longitude.  However, unlike lines of equal latitude, these lines are not parallel; the distances between them vary with latitude.  These distances are greatest at the equator and zero at each pole, where all such lines converge (intersect).  These lines of equal longitude are called (perhaps not surprisingly, from our discussion above) <i>meridians</i>.</p>
     <h4>Angles vs. Distances</h4>
-    <p>
-      As previously stated, latitude and longitude (along with radius) are spherical coordinates.  As such, it is important to remember that latitude and longitude are angles, not distances.  Longitude and latitude are often referred to (erroneously, IMHO) as 'x' and 'y' (respectively), and one common mistake made by less experienced GIS professionals is to treat these values as if they were <a href="http://mathworld.wolfram.com/CartesianCoordinates.html">Cartesian coordinates</a>, using the <a href="http://mathworld.wolfram.com/PythagoreanTheorem.html">Pythagorean theorem</a> to calculate <a href="https://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a> between two points on the surface of the spheroid.  <em>This will not work.</em>  Cartesian coordinates are distances along perpendicular axes in a two-dimensional (2D) plane, whereas latitude and longitude are angles from perpendicular planes that intersect a three-dimensional (3D) spheroid.
-    </p>
-    <p>
-      If the surface of Earth were flat, then it would indeed be valid to use Cartesian coordinates (in some linear unit, like meters) to calculate such distances; however, the surface of Earth is curved, so strictly speaking, Cartesian coordinates cannot be used to calculate distances.  (In practice, Cartesian coordinates <i>are</i> in fact used, but only after the (curved) surface of the earth has been projected onto a flat surface, which is still not entirely accurate, but such projections are designed to preserve as much accuracy as possible based on particular needs -- more on this later.)
-    </p>
-    <p>
-      Perhaps the temptation to use latitude and longitude (as Cartesian coordinates) to calculate surface distance arises from the fact that much geographical data is stored as latitude and longitude (probably because it was collected by GPS).  One may be inclined to ask "how long" a degree of latitude or longitude is, but the answer differs depending on where we are on the surface of the globe.  This is true of both latitude and longitude, but especially of longitude.
-    </p>
-    <p>
-      Recall from our discussion above that although lines of equal latitude are parallel, lines of equal longitude (meridians) are not, and the distances between them vary with latitude.  For example, along the equator (0&deg; latitude), where these distances are greatest, one degree of longitude is about 111 km (69 mi) on the surface.  At 30&deg; latitude (or "the 30<sup>th</sup> parallel," as some prefer to say), one degree of longitude is closer to 96 km (60 mi) on the surface.  At 60&deg; latitude, the surface distance equivalent to one degree of longitude is shorter still, at about 56 km (35 mi).  At the poles (90&deg; latitude), where the meridians converge, one degree of longitude is equivalent to a surface distance of zero, as mentioned above.
-    </p>
-    <p>
-      The variance is much smaller with latitude.  The surface distance equivalent to one degree of latitude increases with latitude (i.e., it is shortest at the equator and longest at the poles).  One degree of latitude is equivalent to a surface distance of about 110.6 km (68.7 mi) at the equator, and closer to 111.7 km (69.4 mi) at the poles.
-    </p>
-    <p>
-      It should be noted that it <i>is</i> possible to calculate the distance between two points on the surface of the earth using spherical coordinates (radius, latitude, and longitude), just not via the Pythagorean theorem, as it would be with Cartesian coordinates.  Remember that Earth's surface is curved, so the surface distance between these two points is not a straight line, but a curved line (i.e., an arc), so rather than computing "straight-line" (Euclidean) distance between them, you would calculate the <a href="https://en.wikipedia.org/wiki/Great-circle_distance">great-circle distance</a> between them.  A number of formulas (such as the commonly used <a href="https://en.wikipedia.org/wiki/Haversine_formula">haversine formula</a>) exist for this calculation, most of which are accurate to within 0.5%.  (This is where that aforementioned mean Earth radius comes in handy.)
-    </p>
+    <p>As previously stated, latitude and longitude (along with radius) are spherical coordinates.  As such, it is important to remember that latitude and longitude are angles, not distances.  Longitude and latitude are often referred to (erroneously, IMHO) as 'x' and 'y' (respectively), and one common mistake made by less experienced GIS professionals is to treat these values as if they were <a href="http://mathworld.wolfram.com/CartesianCoordinates.html">Cartesian coordinates</a>, using the <a href="http://mathworld.wolfram.com/PythagoreanTheorem.html">Pythagorean theorem</a> to calculate <a href="https://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a> between two points on the surface of the spheroid.  <em>This will not work.</em>  Cartesian coordinates are distances along perpendicular axes in a two-dimensional (2D) plane, whereas latitude and longitude are angles from perpendicular planes that intersect a three-dimensional (3D) spheroid.</p>
+    <p>If the surface of Earth were flat, then it would indeed be valid to use Cartesian coordinates (in some linear unit, like meters) to calculate such distances; however, the surface of Earth is curved, so strictly speaking, Cartesian coordinates cannot be used to calculate distances.  (In practice, Cartesian coordinates <i>are</i> in fact used, but only after the (curved) surface of the earth has been projected onto a flat surface, which is still not entirely accurate, but such projections are designed to preserve as much accuracy as possible based on particular needs -- more on this later.)</p>
+    <p>Perhaps the temptation to use latitude and longitude (as Cartesian coordinates) to calculate surface distance arises from the fact that much geographical data is stored as latitude and longitude (probably because it was collected by GPS).  One may be inclined to ask "how long" a degree of latitude or longitude is, but the answer differs depending on where we are on the surface of the globe.  This is true of both latitude and longitude, but especially of longitude.</p>
+    <p>Recall from our discussion above that although lines of equal latitude are parallel, lines of equal longitude (meridians) are not, and the distances between them vary with latitude.  For example, along the equator (0&deg; latitude), where these distances are greatest, one degree of longitude is about 111 km (69 mi) on the surface.  At 30&deg; latitude (or "the 30<sup>th</sup> parallel," as some prefer to say), one degree of longitude is closer to 96 km (60 mi) on the surface.  At 60&deg; latitude, the surface distance equivalent to one degree of longitude is shorter still, at about 56 km (35 mi).  At the poles (90&deg; latitude), where the meridians converge, one degree of longitude is equivalent to a surface distance of zero, as mentioned above.</p>
+    <p>The variance is much smaller with latitude.  The surface distance equivalent to one degree of latitude increases with latitude (i.e., it is shortest at the equator and longest at the poles).  One degree of latitude is equivalent to a surface distance of about 110.6 km (68.7 mi) at the equator, and closer to 111.7 km (69.4 mi) at the poles.</p>
+    <p>It should be noted that it <i>is</i> possible to calculate the distance between two points on the surface of the earth using spherical coordinates (radius, latitude, and longitude), just not via the Pythagorean theorem, as it would be with Cartesian coordinates.  Remember that Earth's surface is curved, so the surface distance between these two points is not a straight line, but a curved line (i.e., an arc), so rather than computing "straight-line" (Euclidean) distance between them, you would calculate the <a href="https://en.wikipedia.org/wiki/Great-circle_distance">great-circle distance</a> between them.  A number of formulas (such as the commonly used <a href="https://en.wikipedia.org/wiki/Haversine_formula">haversine formula</a>) exist for this calculation, most of which are accurate to within 0.5%.  (This is where that aforementioned mean Earth radius comes in handy.)</p>
     <h4>Degrees, Minutes, and Seconds</h4>
-    <p>
-      Although latitude and longitude are often expressed as <i>decimal degrees</i> (e.g., -95.56&deg;), they may also be expressed as <i>degrees, minutes, and seconds (DMS)</i>.  <i>Minutes</i> and <i>seconds</i> here (also called <i>arc-minutes</i> and <i>arc-seconds</i>, respectively) are just like minutes and seconds of clock time: 60 seconds = 1 minute, and 60 minutes = 1 degree.  Unlike clock time, however, arc-minutes and arc-seconds are not written as colon-separated values; rather, apostrophe (or single-quote) means arc-minutes, and double-quote means arc-seconds (e.g., 95&deg;33'36"W).  (Note that when written in DMS format, direction (N, S, E, or W) is preferred over sign; hence, 95&deg;33'36"W instead of -95&deg;33'36".)
-    </p>
+    <p>Although latitude and longitude are often expressed as <i>decimal degrees</i> (e.g., -95.56&deg;), they may also be expressed as <i>degrees, minutes, and seconds (DMS)</i>.  <i>Minutes</i> and <i>seconds</i> here (also called <i>arc-minutes</i> and <i>arc-seconds</i>, respectively) are just like minutes and seconds of clock time: 60 seconds = 1 minute, and 60 minutes = 1 degree.  Unlike clock time, however, arc-minutes and arc-seconds are not written as colon-separated values; rather, apostrophe (or single-quote) means arc-minutes, and double-quote means arc-seconds (e.g., 95&deg;33'36"W).  (Note that when written in DMS format, direction (N, S, E, or W) is preferred over sign; hence, 95&deg;33'36"W instead of -95&deg;33'36".)</p>
     <table>
       <caption>Decimal Degrees (DD) vs. DMS - Examples</caption>
-      <thead>
-        <tr>
-          <th>DD</th>
-          <th>DMS</th>
-        </tr>
-      </thead>
+      <thead><tr><th>DD</th><th>DMS</th></tr></thead>
       <tbody style="text-align: right; font-family: monospace;">
-        <tr>
-          <td>29.55&deg;</td>
-          <td>29&deg;33'00"N</td>
-        </tr>
-        <tr>
-          <td>-95.56&deg;</td>
-          <td>95&deg;33'36"W</td>
-        </tr>
-        <tr>
-          <td>51.48&deg;</td>
-          <td>51&deg;28'40"N</td>
-        </tr>
-        <tr>
-          <td>-31.95&deg;</td>
-          <td>31&deg;57'08"S</td>
-        </tr>
-        <tr>
-          <td>115.86&deg;</td>
-          <td>115&deg;51'32"E</td>
-        </tr>
+        <tr><td>29.55&deg;</td><td>29&deg;33'00"N</td></tr>
+        <tr><td>-95.56&deg;</td><td>95&deg;33'36"W</td></tr>
+        <tr><td>51.48&deg;</td><td>51&deg;28'40"N</td></tr>
+        <tr><td>-31.95&deg;</td><td>31&deg;57'08"S</td></tr>
+        <tr><td>115.86&deg;</td><td>115&deg;51'32"E</td></tr>
       </tbody>
     </table>
-    <p>
-      Just like latitude and longitude (for minutes and seconds are merely fractions thereof), the surface distance equivalent to an arc-minute or arc-second varies with latitude.  Generally speaking, one arc-minute of latitude equals one arc-minute of longitude at the equator, the equivalent surface distance being about 1800 m, or 6000 ft (a little over a mile).  An arc-second of latitude, which equals an arc-second of longitude at the equator, is equivalent to about 30 m (100 ft) on the surface.
-    </p>
+    <p>Just like latitude and longitude (for minutes and seconds are merely fractions thereof), the surface distance equivalent to an arc-minute or arc-second varies with latitude.  Generally speaking, one arc-minute of latitude equals one arc-minute of longitude at the equator, the equivalent surface distance being about 1800 m, or 6000 ft (a little over a mile).  An arc-second of latitude, which equals an arc-second of longitude at the equator, is equivalent to about 30 m (100 ft) on the surface.</p>
     <h4>Datums</h4>
-    <p>
-      In addition to the Earth ellipsoids mentioned above, there is a concept called a <i>datum</i>.  A datum is the combination of a spheroid and an <i>origin</i> (or "tie point"), where the spheroid and the earth coincide (i.e., where the spheroid "attaches" to the earth).  Two datums that have been commonly used over the years are <a href="https://en.wikipedia.org/wiki/North_American_Datum#North_American_Datum_of_1927">North American Datum of 1927 (NAD 27)</a> and <a href="https://en.wikipedia.org/wiki/North_American_Datum#North_American_Datum_of_1983">North American Datum of 1983 (NAD 83)</a>.
-    </p>
-    <p>
-      NAD 27 uses the Clarke 1866 spheroid, and its origin is <a href="https://en.wikipedia.org/wiki/Meades_Ranch_Triangulation_Station">Meades Ranch</a> (a survey marker in Kansas at about 39&deg;N and 98&deg;W, approximating the <a href="https://en.wikipedia.org/wiki/Geographic_center_of_the_contiguous_United_States">geographic center of the 48 contiguous United States</a>.)  NAD 27 is the basis for the well-known <a href="https://nationalmap.gov/ustopo/">USGS 7.5-minute quadrangle maps</a>.  NAD 83 uses the GRS 80 spheroid, and its origin is the mass-center of Earth.
-    </p>
-    <p>
-      WGS 84 is also often referred to as a datum.  When used in this context, its origin is also the mass-center of Earth, which makes it nearly identical to NAD 83.
-    </p>
+    <p>In addition to the Earth ellipsoids mentioned above, there is a concept called a <i>datum</i>.  A datum is the combination of a spheroid and an <i>origin</i> (or "tie point"), where the spheroid and the earth coincide (i.e., where the spheroid "attaches" to the earth).  Two datums that have been commonly used over the years are <a href="https://en.wikipedia.org/wiki/North_American_Datum#North_American_Datum_of_1927">North American Datum of 1927 (NAD 27)</a> and <a href="https://en.wikipedia.org/wiki/North_American_Datum#North_American_Datum_of_1983">North American Datum of 1983 (NAD 83)</a>.</p>
+    <p>NAD 27 uses the Clarke 1866 spheroid, and its origin is <a href="https://en.wikipedia.org/wiki/Meades_Ranch_Triangulation_Station">Meades Ranch</a> (a survey marker in Kansas at about 39&deg;N and 98&deg;W, approximating the <a href="https://en.wikipedia.org/wiki/Geographic_center_of_the_contiguous_United_States">geographic center of the 48 contiguous United States</a>.)  NAD 27 is the basis for the well-known <a href="https://nationalmap.gov/ustopo/">USGS 7.5-minute quadrangle maps</a>.  NAD 83 uses the GRS 80 spheroid, and its origin is the mass-center of Earth.</p>
+    <p>WGS 84 is also often referred to as a datum.  When used in this context, its origin is also the mass-center of Earth, which makes it nearly identical to NAD 83.</p>
     <h4>Projections</h4>
-    <p>
-      As mentioned earlier, the (curved) surface of the earth is often projected onto a flat surface.  This is very useful, as it allows us to do things like print paper maps, display maps on computer screens, and (as mentioned above) even calculate distances using Cartesian coordinates, <i>as if</i> the surface of Earth were flat.  As with any 3D surface represented on a 2D surface, some distortion is inevitable when projecting Earth's surface onto a flat surface.  Also as mentioned earlier, though, these <a href="https://en.wikipedia.org/wiki/Map_projection">map projections</a>, as they are called, are designed to preserve as much accuracy as possible based on particular needs.
-    </p>
-    <p>
-      Generally speaking, a map projection can preserve <u>one</u> of the following properties:
-    </p>
+    <p>As mentioned earlier, the (curved) surface of the earth is often projected onto a flat surface.  This is very useful, as it allows us to do things like print paper maps, display maps on computer screens, and (as mentioned above) even calculate distances using Cartesian coordinates, <i>as if</i> the surface of Earth were flat.  As with any 3D surface represented on a 2D surface, some distortion is inevitable when projecting Earth's surface onto a flat surface.  Also as mentioned earlier, though, these <a href="https://en.wikipedia.org/wiki/Map_projection">map projections</a>, as they are called, are designed to preserve as much accuracy as possible based on particular needs.</p>
+    <p>Generally speaking, a map projection can preserve <u>one</u> of the following properties:</p>
     <ul>
       <li>An <i>equal-area</i> projection preserves the area (e.g., acreage or square mileage) of features.</li>
       <li>An <i>equidistant</i> projection preserves certain distances (for it is not possible to preserve <i>all</i> distances), typically either from a particular point (like a pole) or along one or more lines (like meridians).</li>
       <li>A <i>conformal</i> projection preserves the shapes of small features.</li>
     </ul>
-    <p>
-      Although we speak of projecting the surface of Earth onto a "flat" surface, it is not necessarily a plane onto which the surface is projected.  A better way of putting it would be, "to project the surface of Earth onto a surface (called a <a href="http://mathworld.wolfram.com/DevelopableSurface.html">developable surface</a>) that can be flattened out onto a (2D) plane without distortion."  The "developable" surface could be a plane, a cylinder, or a cone.  Map projections are often classified by which of these surface types (or "geometric models") is used, as follows:
-    </p>
+    <p>Although we speak of projecting the surface of Earth onto a "flat" surface, it is not necessarily a plane onto which the surface is projected.  A better way of putting it would be, "to project the surface of Earth onto a surface (called a <a href="http://mathworld.wolfram.com/DevelopableSurface.html">developable surface</a>) that can be flattened out onto a (2D) plane without distortion."  The "developable" surface could be a plane, a cylinder, or a cone.  Map projections are often classified by which of these surface types (or "geometric models") is used, as follows:</p>
     <ul>
-      <li>
-        When projected onto a plane that is tangent to the globe at a single point (perhaps the easiest to imagine), the projection is said to be <i>planar</i> (also called <i>azimuthal</i> or <i>zenithal</i>).
-      </li>
-      <li>
-        When projected onto a cone that is tangent to the globe at one line or secant to ("slicing" through) the globe at two lines (usually two parallels), the projection is described as <i>conical</i>.  In this case, the flat surface would be produced by cutting the cone along a <i>generatrix</i> (a straight line from apex to base -- specifically, the line opposite the <i>central meridian</i>, to be discussed shortly) and flattening out the lateral surface of the cone.
-      </li>
-      <li>
-        When projected onto a cylinder (which would also be tangent to the globe at one line or secant at two), the projection is <i>cylindrical</i>.  The flat surface in this case would be obtained in a manner similar to that of the cone (the cylinder would be cut along a vertical line and its lateral surface flattened out).  A tangent cylindrical projection is known as a <a href="https://en.wikipedia.org/wiki/Mercator_projection">Mercator projection</a>, named after Flemish geographer <a href="https://en.wikipedia.org/wiki/Gerardus_Mercator">Gerardus Mercator</a>.  A Mercator projection may be <i>normal</i> (tangent at the equator), <i>transverse</i> (tangent at two meridians), or <i>oblique</i> (tangent at an arbitrary great circle).
-      </li>
+      <li>When projected onto a plane that is tangent to the globe at a single point (perhaps the easiest to imagine), the projection is said to be <i>planar</i> (also called <i>azimuthal</i> or <i>zenithal</i>).</li>
+      <li>When projected onto a cone that is tangent to the globe at one line or secant to ("slicing" through) the globe at two lines (usually two parallels), the projection is described as <i>conical</i>.  In this case, the flat surface would be produced by cutting the cone along a <i>generatrix</i> (a straight line from apex to base -- specifically, the line opposite the <i>central meridian</i>, to be discussed shortly) and flattening out the lateral surface of the cone.</li>
+      <li>When projected onto a cylinder (which would also be tangent to the globe at one line or secant at two), the projection is <i>cylindrical</i>.  The flat surface in this case would be obtained in a manner similar to that of the cone (the cylinder would be cut along a vertical line and its lateral surface flattened out).  A tangent cylindrical projection is known as a <a href="https://en.wikipedia.org/wiki/Mercator_projection">Mercator projection</a>, named after Flemish geographer <a href="https://en.wikipedia.org/wiki/Gerardus_Mercator">Gerardus Mercator</a>.  A Mercator projection may be <i>normal</i> (tangent at the equator), <i>transverse</i> (tangent at two meridians), or <i>oblique</i> (tangent at an arbitrary great circle).</li>
     </ul>
-    <p>
-      The developable surface, when flattened into a plane, effectively becomes a Cartesian coordinate system, in which the Pythagorean theorem can be used to calculate Euclidean (straight-line) distance between any two points, given their 2D coordinates (x, y).  (This is admittedly a bit easier than using the haversine formula, don't you think?)  Here, x and y, being Cartesian coordinates, are distances along perpendicular axes (converging at an <i>origin</i>) and are measured in linear units (e.g., meters or miles).  Thus, the projection gives the "flat" appearance of a map that we're all used to.
-    </p>
-    <p>
-      Each class of projection has a set of <i>parameters</i>, summarized as follows:
-    </p>
+    <p>The developable surface, when flattened into a plane, effectively becomes a Cartesian coordinate system, in which the Pythagorean theorem can be used to calculate Euclidean (straight-line) distance between any two points, given their 2D coordinates (x, y).  (This is admittedly a bit easier than using the haversine formula, don't you think?)  Here, x and y, being Cartesian coordinates, are distances along perpendicular axes (converging at an <i>origin</i>) and are measured in linear units (e.g., meters or miles).  Thus, the projection gives the "flat" appearance of a map that we're all used to.</p>
+    <p>Each class of projection has a set of <i>parameters</i>, summarized as follows:</p>
     <table>
       <thead>
         <tr>
@@ -267,8 +171,7 @@
           <td>
             <ul>
               <li>If oblique, great circle</li>
-              <li>
-                Otherwise:
+              <li>Otherwise:
                 <ul>
                   <li>Central meridian</li>
                   <li>If not transverse, standard parallel(s)</li>
@@ -279,12 +182,8 @@
         </tr>
       </tbody>
     </table>
-    <p>
-      In addition, every projection has an <i>origin</i> (where the x and y axes converge) and a (linear) <i>unit of measure</i> (such as meters, feet, or miles).  The term <i>origin</i> may be somewhat misleading here, as the coordinates of the origin are not necessarily 0, 0.  It may be easiest to imagine the origin as the point having coordinates (0, 0) -- and indeed, this is often the case -- but sometimes, the origin is considered to be a point with nonzero coordinates, in which case it is said to have a "false easting" and a "false northing" (essentially, offsets from some "other origin" whose coordinates are 0, 0).  The important thing is where the point (0, 0) is with respect to the features on the map, and it is pretty much always at the lower left-hand corner, such that all x and y values are positive.
-    </p>
-    <p>
-      Some common map projections are summarized below:
-    </p>
+    <p>In addition, every projection has an <i>origin</i> (where the x and y axes converge) and a (linear) <i>unit of measure</i> (such as meters, feet, or miles).  The term <i>origin</i> may be somewhat misleading here, as the coordinates of the origin are not necessarily 0, 0.  It may be easiest to imagine the origin as the point having coordinates (0, 0) -- and indeed, this is often the case -- but sometimes, the origin is considered to be a point with nonzero coordinates, in which case it is said to have a "false easting" and a "false northing" (essentially, offsets from some "other origin" whose coordinates are 0, 0).  The important thing is where the point (0, 0) is with respect to the features on the map, and it is pretty much always at the lower left-hand corner, such that all x and y values are positive.</p>
+    <p>Some common map projections are summarized below:</p>
     <table>
       <thead>
         <tr>
@@ -327,15 +226,9 @@
       </tbody>
     </table>
     <h4>Spatial Reference Systems</h4>
-    <p>
-      Taken together, a datum, a projection, and its parameters constitute what is called a mapping system, coordinate system, <a href="http://docs.qgis.org/2.0/en/docs/gentle_gis_introduction/coordinate_reference_systems.html">coordinate reference system (CRS)</a>, or <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">spatial reference system (SRS)</a>.  (These terms all essentially mean the same thing; this text uses the term <i>spatial reference system</i>.)  It is considered a "best practice" to include this information on any published map.
-    </p>
-    <p>
-      A spatial reference system is often referred to by its Spatial Reference Identifier (SRID), an integer that uniquely identifies a spatial reference system.  Several organizations have published SRIDs, most notably the <a href="http://www.epsg.org/">European Petroleum Survey Group (EPSG)</a> (now part of the <a href="http://www.iogp.org/">International Association of Oil &amp; Gas Producers</a>).  Most if not all SRIDs can be found online at <a href="https://epsg.io/">Coordinate Systems Worldwide (EPSG.io)</a>.
-    </p>
-    <p>
-      Some common spatial reference systems are summarized below:
-    </p>
+    <p>Taken together, a datum, a projection, and its parameters constitute what is called a mapping system, coordinate system, <a href="http://docs.qgis.org/2.0/en/docs/gentle_gis_introduction/coordinate_reference_systems.html">coordinate reference system (CRS)</a>, or <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">spatial reference system (SRS)</a>.  (These terms all essentially mean the same thing; this text uses the term <i>spatial reference system</i>.)  It is considered a "best practice" to include this information on any published map.</p>
+    <p>A spatial reference system is often referred to by its Spatial Reference Identifier (SRID), an integer that uniquely identifies a spatial reference system.  Several organizations have published SRIDs, most notably the <a href="http://www.epsg.org/">European Petroleum Survey Group (EPSG)</a> (now part of the <a href="http://www.iogp.org/">International Association of Oil &amp; Gas Producers</a>).  Most if not all SRIDs can be found online at <a href="https://epsg.io/">Coordinate Systems Worldwide (EPSG.io)</a>.</p>
+    <p>Some common spatial reference systems are summarized below:</p>
     <table>
       <thead style="font-size: 0.8em;">
         <tr>
@@ -349,12 +242,8 @@
       </thead>
       <tbody style="font-size: 0.8em;">
         <tr>
-          <td style="text-align: center;">
-            <a href="https://www.ngs.noaa.gov/TOOLS/utm.shtml">Universal Transverse Mercator (UTM)</a>
-          </td>
-          <td>
-            Earth is divided into 60 zones, each 6&deg; wide (30 different cylinder orientations).  Each zone is split at equator into North (N) and South (S).
-          </td>
+          <td style="text-align: center;"><a href="https://www.ngs.noaa.gov/TOOLS/utm.shtml">Universal Transverse Mercator (UTM)</a></td>
+          <td>Earth is divided into 60 zones, each 6&deg; wide (30 different cylinder orientations).  Each zone is split at equator into North (N) and South (S).</td>
           <td style="text-align: center;">WGS 84<sup>1</sup></td>
           <td style="text-align: center;">Transverse Mercator</td>
           <td>
@@ -365,17 +254,11 @@
               <li><b>Unit of Measure:</b> meter</li>
             </ul>
           </td>
-          <td style="text-align: center;">
-            <a href="https://epsg.io/32601">32601</a> .. <a href="https://epsg.io/32660">32660</a>, <a href="https://epsg.io/32701">32701</a> .. <a href="https://epsg.io/32760">32760</a><sup>2</sup>
-          </td>
+          <td style="text-align: center;"><a href="https://epsg.io/32601">32601</a> .. <a href="https://epsg.io/32660">32660</a>, <a href="https://epsg.io/32701">32701</a> .. <a href="https://epsg.io/32760">32760</a><sup>2</sup></td>
         </tr>
         <tr>
-          <td style="text-align: center;">
-            <a href="https://www.ngs.noaa.gov/TOOLS/spc.shtml">State Plane Coordinate System (SPCS)</a>
-          </td>
-          <td>
-            Each state (in the U.S.) is divided into zones, each of which has its own parameters.
-          </td>
+          <td style="text-align: center;"><a href="https://www.ngs.noaa.gov/TOOLS/spc.shtml">State Plane Coordinate System (SPCS)</a></td>
+          <td>Each state (in the U.S.) is divided into zones, each of which has its own parameters.</td>
           <td style="text-align: center;">NAD 83</td>
           <td style="text-align: center;">depends on zone; most use Lambert Conformal Conic</td>
           <td>
@@ -386,9 +269,7 @@
               <li><b>Unit of Measure:</b> meter or foot</li>
             </ul>
           </td>
-          <td style="text-align: center;">
-            <a href="https://epsg.io/102629">102629</a> .. <a href="https://epsg.io/102758">102758</a>
-          </td>
+          <td style="text-align: center;"><a href="https://epsg.io/102629">102629</a> .. <a href="https://epsg.io/102758">102758</a></td>
         </tr>
         <tr>
           <td style="text-align: center;">Texas State Mapping System (TSMS)</td>
@@ -407,9 +288,7 @@
           <td style="text-align: center;"><a href="https://epsg.io/3081">3081</a></td>
         </tr>
         <tr>
-          <td style="text-align: center;">
-            <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a><sup>3</sup>
-          </td>
+          <td style="text-align: center;"><a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a><sup>3</sup></td>
           <td>Used by most modern GPS devices.</td>
           <td style="text-align: center;">WGS 84</td>
           <td style="text-align: center;">none / geographic<sup>4</sup></td>
@@ -417,12 +296,8 @@
           <td style="text-align: center;"><a href="https://epsg.io/4326">4326</a></td>
         </tr>
         <tr>
-          <td style="text-align: center;">
-            Pseudo-Mercator (a.k.a. <a href="https://en.wikipedia.org/wiki/Web_Mercator">Web Mercator</a>)
-          </td>
-          <td>
-            Used by many web mapping applications, including <a href="https://www.google.com/maps/">Google Maps</a>.
-          </td>
+          <td style="text-align: center;">Pseudo-Mercator (a.k.a. <a href="https://en.wikipedia.org/wiki/Web_Mercator">Web Mercator</a>)</td>
+          <td>Used by many web mapping applications, including <a href="https://www.google.com/maps/">Google Maps</a>.</td>
           <td style="text-align: center;">WGS 84</td>
           <td style="text-align: center;">Mercator</td>
           <td>
@@ -442,14 +317,10 @@
       <sup>3</sup> Although usually used to describe a reference ellipsoid (or a datum based thereon), WGS 84 is often thought of as a SRS in its own right, which can be somewhat deceptive, mainly because of its "projection" (or lack thereof).<br />
       <sup>4</sup> Strictly speaking, there is no projection associated with WGS 84.  By default, it is said to be "unprojected," or sometimes described as having a "geographic coordinate system" (see also <a href="https://en.wikipedia.org/wiki/Equirectangular_projection">plate carr&eacute;e</a>).<br />
     </small>
-    <p>
-      Incidentally, there's a nifty little program called <a href="http://proj4.org/">PROJ.4</a> (maintained right here on <a href="https://github.com/OSGeo/proj.4/">GitHub</a>) that can convert coordinates between these systems and do other neat things with geodetic data.
-    </p>
+    <p>Incidentally, there's a nifty little program called <a href="http://proj4.org/">PROJ.4</a> (maintained right here on <a href="https://github.com/OSGeo/proj.4/">GitHub</a>) that can convert coordinates between these systems and do other neat things with geodetic data.</p>
     <footer>
-      <p>
-        Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version
-      </p>
-      <small>Copyright &copy; 2016-8 Jeffrey Paul Bourdier</small>
+      <p>Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version</p>
+      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
     </footer>
   </body>
 </html>

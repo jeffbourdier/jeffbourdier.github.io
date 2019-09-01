@@ -46,11 +46,7 @@ var KEYWORDS = [
  */
 function highlightSyntax(element)
 {
-  var html, nodes, chars, j, i, fn, k, s;
-
-  nodes = [];
-  chars = [];
-  j = 0;
+  var html, nodes = [], chars = [], j = 0, i, fn, k, s;
 
   /* Because "angle brackets" get converted to character reference names, the HTML markup must
    * be "pre-processed" to "unconvert" them so that they will be parsed and rendered properly.
@@ -201,9 +197,7 @@ function startDelimiter(html, i)
  */
 function buildToken(chars, html, i)
 {
-  var c, j, b, s;
-
-  c = html.charCodeAt(i);
+  var j, b, s, c = html.charCodeAt(i);
 
   /* If there is no token in progress, either start one (if appropriate) or advance to the next token/character. */
   if (chars.length < 1)
@@ -267,10 +261,8 @@ function isKeywordCharCode(c)
  */
 function getKeywordIndex(chars)
 {
-  var s;
-
   if (chars.length < 1) return -1;
-  s = chars.join("");
+  var s = chars.join("");
   return KEYWORDS.indexOf(s);
 }
 
@@ -351,12 +343,10 @@ function processString(html, i, nodes)
  */
 function processNumber(html, i, nodes)
 {
-  var decimal, j, c, s;
-
   /* The number literal ends when a non-numeric character is encountered (or the HTML markup ends).
    * The one exception is a decimal point, which is considered part of the number literal.
    */
-  decimal = false;
+  var j, c, s, decimal = false;
   for (j = i + 1; j < html.length; j++)
   {
     c = html.charCodeAt(j);
@@ -457,13 +447,11 @@ function addElement(className, token, nodes)
  */
 function processText(html, start, end, nodes)
 {
-  var s, node;
-
   /* Don't attempt to process an empty or inverted string. */
   if (start >= html.length || (end >= 0 && start >= end)) return;
 
   /* A negative 'end' value means to extract characters to the end of the HTML markup. */
-  s = (end < 0) ? html.substr(start) : html.substring(start, end);
-  node = document.createTextNode(s);
+  var s = (end < 0) ? html.substr(start) : html.substring(start, end);
+  var node = document.createTextNode(s);
   nodes.push(node);
 }

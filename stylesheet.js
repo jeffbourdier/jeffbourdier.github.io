@@ -1,5 +1,12 @@
 /**
- * @file Processes the stylesheet (desktop(default)/mobile) for an HTML page.
+ * @file       Processes the stylesheet (desktop(default)/mobile) for an HTML page.
+ *
+ * @copyright  (c) 2016 Jeffrey Paul Bourdier
+ *
+ * @license    MIT
+ * Licensed under the MIT License.  This file may be used only in compliance with this License.
+ * Software distributed under this License is provided "AS IS", WITHOUT WARRANTY OF ANY KIND.
+ * For more information, see the following URL:  {@link https://opensource.org/licenses/MIT}
  */
 
 
@@ -16,9 +23,7 @@ function initStylesheet(parentDir) { setStylesheet(screen.width < 512, parentDir
  */
 function switchStylesheet(parentDir)
 {
-  var switchAElement;
-
-  switchAElement = document.getElementById("switchA");
+  var switchAElement = document.getElementById("switchA");
   setStylesheet(switchAElement.innerHTML == "mobile", parentDir);
 }
 
@@ -31,14 +36,9 @@ function switchStylesheet(parentDir)
  */
 function setStylesheet(toMobile, parentDir)
 {
-  var relPath;
-  var linkElement;
-  var switchAElement;
-
-  linkElement = document.getElementsByTagName("link")[0];
-  switchAElement = document.getElementById("switchA");
-
-  relPath = parentDir ? "../" : "";
+  var linkElement = document.getElementsByTagName("link")[0];
+  var switchAElement = document.getElementById("switchA");
+  var relPath = parentDir ? "../" : "";
 
   if (toMobile)
   {

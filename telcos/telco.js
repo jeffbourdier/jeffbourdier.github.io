@@ -1,5 +1,12 @@
 /**
- * @file Functionality unique to the Telcos page.
+ * @file       Functionality unique to the Telcos page.
+ *
+ * @copyright  (c) 2016 Jeffrey Paul Bourdier
+ *
+ * @license    MIT
+ * Licensed under the MIT License.  This file may be used only in compliance with this License.
+ * Software distributed under this License is provided "AS IS", WITHOUT WARRANTY OF ANY KIND.
+ * For more information, see the following URL:  {@link https://opensource.org/licenses/MIT}
  */
 
 
@@ -79,12 +86,7 @@ var EPOCH_Y = (EPOCH_YEAR - BEGIN_YEAR) * YEAR_LOW;
  */
 function drawTimeGrid(svgElementId, yearInterval, color)
 {
-  var d;
-  var y;
-  var width;
-  var year;
-  var element;
-  var svgElement;
+  var d, y, width, year, element, svgElement;
 
   /* Size the SVG element. */
   svgElement = document.getElementById(svgElementId);
@@ -132,12 +134,7 @@ function drawTimeBar(svgElementId, channel, beginYear, endYear, branchChannel, m
 {
   var R = CHANNEL_SPACE / 5;
 
-  var x;
-  var y;
-  var dy;
-  var s;
-  var element;
-  var svgElement;
+  var x, y, dy, s, element, svgElement;
 
   /* Build the points string. */
 
@@ -188,12 +185,7 @@ function drawTimeBar(svgElementId, channel, beginYear, endYear, branchChannel, m
  */
 function drawLineTransfer(svgElementId, year, fromChannel, toChannel, color)
 {
-  var x1;
-  var x2;
-  var y;
-  var s;
-  var element;
-  var svgElement;
+  var x1, x2, y, s, element, svgElement;
 
   svgElement = document.getElementById(svgElementId);
   x1 = channelToX(fromChannel);
@@ -221,11 +213,8 @@ function drawLineTransfer(svgElementId, year, fromChannel, toChannel, color)
  */
 function labelEvent(svgElementId, channel, year, dx, dy, text, textAnchor, color)
 {
-  var x;
-  var y;
-
-  x = channelToX(channel);
-  y = yearToY(year);
+  var x = channelToX(channel);
+  var y = yearToY(year);
   drawLabel(svgElementId, x, y, MARKER_RADIUS, x + dx, y + dy, year + " - " + text, TELCO_FONT_SIZE, textAnchor, color);
 }
 
@@ -239,11 +228,8 @@ function labelEvent(svgElementId, channel, year, dx, dy, text, textAnchor, color
  */
 function labelCompany(svgElementId, channel, text, color)
 {
-  var x;
-  var y;
-
-  x = channelToX(channel);
-  y = yearToY(2017);
+  var x = channelToX(channel);
+  var y = yearToY(2017);
   drawLabel(svgElementId, x, y, MARKER_RADIUS, x, y + 16, text, TELCO_FONT_SIZE, "middle", color);
 }
 
@@ -257,11 +243,8 @@ function labelCompany(svgElementId, channel, text, color)
  */
 function labelYear(svgElementId, year, width)
 {
-  var x;
-  var y;
-
-  y = yearToY(year) - 1;
-  x = (CHANNEL_SPACE - CHANNEL_WIDTH) / 2;
+  var y = yearToY(year) - 1;
+  var x = (CHANNEL_SPACE - CHANNEL_WIDTH) / 2;
   drawLabel(svgElementId, x, y, 0, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
   drawLabel(svgElementId, width - x, y, 0, 0, 0, year, TELCO_FONT_SIZE, "middle", "gray");
 }
@@ -273,10 +256,7 @@ function labelYear(svgElementId, year, width)
  * @param {number} channel
  * @returns {number} The X-coordinate of the channel.
  */
-function channelToX(channel)
-{
-  return channel * CHANNEL_SPACE;
-}
+function channelToX(channel) { return channel * CHANNEL_SPACE; }
 
 
 /**
@@ -287,9 +267,7 @@ function channelToX(channel)
  */
 function yearToY(year)
 {
-  var b;
-  var r;
-  var i;
+  var b, r, i;
 
   if (year < EPOCH_YEAR)
   {
@@ -315,10 +293,4 @@ function yearToY(year)
  * @param {number} y Y-coordinate of the point.
  * @returns {string} The string with the coordinate pair added.
  */
-function addPointToString(s, x, y)
-{
-  var z;
-
-  z = (s !== undefined && s.length) ? (s + " ") : "";
-  return z + x + "," + y;
-}
+function addPointToString(s, x, y) { return ((s !== undefined && s.length) ? (s + " ") : "") + x + "," + y; }

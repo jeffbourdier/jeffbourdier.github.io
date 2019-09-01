@@ -1,5 +1,12 @@
 /**
- * @file Functionality unique to the Geodesy page.
+ * @file       Functionality unique to the Geodesy page.
+ *
+ * @copyright  (c) 2016 Jeffrey Paul Bourdier
+ *
+ * @license    MIT
+ * Licensed under the MIT License.  This file may be used only in compliance with this License.
+ * Software distributed under this License is provided "AS IS", WITHOUT WARRANTY OF ANY KIND.
+ * For more information, see the following URL:  {@link https://opensource.org/licenses/MIT}
  */
 
 
@@ -17,13 +24,8 @@
  */
 function drawGlobe(svgElementId, equatorialRadius, polarRadius, n, strokeColor, fillColor)
 {
-  var i;
-  var a;
-  var element;
-  var svgElement;
-
   /* Size the SVG element. */
-  svgElement = document.getElementById(svgElementId);
+  var a, svgElement = document.getElementById(svgElementId);
   svgElement.style.width = 2 * equatorialRadius + "px";
   svgElement.style.height = 2 * polarRadius + "px";
 
@@ -31,7 +33,7 @@ function drawGlobe(svgElementId, equatorialRadius, polarRadius, n, strokeColor, 
   drawGlobeOutline(svgElement, equatorialRadius, polarRadius, strokeColor, fillColor);
 
   /* Draw the parallels and meridians. */
-  for (i = 0; i < n; i++)
+  for (var i = 0; i < n; i++)
   {
     a = (i / n) * (Math.PI / 2);
     drawParallels(svgElement, equatorialRadius, polarRadius, a, strokeColor);
@@ -52,23 +54,19 @@ function drawGlobe(svgElementId, equatorialRadius, polarRadius, n, strokeColor, 
  */
 function drawMeridians(svgElement, equatorialRadius, polarRadius, angle, color)
 {
-  var nodeName;
-  var radiusX;
-  var element;
-
   /* Special case:  If angle is zero, that's the prime meridian.  However, if we draw an ellipse with
    * a radius of zero, nothing will be drawn.  Therefore, draw instead a line for the prime meridian.
    * Otherwise, draw an ellipse representing two meridians equidistant from the prime meridian.
    */
-  nodeName = angle ? "ellipse" : "line"
-  element = document.createElementNS(NS, nodeName);
+  var nodeName = angle ? "ellipse" : "line"
+  var element = document.createElementNS(NS, nodeName);
   element.setAttribute("stroke", color);
   if (angle)
   {
     element.setAttribute("fill", "none");
     element.setAttribute("cx", equatorialRadius);
     element.setAttribute("cy", polarRadius);
-    radiusX = equatorialRadius * Math.sin(angle);
+    var radiusX = equatorialRadius * Math.sin(angle);
     element.setAttribute("rx", radiusX);
     element.setAttribute("ry", polarRadius);
   }
@@ -95,15 +93,12 @@ function drawMeridians(svgElement, equatorialRadius, polarRadius, angle, color)
  */
 function drawParallels(svgElement, equatorialRadius, polarRadius, angle, color)
 {
-  var d;
-  var element;
-
   /* The default case is to draw two lines representing two parallels equidistant from the equator.  The
    * same Element object can be used for both lines.  Instantiate this object and set its common attributes.
    */
-  element = document.createElementNS(NS, "line");
+  var element = document.createElementNS(NS, "line");
   element.setAttribute("stroke", color);
-  d = equatorialRadius * Math.cos(angle);
+  var d = equatorialRadius * Math.cos(angle);
   element.setAttribute("x1", equatorialRadius - d);
   element.setAttribute("x2", equatorialRadius + d);
 
@@ -140,13 +135,8 @@ function drawParallels(svgElement, equatorialRadius, polarRadius, angle, color)
  */
 function drawGlobePolar(svgElementId, radius, n, strokeColor, fillColor)
 {
-  var i;
-  var a;
-  var element;
-  var svgElement;
-
   /* Size the SVG element. */
-  svgElement = document.getElementById(svgElementId);
+  var a, svgElement = document.getElementById(svgElementId);
   svgElement.style.width = 2 * radius + "px";
   svgElement.style.height = 2 * radius + "px";
 
@@ -154,7 +144,7 @@ function drawGlobePolar(svgElementId, radius, n, strokeColor, fillColor)
   drawGlobeOutline(svgElement, radius, radius, strokeColor, fillColor);
 
   /* Draw the parallels and meridians. */
-  for (i = 0; i < n; i++)
+  for (var i = 0; i < n; i++)
   {
     a = (i / n) * (Math.PI / 2);
     drawParallelsPolar(svgElement, radius, a, strokeColor);
@@ -174,18 +164,15 @@ function drawGlobePolar(svgElementId, radius, n, strokeColor, fillColor)
  */
 function drawMeridiansPolar(svgElement, radius, angle, color)
 {
-  var d;
-  var element;
-
   /* The default case is to draw two lines representing two meridian halves equidistant from the prime meridian.  (Half
    * of each meridian half will be in the eastern hemisphere, the other half in the western.)  Assuming we are looking at
    * the north pole and the prime meridian is oriented horizontally on the right side, those meridian halves in quadrants
    * I and II would be in the eastern hemisphere, while those in quadrants III and IV would be in the western hemisphere.
    * The same Element object can be used for both lines.  Instantiate this object and set its common attributes.
    */
-  element = document.createElementNS(NS, "line");
+  var element = document.createElementNS(NS, "line");
   element.setAttribute("stroke", color);
-  d = radius * Math.cos(angle);
+  var d = radius * Math.cos(angle);
   element.setAttribute("x1", radius - d);
   element.setAttribute("x2", radius + d);
 
@@ -229,13 +216,10 @@ function drawMeridiansPolar(svgElement, radius, angle, color)
  */
 function drawParallelsPolar(svgElement, radius, angle, color)
 {
-  var r;
-  var element;
-
-  element = document.createElementNS(NS, "ellipse");
+  var element = document.createElementNS(NS, "ellipse");
   element.setAttribute("cx", radius);
   element.setAttribute("cy", radius);
-  r = radius * Math.sin(angle);
+  var r = radius * Math.sin(angle);
   element.setAttribute("rx", r);
   element.setAttribute("ry", r);
   element.setAttribute("stroke", color);
@@ -254,9 +238,7 @@ function drawParallelsPolar(svgElement, radius, angle, color)
  */
 function drawGlobeOutline(svgElement, equatorialRadius, polarRadius, strokeColor, fillColor)
 {
-  var element;
-
-  element = document.createElementNS(NS, "ellipse");
+  var element = document.createElementNS(NS, "ellipse");
   element.setAttribute("cx", equatorialRadius);
   element.setAttribute("cy", polarRadius);
   element.setAttribute("rx", equatorialRadius);
@@ -275,13 +257,9 @@ function drawGlobeOutline(svgElement, equatorialRadius, polarRadius, strokeColor
  */
 function drawHorizontal(svgElementId, color)
 {
-  var y;
-  var element;
-  var svgElement;
-
-  svgElement = document.getElementById(svgElementId);
-  y = parseInt(svgElement.style.height) / 2;
-  element = initLine(0, y, svgElement.style.width, y, color);
+  var svgElement = document.getElementById(svgElementId);
+  var y = parseInt(svgElement.style.height) / 2;
+  var element = initLine(0, y, svgElement.style.width, y, color);
   element.setAttribute("stroke-width", 4);
   svgElement.appendChild(element);
 }
@@ -301,19 +279,7 @@ function drawRadial(svgElementId, angle, supplementary, color)
   var ANNO_FACTOR = 3 / 4;
   var FONT_SIZE = 36;
 
-  var x;
-  var y;
-  var d;
-  var cx;
-  var cy;
-  var rx;
-  var ry;
-  var textNode;
-  var element;
-  var svgElement
-  var cosAngle;
-  var sinAngle;
-  var supFactor;
+  var x, y, d, cx, cy, rx, ry, textNode, element, svgElement, cosAngle, sinAngle, supFactor;
 
   /* Get the SVG element and the sine and cosine of the angle, which will be needed throughout. */
   svgElement = document.getElementById(svgElementId);
