@@ -5,10 +5,11 @@
     <title>Jeff Bourdier on GitHub</title>
     <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
-    <link rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
     <link rel="icon" href="../favicon.ico" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
-    <script src="../stylesheet.js"></script>
     <script src="../graphics.js"></script>
     <script src="telco.js"></script>
     <script type="text/javascript">
@@ -18,8 +19,6 @@
       {
         var SVG_ID = "timelineSVG";
         var LABEL_COLOR = "black";
-
-        initStylesheet(true);
 
         drawTimeGrid(SVG_ID, 5, "silver");
 
@@ -175,18 +174,6 @@
     <p>Working for a telephone company (or "telco," if you like) has given me a new appreciation for the telecom industry.  After all, it was a telco (<a href="http://www.bell-labs.com/">Bell Labs</a>, to be specfic) that gave us <a href="http://opengroup.org/unix">UNIX</a>, <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>, <a href="https://isocpp.org/">C++</a>, and even some of the earliest <a href="https://en.wikipedia.org/wiki/MUSIC-N">music software</a>.  It has also led to some <a href="http://sspinnovations.com/blog/2013/08/09/why-telecoms-need-gis">interesting developments in GIS</a> (not to mention, of course, providing the essential services of long-distance communication and data transfer).</p>
     <p>Given this newfound interest in telcos, I thought it might be instructive also to have some knowledge of the industry's fascinating history.  This page is the summary of what I have learned, shared here (like my software) for the benefit of anyone else who might appreciate it.  Enjoy!  (Note: the scale of the timeline changes at 1980; horizontal lines mark 5-year intervals.)</p>
     <figure><svg id="timelineSVG" /></figure>
-    <!--<h4>Sources:</h4>
-    <ul>
-      <li>Brooks, John. <i><a href="https://books.google.com/books?id=H4NjAAAAIAAJ">Telephone: The First Hundred Years</a></i>, Harper &amp; Row, 1976.</li>
-      <li>Pizer, Russell A. <i><a href="https://books.google.com/books?id=4Vjyz9fgs6sC">The Tangled Web of Patent #174465</a></i>, AuthorHouse, 2009.</li>
-      <li>Bruce, Robert V. <i>Bell: Alexander Bell and the Conquest of Solitude</i>, Cornell University Press, 1990.</li>
-      <li>Block, Melissa; Neff, Brijet (2012-10-15). <a href="http://www.npr.org/2012/10/15/162963607/sprint-born-from-railroad-telephone-businesses">"Sprint Born From Railroad, Telephone Businesses"</a>. NPR.</li>
-      <li><a href="http://newsroom.sprint.com/news-releases/sprint-and-softbank-announce-completion-of-merger.htm">"Sprint and SoftBank Announce Completion of Merger"</a></li>
-      <li><a href="http://www.fundinguniverse.com/company-histories/frontier-corp-history/">Frontier Corp. - Company History, Funding Universe</a></li>
-    </ul>-->
-    <footer>
-      <p>Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version</p>
-      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
-    </footer>
+    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
   </body>
 </html>

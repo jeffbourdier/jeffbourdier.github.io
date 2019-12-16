@@ -5,26 +5,13 @@
     <title>Jeff Bourdier on GitHub</title>
     <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
-    <link rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <link rel="stylesheet" type="text/css" href="mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="desktop.css" media="only screen and (min-device-width: 512px)" />
     <link rel="icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <script src="stylesheet.js"></script>
-    <script type="text/javascript">
-      <!--
-
-      function initPage() { initStylesheet(false); }
-
-      //-->
-    </script>
   </head>
-  <body onload="initPage()">
-    <noscript>
-      <div style="border: 8px solid fuchsia; background-color: aqua; color: navy; padding: 16px; font-size: 1.25em;">
-        <p>This page requires JavaScript in order to function properly.  Either your browser does not support JavaScript, or JavaScript is disabled.  Please use a browser that supports JavaScript and make sure that JavaScript is enabled.</p>
-        <p>With Internet Explorer, if you see a bar at the bottom of your browser like the one below, simply click <b><u>A</u>llow blocked content</b> and the page will reload with JavaScript enabled.  (If this bar has already disappeared by the time you get here, press Ctrl+R or F5 to reload the page, and it should reappear.)</p>
-        <img src="ie-blocked.png" alt="Internet Explorer restricted this webpage from running scripts or ActiveX controls.  (Allow blocked content)" style="display: block; margin: auto; width: 960px; height: 50px;" />
-      </div>
-    </noscript>
+  <body>
     <header>
       <h1>Jeff Bourdier on GitHub</h1>
       <nav>
@@ -41,7 +28,8 @@
     <dl>
       <dt><a href="https://github.com/jeffbourdier/MIDIopsy">MIDIopsy</a></dt>
       <dd>
-        <p>A <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/">WPF</a> application (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>) that is used to view the binary contents of a <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI file</a>, with user-friendly comments.</p>
+        <p>A <a href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/">WPF</a> application (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>) that is used to view, play, and edit the binary contents of <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI files</a>.</p>
+        <p><a style="font-family: sans-serif; font-weight: bold;" href="midiopsy">MIDIopsy Home Page</a></p>
       </dd>
       <dt><a href="https://github.com/jeffbourdier/PortivewareSuite">Portiveware Suite</a></dt>
       <dd>
@@ -61,9 +49,6 @@
         </ul>
       </dd>
     </dl>
-    <footer>
-      <p>Switch to <a id="switchA" href="#" onclick="switchStylesheet(false)"></a> version</p>
-      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
-    </footer>
+    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
   </body>
 </html>

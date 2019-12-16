@@ -5,10 +5,11 @@
     <title>Jeff Bourdier on GitHub</title>
     <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
-    <link rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
     <link rel="icon" href="../favicon.ico" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
-    <script src="../stylesheet.js"></script>
     <script src="../graphics.js"></script>
     <script src="geo.js"></script>
     <script type="text/javascript">
@@ -23,8 +24,6 @@
         var LABEL_FONT_SIZE = 24;
         var LABEL_TEXT_ANCHOR = "middle";
         var LABEL_COLOR = "black";
-
-        initStylesheet(true);
 
         var n = GLOBE_RADIUS / 2;
         drawGlobe("sphereSVG", n, n, LINE_COUNT, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
@@ -318,9 +317,6 @@
       <sup>4</sup> Strictly speaking, there is no projection associated with WGS 84.  By default, it is said to be "unprojected," or sometimes described as having a "geographic coordinate system" (see also <a href="https://en.wikipedia.org/wiki/Equirectangular_projection">plate carr&eacute;e</a>).<br />
     </small>
     <p>Incidentally, there's a nifty little program called <a href="http://proj4.org/">PROJ.4</a> (maintained right here on <a href="https://github.com/OSGeo/proj.4/">GitHub</a>) that can convert coordinates between these systems and do other neat things with geodetic data.</p>
-    <footer>
-      <p>Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version</p>
-      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
-    </footer>
+    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
   </body>
 </html>

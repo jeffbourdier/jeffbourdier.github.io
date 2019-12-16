@@ -5,10 +5,11 @@
     <title>Jeff Bourdier on GitHub</title>
     <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
-    <link rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
     <link rel="icon" href="../favicon.ico" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
-    <script src="../stylesheet.js"></script>
     <script src="ora.js"></script>
     <script type="text/javascript">
       <!--
@@ -19,8 +20,6 @@
       function initPage()
       {
         var elements, i;
-
-        initStylesheet(true);
 
         /* Uncomment this to track keyword frequency. */
         //for (i = 0; i < KEYWORDS.length; i++) keywordFrequency.push(0);
@@ -1152,9 +1151,6 @@ END;
       <li><b>Compile for Debug</b> = optimization level 1 (some debug info)</li>
     </ul>
     <p><a href="http://www.devshed.com/c/a/oracle/compiling-plsql-code-for-an-oracle-database/">This article</a> and <a href="http://stevenfeuersteinonplsql.blogspot.com/2016/08/plsql-optimization-levels-and-native.html">this blog post</a> explain optimization levels pretty well.</p>
-    <footer>
-      <p>Switch to <a id="switchA" href="#" onclick="switchStylesheet(true)"></a> version</p>
-      <small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small>
-    </footer>
+    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
   </body>
 </html>
