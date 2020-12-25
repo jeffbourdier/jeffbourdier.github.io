@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Plunge by Jeff Bourdier</title>
+    <meta name="description" content="Plunge home page hosted on GitHub" />
+    <meta name="author" content="Jeff Bourdier" />
+    <meta name="keywords" content="file synchronizer,file synchronization" />
+    <style>
+      html { background-color: #FFFFDF; }
+      h1, h5, h6 { text-align: center; }
+      h1 { color: purple; font-family: monospace; margin-bottom: auto; }
+      h5 { color: maroon; font-family: monospace; margin-top: auto; }
+      h6 { border-top: 1px solid; padding-top: 8px; }
+      pre, code { background-color: #EFEFEF; font-weight: bold; }
+      pre { padding: 8px; }
+      code { padding: 1px; margin: 1px; }
+      dd { margin-bottom: 16px; }
+      @media only screen and (max-device-width: 511px) { html { font-size: 3em; } }
+    </style>
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  </head>
+  <body>
+    <h1>Plunge</h1>
+    <h5>by Jeff Bourdier</h5>
+    <p>Plunge is a command-line utility for Windows and Linux that is used to synchronize sets of files.  (Don't just sync; Plunge!)  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
+    <p>Plunge may be thought of as an extremely lightweight, portable version of <a href="https://rsync.samba.org/">Rsync</a>.  The typical use case is as follows:  You have two sets of files that you wish to keep synchronized.  One (the <i>source</i>) is the "master" set that you edit regularly and is generally up to date.  The other (the <i>destination</i>) is a redundant set (e.g., a backup).  From time to time, you'd like to run a command that compares each file in the one set to its counterpart in the other set, detects changes in size and timestamp, and copies each file from the <i>source</i> to the <i>destination</i> as necessary to bring the two sets in sync.</p>
+    <h2>Usage</h2>
+    <pre>
+plunge [OPTION]... <i>SOURCE</i> <i>DEST</i></pre>
+    <p><code><i>SOURCE</i></code> and <code><i>DEST</i></code> are the full pathnames of the <i>source</i> and <i>destination</i> directories (respectively).  Each pathname may or may not end with a path separator (<code>\</code> or <code>/</code>).  Plunge then reads standard input (stdin) for a list of file pathnames relative to the <i>source</i> and <i>destination</i> directories.  When end-of-file (EOF) is reached, each file in <code><i>SOURCE</i></code> is compared with its counterpart in <code><i>DEST</i></code>.  If the <code><i>SOURCE</i></code> file is newer than the <code><i>DEST</i></code> file, or if the <code><i>DEST</i></code> file does not exist, the <code><i>DEST</i></code> file is overwritten with the <code><i>SOURCE</i></code> file; otherwise, no action is taken.</p>
+    <h2>Options</h2>
+    <dl>
+      <dt><code>-h, --help</code></dt>
+      <dd>Output a help message and exit.</dd>
+      <dt><code>-n, --dry-run</code></dt>
+      <dd>Do not actually copy files; just output the messages.  This may be useful for examining the proposed actions and making sure there are no surprises.</dd>
+      <dt><code>-p, --purge</code></dt>
+      <dd>Report files in the destination directory that may need to be purged (i.e., because there are no corresponding files in the source directory).</dd>
+      <dt><code>-v, --verbose</code></dt>
+      <dd>Output messages for all files, whether copied or skipped.  (By default, a message is output only when a file is copied, not when it is skipped.)</dd>
+    </dl>
+    <h2>Example</h2>
+    <p>Let's say you have the following set of files on your local hard drive:</p>
+    <ul>
+      <li>C:\Users\Jeff\Documents\contacts.xlsx</li>
+      <li>C:\Users\Jeff\Documents\misc\accounts.xlsx</li>
+      <li>C:\Users\Jeff\Documents\misc\websites.xlsx</li>
+    </ul>
+    <p>You also have a public-facing fileserver with a copy of each of these files:</p>
+    <ul>
+      <li>\\192.168.0.199\Jeff\contacts.xlsx</li>
+      <li>\\192.168.0.199\Jeff\misc\accounts.xlsx</li>
+      <li>\\192.168.0.199\Jeff\misc\websites.xlsx</li>
+    </ul>
+    <p>Although you maintain these files on the local hard disk, you want to be able to access the latest versions of them (via the fileserver) from any Internet-connected device.  After making changes to these files, you might run:</p>
+    <pre>
+plunge -v C:\Users\Jeff\Documents \\192.168.0.199\Jeff &lt; plunge.txt</pre>
+    <p>The contents of <code>plunge.txt</code> would be:</p>
+    <pre>
+contacts.xlsx
+misc\accounts.xlsx
+misc\websites.xlsx</pre>
+    <p>Typical output might be:</p>
+    <pre>
+                     Pathname                             Status        Action
+--------------------------------------------------  ------------------  ------
+contacts.xlsx . . . . . . . . . . . . . . . . . . . Src newer. . . . . . Copy
+misc\accounts.xlsx. . . . . . . . . . . . . . . . . Src newer &amp; larger . Copy
+misc\websites.xlsx. . . . . . . . . . . . . . . . . Same age . . . . . . Skip</pre>
+    <p>Without the verbose (<code>-v</code>) option, output would be:</p>
+    <pre>
+                         Pathname                                 Status
+----------------------------------------------------------  ------------------
+contacts.xlsx . . . . . . . . . . . . . . . . . . . . . . . Newer (not larger)
+misc\accounts.xlsx. . . . . . . . . . . . . . . . . . . . . Newer and larger</pre>
+    <h2>Download</h2>
+    <p>Plunge can be downloaded from its <a href="https://github.com/jeffbourdier/plunge">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
+    <h6>Copyright &copy; 2020 Jeffrey Paul Bourdier</h6>
+  </body>
+</html>
