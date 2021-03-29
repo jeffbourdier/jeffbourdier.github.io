@@ -13,7 +13,7 @@
       h5 { color: maroon; font-family: monospace; margin-top: auto; }
       h6 { border-top: 1px solid; padding-top: 8px; }
       pre, code { background-color: #EFEFEF; font-weight: bold; }
-      pre { padding: 8px; }
+      pre { padding: 8px; overflow: auto; }
       code { padding: 1px; margin: 1px; }
       dd { margin-bottom: 16px; }
       @media only screen and (max-device-width: 511px) { html { font-size: 3em; } }
@@ -42,41 +42,60 @@ plunge [OPTION]... <i>SOURCE</i> <i>DEST</i></pre>
       <dd>Output messages for all files, whether copied or skipped.  (By default, a message is output only when a file is copied, not when it is skipped.)</dd>
     </dl>
     <h2>Example</h2>
-    <p>Let's say you have the following set of files on your local hard drive:</p>
+    <p>Let's say you're developing a <a href="https://plugins.qgis.org/">QGIS plugin</a> (such as the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>).  You might have the following set of files for the <a href="https://github.com/ogc-pipelineml/pml-geopackager">GitHub repository</a>:</p>
     <ul>
-      <li>C:\Users\Jeff\Documents\contacts.xlsx</li>
-      <li>C:\Users\Jeff\Documents\misc\accounts.xlsx</li>
-      <li>C:\Users\Jeff\Documents\misc\websites.xlsx</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\__init__.py</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\algorithm.py</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\metadata.txt</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\plugin.py</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\provider.py</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\icon.svg</li>
+      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\pml.svg</li>
     </ul>
-    <p>You also have a public-facing fileserver with a copy of each of these files:</p>
+    <p>In order to test the plugin, you need a copy of each of these files in your QGIS plugin path:</p>
     <ul>
-      <li>\\192.168.0.199\Jeff\contacts.xlsx</li>
-      <li>\\192.168.0.199\Jeff\misc\accounts.xlsx</li>
-      <li>\\192.168.0.199\Jeff\misc\websites.xlsx</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\__init__.py</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\algorithm.py</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\metadata.txt</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\plugin.py</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\provider.py</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\icon.svg</li>
+      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\pml.svg</li>
     </ul>
-    <p>Although you maintain these files on the local hard disk, you want to be able to access the latest versions of them (via the fileserver) from any Internet-connected device.  After making changes to these files, you might run:</p>
+    <p>After making changes to these files, you might run:</p>
     <pre>
-plunge -v C:\Users\Jeff\Documents \\192.168.0.199\Jeff &lt; plunge.txt</pre>
+plunge -v C:\Users\Jeff\Documents\GitHub\pml-geopackager C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager &lt; plunge.txt</pre>
     <p>The contents of <code>plunge.txt</code> would be:</p>
     <pre>
-contacts.xlsx
-misc\accounts.xlsx
-misc\websites.xlsx</pre>
+__init__.py
+algorithm.py
+metadata.txt
+plugin.py
+provider.py
+img/icon.svg
+img/pml.svg</pre>
     <p>Typical output might be:</p>
     <pre>
                      Pathname                             Status        Action
 --------------------------------------------------  ------------------  ------
-contacts.xlsx . . . . . . . . . . . . . . . . . . . Src newer. . . . . . Copy
-misc\accounts.xlsx. . . . . . . . . . . . . . . . . Src newer &amp; larger . Copy
-misc\websites.xlsx. . . . . . . . . . . . . . . . . Same age . . . . . . Skip</pre>
+__init__.py . . . . . . . . . . . . . . . . . . . . Same age . . . . . . Skip
+algorithm.py. . . . . . . . . . . . . . . . . . . . Src newer &amp; larger . Copy
+metadata.txt. . . . . . . . . . . . . . . . . . . . Src newer. . . . . . Copy
+plugin.py . . . . . . . . . . . . . . . . . . . . . Same age . . . . . . Skip
+provider.py . . . . . . . . . . . . . . . . . . . . Src newer. . . . . . Copy
+img/icon.svg. . . . . . . . . . . . . . . . . . . . Dst not found. . . . Copy
+img/pml.svg . . . . . . . . . . . . . . . . . . . . Dst not found. . . . Copy</pre>
     <p>Without the verbose (<code>-v</code>) option, output would be:</p>
     <pre>
                          Pathname                                 Status
 ----------------------------------------------------------  ------------------
-contacts.xlsx . . . . . . . . . . . . . . . . . . . . . . . Newer (not larger)
-misc\accounts.xlsx. . . . . . . . . . . . . . . . . . . . . Newer and larger</pre>
+algorithm.py. . . . . . . . . . . . . . . . . . . . . . . . Newer and larger
+metadata.txt. . . . . . . . . . . . . . . . . . . . . . . . Newer (not larger)
+provider.py . . . . . . . . . . . . . . . . . . . . . . . . Newer (not larger)
+img/icon.svg. . . . . . . . . . . . . . . . . . . . . . . . New
+img/pml.svg . . . . . . . . . . . . . . . . . . . . . . . . New</pre>
     <h2>Download</h2>
     <p>Plunge can be downloaded from its <a href="https://github.com/jeffbourdier/plunge">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
-    <h6>Copyright &copy; 2020 Jeffrey Paul Bourdier</h6>
+    <h6>Copyright &copy; 2020-1 Jeffrey Paul Bourdier</h6>
   </body>
 </html>

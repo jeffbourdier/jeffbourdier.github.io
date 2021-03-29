@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DUMPROWS by Jeff Bourdier</title>
+    <meta name="description" content="DUMPROWS home page hosted on GitHub" />
+    <meta name="author" content="Jeff Bourdier" />
+    <meta name="keywords" content="CGI,SQL,database,query,spatialize" />
+    <style>
+      html { background-color: #FFFFDF; }
+      h1, h5, h6 { text-align: center; }
+      h1 { color: green; font-family: serif; margin-bottom: auto; }
+      h5 { color: maroon; font-family: monospace; margin-top: auto; }
+      h6 { border-top: 1px solid; padding-top: 8px; }
+      pre, code { background-color: #EFEFEF; font-weight: bold; }
+      pre { padding: 8px; overflow: auto; }
+      code { padding: 1px; margin: 1px; }
+      dd { margin-bottom: 16px; }
+      @media only screen and (max-device-width: 511px) { html { font-size: 3em; } }
+    </style>
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  </head>
+  <body>
+    <h1>D<span style="font-size: 0.75em">UMP</span>R<span style="font-size: 0.75em">OWS</span></h1>
+    <h5>by Jeff Bourdier</h5>
+    <p>DUMPROWS (Database Utility Map-Producing Read-Only Web Service) is a <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">Common Gateway Interface (CGI)</a> program that allows a database to be queried using a web browser.  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
+    <p>DUMPROWS leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  URLs can be saved as bookmarks/favorites in your browser (convenient for viewing the results of frequently run queries), sent via email (very useful for sharing queries/resultsets with colleagues), etc..  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.</p>
+    <h2>Usage</h2>
+    <pre>
+dumprows [OPTION]... <i>COMMAND</i></pre>
+    <p><code><i>COMMAND</i></code> is a command line (which may be quoted) that invokes a database utility.  It should include the arguments needed to:</p>
+    <ul>
+      <li>produce HTML output</li>
+      <li>specify a database to connect to</li>
+      <li>provide credentials for the specified database</li>
+    </ul>
+    <p>The <code>QUERY_STRING</code> environment variable is taken as an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL SELECT</a> statement, which is then validated (to prevent <a href="https://bobby-tables.com/">Bobby Tables</a>) and run against the specified database.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
+    <h2>Options</h2>
+    <dl>
+      <dt><code>-h, --help</code></dt>
+      <dd>Output a help message and exit.</dd>
+    </dl>
+    <dl>
+      <dt><code>-l, --log</code></dt>
+      <dd>Write a message to the default log file (<code>C:\ProgramData\dumprows.log</code> on Windows, <code>/var/log/dumprows.log</code> on Linux).</dd>
+    </dl>
+    <p>Note that on Linux (assuming the HTTP server runs as a user called <code>www-data</code>), because the directory <code>/var/log/</code> is owned by <code>root</code>, the log file must be bootstrapped in order to be writable by the CGI process at run-time.  The following commands accomplish this by creating an empty log file and assigning ownership of it to the user <code>www-data</code>:</p>
+    <pre>
+sudo touch /var/log/dumprows.log
+sudo chown www-data:www-data /var/log/dumprows.log</pre>
+    <h2>Examples</h2>
+    <p>These examples were tested on <a href="https://ubuntu.com/">Ubuntu</a> running <a href="https://httpd.apache.org/">Apache HTTP Server (httpd)</a>.  CGI was enabled as follows:</p>
+    <pre>
+sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/</pre>
+    <p>A script of the following form was created in <code>/usr/lib/cgi-bin/</code>:</p>
+    <pre>
+#!/bin/sh
+dumprows --log "<i>COMMAND</i>"</pre>
+    <p>The examples below illustrate different values of <code><i>COMMAND</i></code> when using DUMPROWS with various database providers and geometry types.</p>
+    <h3>Oracle</h3>
+    <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a>, version 12.2 (or higher), with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>.  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
+    <pre>
+#!/bin/sh
+dumprows --log "sqlplus -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
+    <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that the SQL*Plus&reg; executable might be <code>sqlplus64</code> instead of <code>sqlplus</code>, depending on what was installed.)</p>
+    <p>The following query returns a set of point features representing school buildings in Brockport, New York:</p>
+    <pre>
+SELECT DESCRIPTION AS "Description", ADDRESS AS "Address", SDO_UTIL.TO_GEOJSON(GEOM) AS "Location"
+FROM BROCKPORT.SCHOOL
+ORDER BY ADDRESS;</pre>
+    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <pre>
+http://<i>host</i>/cgi-bin/<i>script</i>?SELECT DESCRIPTION AS "Description", ADDRESS AS "Address", SDO_UTIL.TO_GEOJSON(GEOM) AS "Location" FROM BROCKPORT.SCHOOL ORDER BY ADDRESS</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+    <p>Click <a href="results1.html">here</a> to see the resulting web page.</p>
+    <h3>PostgreSQL</h3>
+    <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  The CGI script would invoke <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> as follows:</p>
+    <pre>
+#!/bin/sh
+dumprows --log "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
+    <p>with <code><i>hostname</i></code>, <code><i>dbname</i></code>, <code><i>username</i></code>, and <code><i>password</i></code> populated appropriately.</p>
+    <p>The following query returns a set of polygon features representing the coterminous United States:</p>
+    <pre>
+SELECT fips_code AS "FIPS", usps_code AS "USPS", name AS "Name", ST_AsGeoJSON(shape) AS "Location"
+FROM states
+WHERE (fips_code::integer &lt; 60) AND (usps_code NOT IN ('AK', 'HI'))
+ORDER BY fips_code;</pre>
+    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <pre>
+http://<i>host</i>/cgi-bin/<i>script</i>?SELECT fips_code AS "FIPS", usps_code AS "USPS", name AS "Name", ST_AsGeoJSON(shape) AS "Location" FROM states WHERE (fips_code::integer &lt; 60) AND (usps_code NOT IN ('AK', 'HI')) ORDER BY fips_code</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+    <p>Click <a href="results2.html">here</a> to see the resulting web page.</p>
+    <h3>SQLite/SpatiaLite</h3>
+    <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a>, version 5 (or higher), with the GPKG (GeoPackage) extension module; though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functions (<code>AsGeoJSON</code> and <code>GeomFromGPB</code>).  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> as follows:</p>
+    <pre>
+#!/bin/sh
+dumprows --log "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
+    <p>with <code><i>FILENAME</i></code> populated appropriately.  (<a href="https://www.sqlite.org/cli.html">sqlite3</a> could be substituted for <code>spatialite</code>.)</p>
+    <p>The following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
+    <pre>
+SELECT 'Linepipe' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Linepipe WHERE (CAST(code AS INTEGER) &gt; 1712042) UNION ALL
+SELECT 'Valve'    AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Valve    WHERE (CAST(code AS INTEGER) &gt;    9276) UNION ALL
+SELECT 'Tee'      AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Tee
+ORDER BY 2;</pre>
+    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <pre>
+http://<i>host</i>/cgi-bin/<i>script</i>?SELECT 'Linepipe' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Linepipe WHERE (CAST(code AS INTEGER) &gt; 1712042) UNION ALL SELECT 'Valve' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Valve WHERE (CAST(code AS INTEGER) &gt; 9276) UNION ALL SELECT 'Tee' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Tee ORDER BY 2</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+    <p>Click <a href="results3.html">here</a> to see the resulting web page.</p>
+    <h2>Download</h2>
+    <p>DUMPROWS can be downloaded from its <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
+    <h6>Copyright &copy; 2021 Jeffrey Paul Bourdier</h6>
+  </body>
+</html>
