@@ -25,7 +25,12 @@
     <h1>D<span style="font-size: 0.75em">UMP</span>R<span style="font-size: 0.75em">OWS</span></h1>
     <h5>by Jeff Bourdier</h5>
     <p>DUMPROWS (Database Utility Map-Producing Read-Only Web Service) is a <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">Common Gateway Interface (CGI)</a> program that allows a database to be queried using a web browser.  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
-    <p>DUMPROWS leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  URLs can be saved as bookmarks/favorites in your browser (convenient for viewing the results of frequently run queries), sent via email (very useful for sharing queries/resultsets with colleagues), etc..  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.</p>
+    <p>DUMPROWS leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.  Use cases may include:</p>
+    <ul>
+      <li>seeing the results of a spatial query on a map</li>
+      <li>saving URLs as bookmarks/favorites in your browser (convenient for viewing the results of frequently run queries)</li>
+      <li>sending URLs via email (very useful for sharing queries/resultsets with colleagues)</li>
+    </ul>
     <h2>Usage</h2>
     <pre>
 dumprows [OPTION]... <i>COMMAND</i></pre>
@@ -35,7 +40,7 @@ dumprows [OPTION]... <i>COMMAND</i></pre>
       <li>specify a database to connect to</li>
       <li>provide credentials for the specified database</li>
     </ul>
-    <p>The <code>QUERY_STRING</code> environment variable is taken as an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL SELECT</a> statement, which is then validated (to prevent <a href="https://bobby-tables.com/">Bobby Tables</a>) and run against the specified database.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
+    <p>If the <code>QUERY_STRING</code> environment variable is empty, DUMPROWS outputs a web page that prompts for a query.  Otherwise, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL SELECT</a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
     <h2>Options</h2>
     <dl>
       <dt><code>-h, --help</code></dt>
@@ -59,20 +64,20 @@ sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/</pre>
 dumprows --log "<i>COMMAND</i>"</pre>
     <p>The examples below illustrate different values of <code><i>COMMAND</i></code> when using DUMPROWS with various database providers and geometry types.</p>
     <h3>Oracle</h3>
-    <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a>, version 12.2 (or higher), with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>.  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
+    <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> (version 12.2 or higher, with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>).  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
     <pre>
 #!/bin/sh
 dumprows --log "sqlplus -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
-    <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that the SQL*Plus&reg; executable might be <code>sqlplus64</code> instead of <code>sqlplus</code>, depending on what was installed.)</p>
-    <p>The following query returns a set of point features representing school buildings in Brockport, New York:</p>
+    <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that if the 64-bit version of the Oracle client is installed, the command would be <code>sqlplus64</code> instead of <code>sqlplus</code>.)</p>
+    <p>Let's say the following query returns a set of point features representing school buildings in Brockport, New York:</p>
     <pre>
 SELECT DESCRIPTION AS "Description", ADDRESS AS "Address", SDO_UTIL.TO_GEOJSON(GEOM) AS "Location"
 FROM BROCKPORT.SCHOOL
 ORDER BY ADDRESS;</pre>
-    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <p>This query would equate to the following URL:</p>
     <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?SELECT DESCRIPTION AS "Description", ADDRESS AS "Address", SDO_UTIL.TO_GEOJSON(GEOM) AS "Location" FROM BROCKPORT.SCHOOL ORDER BY ADDRESS</pre>
-    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+DESCRIPTION+AS+"Description"%2C+ADDRESS+AS+"Address"%2C+SDO_UTIL.TO_GEOJSON%28GEOM%29+AS+"Location"%0D%0AFROM+BROCKPORT.SCHOOL%0D%0AORDER+BY+ADDRESS</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
     <p>Click <a href="results1.html">here</a> to see the resulting web page.</p>
     <h3>PostgreSQL</h3>
     <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  The CGI script would invoke <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> as follows:</p>
@@ -80,33 +85,34 @@ http://<i>host</i>/cgi-bin/<i>script</i>?SELECT DESCRIPTION AS "Description", AD
 #!/bin/sh
 dumprows --log "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
     <p>with <code><i>hostname</i></code>, <code><i>dbname</i></code>, <code><i>username</i></code>, and <code><i>password</i></code> populated appropriately.</p>
-    <p>The following query returns a set of polygon features representing the coterminous United States:</p>
+    <p>Let's say the following query returns a set of polygon features representing the coterminous United States:</p>
     <pre>
 SELECT fips_code AS "FIPS", usps_code AS "USPS", name AS "Name", ST_AsGeoJSON(shape) AS "Location"
 FROM states
 WHERE (fips_code::integer &lt; 60) AND (usps_code NOT IN ('AK', 'HI'))
 ORDER BY fips_code;</pre>
-    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <p>This query would equate to the following URL:</p>
     <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?SELECT fips_code AS "FIPS", usps_code AS "USPS", name AS "Name", ST_AsGeoJSON(shape) AS "Location" FROM states WHERE (fips_code::integer &lt; 60) AND (usps_code NOT IN ('AK', 'HI')) ORDER BY fips_code</pre>
-    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+fips_code+AS+"FIPS"%2C+usps_code+AS+"USPS"%2C+name+AS+"Name"%2C+ST_AsGeoJSON%28shape%29+AS+"Location"%0D%0AFROM+states%0D%0AWHERE+%28fips_code%3A%3Ainteger+&lt;+60%29+AND+%28usps_code+NOT+IN+%28%27AK%27%2C+%27HI%27%29%29%0D%0AORDER+BY+fips_code</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
     <p>Click <a href="results2.html">here</a> to see the resulting web page.</p>
     <h3>SQLite/SpatiaLite</h3>
-    <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a>, version 5 (or higher), with the GPKG (GeoPackage) extension module; though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functions (<code>AsGeoJSON</code> and <code>GeomFromGPB</code>).  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> as follows:</p>
+    <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a> (version 5 or higher, with the GPKG (GeoPackage) extension module), though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functionality.  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> (or <a href="https://www.sqlite.org/cli.html">sqlite3</a>) as follows:</p>
     <pre>
 #!/bin/sh
 dumprows --log "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
-    <p>with <code><i>FILENAME</i></code> populated appropriately.  (<a href="https://www.sqlite.org/cli.html">sqlite3</a> could be substituted for <code>spatialite</code>.)</p>
-    <p>The following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
+    <p>with <code><i>FILENAME</i></code> populated appropriately.  (Without SpatiaLite, substitute <code>sqlite3</code> for <code>spatialite</code>.)</p>
+    <p>Let's say the following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
     <pre>
 SELECT 'Linepipe' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Linepipe WHERE (CAST(code AS INTEGER) &gt; 1712042) UNION ALL
 SELECT 'Valve'    AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Valve    WHERE (CAST(code AS INTEGER) &gt;    9276) UNION ALL
 SELECT 'Tee'      AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Tee
 ORDER BY 2;</pre>
-    <p>The following URL could be used to send this query to DUMPROWS:</p>
+    <p>(Without SpatiaLite, don't use <code>AsGeoJSON</code> or <code>GeomFromGPB</code>.)</p>
+    <p>This query would equate to the following URL:</p>
     <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?SELECT 'Linepipe' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Linepipe WHERE (CAST(code AS INTEGER) &gt; 1712042) UNION ALL SELECT 'Valve' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Valve WHERE (CAST(code AS INTEGER) &gt; 9276) UNION ALL SELECT 'Tee' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Tee ORDER BY 2</pre>
-    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.</p>
+http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+%27Linepipe%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Linepipe+WHERE+%28CAST%28code+AS+INTEGER%29+>+1712042%29+UNION+ALL%0D%0ASELECT+%27Valve%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Valve+WHERE+%28CAST%28code+AS+INTEGER%29+>+9276%29+UNION+ALL%0D%0ASELECT+%27Tee%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Tee%0D%0AORDER+BY+2</pre>
+    <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
     <p>Click <a href="results3.html">here</a> to see the resulting web page.</p>
     <h2>Download</h2>
     <p>DUMPROWS can be downloaded from its <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
