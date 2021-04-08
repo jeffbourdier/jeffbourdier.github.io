@@ -2,24 +2,28 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <title>MIDIopsy by Jeff Bourdier</title>
+    <title>MIDIopsy - Software by Jeff Bourdier</title>
     <meta name="description" content="MIDIopsy home page hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
     <meta name="keywords" content="MIDI,MIDI file,MIDI editor,MIDI file editor,MIDI binary editor,MIDI file binary editor,MIDI hex editor,MIDI file hex editor" />
-    <style>
-      html { background-color: #FFFFDF; }
-      h1, h5, h6, figure { text-align: center; }
-      h1 { color: navy; font-family: sans-serif; margin-bottom: auto; }
-      h5 { color: maroon; font-family: monospace; margin-top: auto; }
-      h6 { border-top: 1px solid; padding-top: 8px; }
-      @media only screen and (max-device-width: 511px) { html { font-size: 3em; } }
-    </style>
-    <link rel="icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
   </head>
   <body>
-    <h1>MIDIopsy</h1>
-    <h5>by Jeff Bourdier</h5>
+    <header>
+      <b>Software by Jeff Bourdier</b>
+      <nav>
+        <a href="..">Home</a>
+        <span style="color: yellow; padding: 8px;">MIDIopsy</span>
+        <a href="../plunge">Plunge</a>
+        <a href="../dumprows">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></a>
+        <a href="../about">About</a>
+      </nav>
+    </header>
+    <h1 style="color: navy; font-family: sans-serif;"><img alt="MIDIopsy logo" src="logo.svg" /> MIDIopsy</h1>
     <p>MIDIopsy is a Windows application (written in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/">C#</a>) that is used to view, play, and edit the binary contents of <a href="https://www.midi.org/specifications-old/item/standard-midi-files-smf">standard MIDI (musical instrument digital interface) files</a>.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
     <p>The only requirement for MIDIopsy is .NET Framework 3.0 (or higher).  If you have Windows Vista or later, you already meet this requirement.  Otherwise, <a href="https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed">check to see which versions of .NET Framework are installed</a>.  If you do not already have it, <a href="https://dotnet.microsoft.com/download/dotnet-framework">download and install .NET Framework</a> version 3.0 (or higher) before running MIDIopsy.</p>
     <figure style="text-align: center;"><a href="screenshots"><img alt="MIDIopsy screenshot" src="screenshot.png" title="Click for more screenshots" /><figcaption>Click the image for more screenshots</figcaption></a></figure>
@@ -53,6 +57,6 @@
     </ul>
     <ul><li><a href="Help.html">User Documentation</a> (Help file that ships with the application)</li></ul>
     <ul><li><a href="https://github.com/jeffbourdier/MIDIopsy">GitHub repository</a> (get source code, report bugs, request enhancements, or otherwise become involved)</li></ul>
-    <h6>Copyright &copy; 2019-20 Jeffrey Paul Bourdier</h6>
+    <footer>Copyright &copy; 2019-21 Jeffrey Paul Bourdier</footer>
   </body>
 </html>

@@ -2,14 +2,21 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <title>Jeff Bourdier on GitHub</title>
-    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
+    <title>Oracle cheat sheet - Software by Jeff Bourdier</title>
+    <meta name="description" content="Oracle cheat sheet page by Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
     <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
-    <link rel="icon" href="../favicon.ico" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <style>
+      pre span.comment { color: green; }
+      pre span.string { color: red; }
+      pre span.number { color: fuchsia; }
+      pre span.delimiter { color: purple; }
+      pre span.keyword { color: blue; }
+    </style>
     <script src="ora.js"></script>
     <script type="text/javascript">
       <!--
@@ -44,18 +51,17 @@
       </div>
     </noscript>
     <header>
-      <h1>Jeff Bourdier on GitHub</h1>
+      <b>Software by Jeff Bourdier</b>
       <nav>
-        <ul>
-          <li><a href="..">Home</a></li>
-          <li><a href="../geodesy">Geodesy</a></li>
-          <li>Oracle</li>
-          <li><a href="../telcos">Telcos</a></li>
-          <li><a href="../about">About</a></li>
-        </ul>
+        <a href="..">Home</a>
+        <a href="../midiopsy">MIDIopsy</a>
+        <a href="../plunge">Plunge</a>
+        <a href="../dumprows">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></a>
+        <a href="../about">About</a>
       </nav>
     </header>
-    <p>For pretty much my entire career as a <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> developer, I have worked with <a href="http://www.oracle.com/technetwork/database/index.html">Oracle Database</a>, and increasingly with <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> and <a href="http://www.oracle.com/technetwork/database/features/plsql/index.html">PL/SQL</a>.  As frequently as I find myself doing the same things repeatedly in Oracle, I find it very handy to have a "cheat sheet" such as this to remind me of syntax, object names, etc..  Here it is, in case it may happen to be useful to anyone else.  Links to Oracle documentation throughout this text are for version <a href="http://docs.oracle.com/cd/E11882_01/index.htm">11g Release 2 (11.2)</a>.</p>
+    <h1>Oracle cheat sheet</h1>
+    <p>For pretty much my entire career as a <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> developer, I have worked with <a href="http://www.oracle.com/technetwork/database/index.html">Oracle Database</a>, and increasingly with <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> and <a href="http://www.oracle.com/technetwork/database/features/plsql/index.html">PL/SQL</a>.  As frequently as I find myself doing the same things repeatedly in Oracle, I find it very handy to have a "cheat sheet" such as this to remind me of syntax, object names, and so forth.  Links to Oracle documentation throughout this text are for version <a href="http://docs.oracle.com/cd/E11882_01/index.htm">11g Release 2 (11.2)</a>.</p>
     <h3>Oracle Database (general)</h3>
     <p>It's always good to know which version of Oracle you're dealing with, as there can be significant differences between versions.  Below are two different ways to get the Oracle Database version.</p>
     <pre>
@@ -1151,6 +1157,6 @@ END;
       <li><b>Compile for Debug</b> = optimization level 1 (some debug info)</li>
     </ul>
     <p><a href="http://www.devshed.com/c/a/oracle/compiling-plsql-code-for-an-oracle-database/">This article</a> and <a href="http://stevenfeuersteinonplsql.blogspot.com/2016/08/plsql-optimization-levels-and-native.html">this blog post</a> explain optimization levels pretty well.</p>
-    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
+    <footer>Copyright &copy; 2016-21 Jeffrey Paul Bourdier</footer>
   </body>
 </html>

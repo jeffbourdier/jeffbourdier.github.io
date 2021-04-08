@@ -2,28 +2,28 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <title>Plunge by Jeff Bourdier</title>
+    <title>Plunge - Software by Jeff Bourdier</title>
     <meta name="description" content="Plunge home page hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
     <meta name="keywords" content="file synchronizer,file synchronization" />
-    <style>
-      html { background-color: #FFFFDF; }
-      h1, h5, h6 { text-align: center; }
-      h1 { color: purple; font-family: monospace; margin-bottom: auto; }
-      h5 { color: maroon; font-family: monospace; margin-top: auto; }
-      h6 { border-top: 1px solid; padding-top: 8px; }
-      pre, code { background-color: #EFEFEF; font-weight: bold; }
-      pre { padding: 8px; overflow: auto; }
-      code { padding: 1px; margin: 1px; }
-      dd { margin-bottom: 16px; }
-      @media only screen and (max-device-width: 511px) { html { font-size: 3em; } }
-    </style>
     <link rel="icon" href="../favicon.ico" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
+    <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
   </head>
   <body>
-    <h1>Plunge</h1>
-    <h5>by Jeff Bourdier</h5>
+    <header>
+      <b>Software by Jeff Bourdier</b>
+      <nav>
+        <a href="..">Home</a>
+        <a href="../midiopsy">MIDIopsy</a>
+        <span style="color: yellow; padding: 8px;">Plunge</span>
+        <a href="../dumprows">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></a>
+        <a href="../about">About</a>
+      </nav>
+    </header>
+    <h1 style="color: maroon; font-family: Courier, monospace;">Plunge</h1>
     <p>Plunge is a command-line utility for Windows and Linux that is used to synchronize sets of files.  (Don't just sync; Plunge!)  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
     <p>Plunge may be thought of as an extremely lightweight, portable version of <a href="https://rsync.samba.org/">Rsync</a>.  The typical use case is as follows:  You have two sets of files that you wish to keep synchronized.  One (the <i>source</i>) is the "master" set that you edit regularly and is generally up to date.  The other (the <i>destination</i>) is a redundant set (e.g., a backup).  From time to time, you'd like to run a command that compares each file in the one set to its counterpart in the other set, detects changes in size and timestamp, and copies each file from the <i>source</i> to the <i>destination</i> as necessary to bring the two sets in sync.</p>
     <h2>Usage</h2>
@@ -33,35 +33,33 @@ plunge [OPTION]... <i>SOURCE</i> <i>DEST</i></pre>
     <h2>Options</h2>
     <dl>
       <dt><code>-h, --help</code></dt>
-      <dd>Output a help message and exit.</dd>
+      <dd>Output a help message and exit.</dd><br />
       <dt><code>-n, --dry-run</code></dt>
-      <dd>Do not actually copy files; just output the messages.  This may be useful for examining the proposed actions and making sure there are no surprises.</dd>
+      <dd>Do not actually copy files; just output the messages.  This may be useful for examining the proposed actions and making sure there are no surprises.</dd><br />
       <dt><code>-p, --purge</code></dt>
-      <dd>Report files in the destination directory that may need to be purged (i.e., because there are no corresponding files in the source directory).</dd>
+      <dd>Report files in the destination directory that may need to be purged (i.e., because there are no corresponding files in the source directory).</dd><br />
       <dt><code>-v, --verbose</code></dt>
       <dd>Output messages for all files, whether copied or skipped.  (By default, a message is output only when a file is copied, not when it is skipped.)</dd>
     </dl>
     <h2>Example</h2>
     <p>Let's say you're developing a <a href="https://plugins.qgis.org/">QGIS plugin</a> (such as the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>).  You might have the following set of files for the <a href="https://github.com/ogc-pipelineml/pml-geopackager">GitHub repository</a>:</p>
-    <ul>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\__init__.py</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\algorithm.py</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\metadata.txt</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\plugin.py</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\provider.py</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\icon.svg</li>
-      <li>C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\pml.svg</li>
-    </ul>
+    <pre>
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\__init__.py
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\algorithm.py
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\metadata.txt
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\plugin.py
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\provider.py
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\icon.svg
+C:\Users\Jeff\Documents\GitHub\pml-geopackager\img\pml.svg</pre>
     <p>In order to test the plugin, you need a copy of each of these files in your QGIS plugin path:</p>
-    <ul>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\__init__.py</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\algorithm.py</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\metadata.txt</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\plugin.py</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\provider.py</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\icon.svg</li>
-      <li>C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\pml.svg</li>
-    </ul>
+    <pre>
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\__init__.py
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\algorithm.py
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\metadata.txt
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\plugin.py
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\provider.py
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\icon.svg
+C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager\img\pml.svg</pre>
     <p>After making changes to these files, you might run:</p>
     <pre>
 plunge -v C:\Users\Jeff\Documents\GitHub\pml-geopackager C:\Users\Jeff\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\pml_geopackager &lt; plunge.txt</pre>
@@ -96,6 +94,6 @@ img\icon.svg. . . . . . . . . . . . . . . . . . . . . . . . New
 img\pml.svg . . . . . . . . . . . . . . . . . . . . . . . . New</pre>
     <h2>Download</h2>
     <p>Plunge can be downloaded from its <a href="https://github.com/jeffbourdier/plunge">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
-    <h6>Copyright &copy; 2020-1 Jeffrey Paul Bourdier</h6>
+    <footer>Copyright &copy; 2020-1 Jeffrey Paul Bourdier</footer>
   </body>
 </html>

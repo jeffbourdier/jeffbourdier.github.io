@@ -1,79 +1,18 @@
-header
-{
-  margin: auto;
-  text-align: center;
-  font-family: Verdana, sans-serif;
-}
-
-h1 { color: teal; }
-
-nav ul
-{
-  list-style-type: none;
-  padding: 0;
-}
-
-nav ul li
-{
-  color: yellow;
-  background-color: maroon;
-  border: 4px solid maroon;
-}
-
-nav ul li a
-{
-  display: block;
-  color: yellow;
-  background-color: maroon;
-}
-
-nav ul li a:hover
-{
-  color: maroon;
-  background-color: yellow;
-}
-
-nav ul li a:active
-{
-  color: maroon;
-  background-color: aqua;
-}
-
-figure { text-align: center; }
-
-svg, pre { padding: 16px; }
-
-table
-{
-  margin: auto;
-  border-collapse: collapse;
-}
-
-table, th, td
-{
-  border: 1px solid;
-  padding: 4px;
-}
-
-th { background-color: silver; }
-
+html { background-color: #FFFFDF; }
+header { text-align: center; background-color: maroon; font-family: Verdana, sans-serif; }
+header b { color: #BFFFBF; }
+header nav { display: inline-block; }
+header a { color: yellow; }
+header a:hover { color: maroon; background-color: yellow; }
+header a:active { color: navy; background-color: #BFFFBF; }
+h1, figure { text-align: center; }
+figcaption { font-size: 0.8em; }
+figure img { max-width: 100%; }
+pre, code { background-color: #EFEFEF; font-weight: bold; }
+pre { overflow: auto; }
+table caption { font-size: 0.8em; }
+table { margin: auto; border-collapse: collapse; }
+table, th, td { border: 1px solid; padding: 4px; }
+th { background-color: #DFDFDF; }
 table ul { margin: auto; }
-
-pre, code
-{
-  background-color: #EFEFEF;
-  font-weight: bold;
-}
-
-pre span.comment { color: green; }
-pre span.string { color: red; }
-pre span.number { color: fuchsia; }
-pre span.delimiter { color: purple; }
-pre span.keyword { color: blue; }
-
-footer
-{
-  border-top: 1px solid;
-  text-align: center;
-  padding-top: 8px;
-}
+footer { border-top: 1px solid; text-align: center; font-size: 0.8em; }

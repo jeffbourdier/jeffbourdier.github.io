@@ -2,14 +2,15 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <title>Jeff Bourdier on GitHub</title>
-    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
+    <title>Geodesy - Software by Jeff Bourdier</title>
+    <meta name="description" content="Geodesy page by Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
     <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
-    <link rel="icon" href="../favicon.ico" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <style>svg { padding: 16px; }</style>
     <script src="../graphics.js"></script>
     <script src="geo.js"></script>
     <script type="text/javascript">
@@ -58,20 +59,19 @@
       </div>
     </noscript>
     <header>
-      <h1>Jeff Bourdier on GitHub</h1>
+      <b>Software by Jeff Bourdier</b>
       <nav>
-        <ul>
-          <li><a href="..">Home</a></li>
-          <li>Geodesy</li>
-          <li><a href="../oracle">Oracle</a></li>
-          <li><a href="../telcos">Telcos</a></li>
-          <li><a href="../about">About</a></li>
-        </ul>
+        <a href="..">Home</a>
+        <a href="../midiopsy">MIDIopsy</a>
+        <a href="../plunge">Plunge</a>
+        <a href="../dumprows">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></a>
+        <a href="../about">About</a>
       </nav>
     </header>
+    <h1>Geodesy</h1>
     <p><a href="https://en.wikipedia.org/wiki/Geodesy">Geodesy</a> is the study of the spatial representation and measurement (the shape and size, if you like) of our planet (though it could be applied to any planet, but for the purpose of this discussion, it applies to Earth).  A fundamental understanding of geodesy is essential to the <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> work that I do, so I find it instructive to have a "reference guide" of sorts such as this, as these concepts figure frequently into my coding.</p>
     <h4>The Geoid</h4>
-    <p>As everyone knows, the earth is round.  It is not perfectly round, however.  The earth is often thought of as spherical, which it nearly is, but it also rotates about on an axis.  The inertia of this motion has a "flattening" effect, causing the earth more to resemble a flattened (or <i>oblate</i>) <a href="https://en.wikipedia.org/wiki/Spheroid">spheroid</a> (i.e., an ellipsoid).</p>
+    <p>The earth is round, but not perfectly.  Earth is often thought of as being spherical, which it nearly is, but it also rotates about on an axis.  The inertia of this motion has a "flattening" effect, causing the earth more to resemble a flattened (or <i>oblate</i>) <a href="https://en.wikipedia.org/wiki/Spheroid">spheroid</a> (i.e., an ellipsoid).</p>
     <figure>
       <svg id="sphereSVG" />
       <svg id="spheroidSVG" />
@@ -79,7 +79,7 @@
     </figure>
     <p>What this means is that -- unlike a sphere, which has one radius -- the earth has two different radii: an equatorial radius, of about 6,378 km (3,963 mi), and a polar radius, of about 6,357 km (3,950 mi).  Notice that because the earth resembles an oblate (flattened) spheroid, its polar radius is shorter than its equatorial radius -- ever so slightly, only by about 21 km (13 mi), or about 0.3%.  This also means that at any point on the earth's surface, the radius, diameter, and circumference of the planet vary based on (among other things) distance from the equator, but will be longest at the equator (and shortest at the poles).  The equatorial circumference of Earth is about 40,076 km (24,902 mi).</p>
     <p>To take it a step further, a shape called the <a href="https://en.wikipedia.org/wiki/Geoid">geoid</a> has been developed.  The geoid is a theoretical surface of the earth that is perpendicular at every point to the direction of gravity; it approximates mean sea-level in open ocean (without tides, waves, or swell).  This figure might be imagined as an ellipsoid (specifically, an oblate spheroid) with a bunch of little bumps on it.  In practice, however, it is not feasible to simulate the geoid computationally, so we settle for a spheroid (also called a <a href="https://en.wikipedia.org/wiki/Reference_ellipsoid">reference ellipsoid</a>, or an <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid">Earth ellipsoid</a>) that closely approximates the geoid.</p>
-    <p>Several spheroids (or <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid#Historical_Earth_ellipsoids">Earth ellipsoids</a>) have been developed over the years.  The first in wide use in North America was developed by British geodesist <a href="https://en.wikipedia.org/wiki/Alexander_Ross_Clarke">Alexander Clarke</a> in 1866.  The two most commonly used today are <a href="http://www.gfy.ku.dk/~iag/HB2000/part4/grs80_corr.htm">Geodetic Reference System 1980 (GRS 80)</a> and <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a>, which is used by most modern <a href="http://www.gps.gov/">GPS</a> devices.  These last two ellipsoids are nearly identical (the latter being largely based on the former); both are generally accurate (to the geoid) to within a hundred meters, or about 0.00002% of Earth's (shorter) polar radius.</p>
+    <p>Several spheroids (or <a href="https://en.wikipedia.org/wiki/Earth_ellipsoid#Historical_Earth_ellipsoids">Earth ellipsoids</a>) have been developed over the years.  The first in wide use in North America was developed by British geodesist <a href="https://en.wikipedia.org/wiki/Alexander_Ross_Clarke">Alexander Clarke</a> in 1866.  The two most commonly used today are <a href="http://www.gfy.ku.dk/~iag/HB2000/part4/grs80_corr.htm">Geodetic Reference System 1980 (GRS 80)</a> and <a href="http://earth-info.nga.mil/GandG/wgs84/index.html">World Geodetic System 1984 (WGS 84)</a>, the latter of which is used by most modern <a href="http://www.gps.gov/">GPS</a> devices.  GRS 80 and WGS 84 are nearly identical (the latter being largely based on the former); both are generally accurate (to the geoid) to within a hundred meters, or about 0.00002% of Earth's (shorter) polar radius.</p>
     <h4>Latitude and Longitude</h4>
     <p>A point on the surface of a reference ellipsoid is measured by three things:</p>
     <ol>
@@ -138,7 +138,7 @@
       <li>When projected onto a cone that is tangent to the globe at one line or secant to ("slicing" through) the globe at two lines (usually two parallels), the projection is described as <i>conical</i>.  In this case, the flat surface would be produced by cutting the cone along a <i>generatrix</i> (a straight line from apex to base -- specifically, the line opposite the <i>central meridian</i>, to be discussed shortly) and flattening out the lateral surface of the cone.</li>
       <li>When projected onto a cylinder (which would also be tangent to the globe at one line or secant at two), the projection is <i>cylindrical</i>.  The flat surface in this case would be obtained in a manner similar to that of the cone (the cylinder would be cut along a vertical line and its lateral surface flattened out).  A tangent cylindrical projection is known as a <a href="https://en.wikipedia.org/wiki/Mercator_projection">Mercator projection</a>, named after Flemish geographer <a href="https://en.wikipedia.org/wiki/Gerardus_Mercator">Gerardus Mercator</a>.  A Mercator projection may be <i>normal</i> (tangent at the equator), <i>transverse</i> (tangent at two meridians), or <i>oblique</i> (tangent at an arbitrary great circle).</li>
     </ul>
-    <p>The developable surface, when flattened into a plane, effectively becomes a Cartesian coordinate system, in which the Pythagorean theorem can be used to calculate Euclidean (straight-line) distance between any two points, given their 2D coordinates (x, y).  (This is admittedly a bit easier than using the haversine formula, don't you think?)  Here, x and y, being Cartesian coordinates, are distances along perpendicular axes (converging at an <i>origin</i>) and are measured in linear units (e.g., meters or miles).  Thus, the projection gives the "flat" appearance of a map that we're all used to.</p>
+    <p>The developable surface, when flattened into a plane, effectively becomes a Cartesian coordinate system, in which the Pythagorean theorem can be used to calculate Euclidean (straight-line) distance between any two points, given their 2D coordinates (x, y).  (This is admittedly a bit easier than using the haversine formula.)  Here, x and y, being Cartesian coordinates, are distances along perpendicular axes (converging at an <i>origin</i>) and are measured in linear units (e.g., meters or miles).  Thus, the projection gives the "flat" appearance of a map that we're all used to.</p>
     <p>Each class of projection has a set of <i>parameters</i>, summarized as follows:</p>
     <table>
       <thead>
@@ -235,7 +235,7 @@
           <th>Description</th>
           <th>Datum</th>
           <th>Projection</th>
-          <th style="width: 33%;">Parameters</th>
+          <th>Parameters</th>
           <th>SRID(s)</th>
         </tr>
       </thead>
@@ -316,7 +316,7 @@
       <sup>3</sup> Although usually used to describe a reference ellipsoid (or a datum based thereon), WGS 84 is often thought of as a SRS in its own right, which can be somewhat deceptive, mainly because of its "projection" (or lack thereof).<br />
       <sup>4</sup> Strictly speaking, there is no projection associated with WGS 84.  By default, it is said to be "unprojected," or sometimes described as having a "geographic coordinate system" (see also <a href="https://en.wikipedia.org/wiki/Equirectangular_projection">plate carr&eacute;e</a>).<br />
     </small>
-    <p>Incidentally, there's a nifty little program called <a href="http://proj4.org/">PROJ.4</a> (maintained right here on <a href="https://github.com/OSGeo/proj.4/">GitHub</a>) that can convert coordinates between these systems and do other neat things with geodetic data.</p>
-    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
+    <br />
+    <footer>Copyright &copy; 2016-21 Jeffrey Paul Bourdier</footer>
   </body>
 </html>

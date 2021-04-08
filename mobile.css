@@ -1,21 +1,8 @@
-h1 { font-size: 64px; }
-
-nav
-{
-  width: 80%;
-  margin: auto;
-}
-
-nav ul { font-size: 64px; }
-
-nav ul li a { padding: 16px; }
-
-h3 { font-size: 4em; }
-
-p, h4, ul, ol, dt, table, pre { font-size: 3em; }
-
-figcaption { font-size: 2em; }
-
-table ul { font-size: 1em; }
-
-pre, code { overflow: auto; }
+html { font-size: 2em; }
+header { padding: 8px; }
+header b { font-size: 48px; margin: 16px; }
+header nav, header a, pre, footer { padding: 16px; }
+h1 img { height: 48px; }
+code { padding: 2px; margin: 2px; }
+ol { margin-left: 16px; }
+small { font-size: 0.5em; }

@@ -2,14 +2,14 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <title>Jeff Bourdier on GitHub</title>
-    <meta name="description" content="Personal website of Jeff Bourdier hosted on GitHub" />
+    <title>Telco history - Software by Jeff Bourdier</title>
+    <meta name="description" content="Telco history page by Jeff Bourdier hosted on GitHub" />
     <meta name="author" content="Jeff Bourdier" />
+    <link rel="icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
     <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
-    <link rel="icon" href="../favicon.ico" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <script src="../graphics.js"></script>
     <script src="telco.js"></script>
     <script type="text/javascript">
@@ -66,8 +66,8 @@
         drawTimeBar(SVG_ID, 11, 1968, 2017, 0, 0, "green");
 
         /* Sprint */
-        drawTimeBar(SVG_ID, 12, 1978, 1983, 0, 13, "yellow");
-        drawTimeBar(SVG_ID, 14, 1983, 1991, 13, 15, "yellow");
+        drawTimeBar(SVG_ID, 12, 1978, 1983, 0, 13, "orange");
+        drawTimeBar(SVG_ID, 14, 1983, 1991, 13, 15, "orange");
 
         /* GTE > Verizon */
         drawTimeBar(SVG_ID, 13, 1935, 2017, 0, 0, "red");
@@ -76,7 +76,7 @@
         drawTimeBar(SVG_ID, 15, 1899, 1991, 0, 0, "brown");
 
         /* Sprint */
-        drawTimeBar(SVG_ID, 15, 1991, 2017, 0, 0, "yellow");
+        drawTimeBar(SVG_ID, 15, 1991, 2017, 0, 0, "orange");
 
         /* Rochester */
         drawTimeBar(SVG_ID, 17, 1899, 2001, 0, 16, "fuchsia");
@@ -160,20 +160,23 @@
       </div>
     </noscript>
     <header>
-      <h1>Jeff Bourdier on GitHub</h1>
+      <b>Software by Jeff Bourdier</b>
       <nav>
-        <ul>
-          <li><a href="..">Home</a></li>
-          <li><a href="../geodesy">Geodesy</a></li>
-          <li><a href="../oracle">Oracle</a></li>
-          <li>Telcos</li>
-          <li><a href="../about">About</a></li>
-        </ul>
+        <a href="..">Home</a>
+        <a href="../midiopsy">MIDIopsy</a>
+        <a href="../plunge">Plunge</a>
+        <a href="../dumprows">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></a>
+        <a href="../about">About</a>
       </nav>
     </header>
-    <p>Working for a telephone company (or "telco," if you like) has given me a new appreciation for the telecom industry.  After all, it was a telco (<a href="http://www.bell-labs.com/">Bell Labs</a>, to be specfic) that gave us <a href="http://opengroup.org/unix">UNIX</a>, <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>, <a href="https://isocpp.org/">C++</a>, and even some of the earliest <a href="https://en.wikipedia.org/wiki/MUSIC-N">music software</a>.  It has also led to some <a href="http://sspinnovations.com/blog/2013/08/09/why-telecoms-need-gis">interesting developments in GIS</a> (not to mention, of course, providing the essential services of long-distance communication and data transfer).</p>
-    <p>Given this newfound interest in telcos, I thought it might be instructive also to have some knowledge of the industry's fascinating history.  This page is the summary of what I have learned, shared here (like my software) for the benefit of anyone else who might appreciate it.  Enjoy!  (Note: the scale of the timeline changes at 1980; horizontal lines mark 5-year intervals.)</p>
+    <h1>Telco history</h1>
+    <p>Working for a telephone company (or "telco," if you like) has given me a new appreciation for the telecom industry.  After all, it was a telco (<a href="http://www.bell-labs.com/">Bell Labs</a>, to be specfic) that gave us <a href="http://opengroup.org/unix">UNIX</a>, <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>, <a href="https://isocpp.org/">C++</a>, and even some of the earliest <a href="https://en.wikipedia.org/wiki/MUSIC-N">music software</a>.  Given this newfound interest, I thought it might be instructive also to have some knowledge of the industry's fascinating history.  Here is a summary of what I have learned.  Enjoy!</p>
+    <p>Note:</p>
+    <ul>
+      <li>The scale of the timeline changes at 1980.</li>
+      <li>Horizontal lines mark 5-year intervals.</li>
+    </ul>
     <figure><svg id="timelineSVG" /></figure>
-    <footer><small>Copyright &copy; 2016-9 Jeffrey Paul Bourdier</small></footer>
+    <footer>Copyright &copy; 2016-21 Jeffrey Paul Bourdier</footer>
   </body>
 </html>

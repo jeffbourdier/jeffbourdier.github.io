@@ -1,49 +1,6 @@
-body
-{
-  min-width: 768px;
-  max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-header
-{
-  width: 768px;
-  height: 64px;
-  padding: 16px;
-}
-
-h1
-{
-  float: left;
-  width: 192px;
-  height: 100%;
-  margin: auto;
-  font-size: 24px;
-}
-
-nav
-{
-  float: right;
-  width: 510px;
-  height: 100%;
-}
-
-nav ul
-{
-  height: 100%;
-  font-size: 20px;
-  margin: auto;
-}
-
-nav ul li
-{
-  float: left;
-  width: 94px;
-  height: 100%;
-  line-height: 300%;
-}
-
-nav ul li a { height: 100%; }
-
-figcaption { font-size: 0.8em; }
+html { min-width: 800px; }
+header { padding: 4px; font-size: 16px; }
+header b { margin-right: 32px; }
+header nav, header a, pre, footer { padding: 8px; }
+h1 img { height: 24px; }
+code { padding: 1px; margin: 1px; }
