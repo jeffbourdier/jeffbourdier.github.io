@@ -19,13 +19,13 @@
         <a href="..">Home</a>
         <a href="../midiopsy">MIDIopsy</a>
         <a href="../plunge">Plunge</a>
-        <span style="color: yellow; padding: 8px;">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></span>
+        <span style="color: yellow; padding: 8px; font-variant: small-caps;">DumpRows</span>
         <a href="../about">About</a>
       </nav>
     </header>
-    <h1 style="color: green;">D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span></h1>
-    <p>D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span> (Database Utility Map-Producing Read-Only Web Service) is a <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">Common Gateway Interface (CGI)</a> program that allows a geospatial database to be queried using a web browser.  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
-    <p>D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span> leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.  Use cases may include:</p>
+    <h1 style="color: green;"><span style="font-variant: small-caps;">DumpRows</span></h1>
+    <p><span style="font-variant: small-caps;">DumpRows</span> (Database Utility Map-Producing Read-Only Web Service) is a <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">Common Gateway Interface (CGI)</a> program that allows a geospatial database to be queried using a web browser.  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
+    <p><span style="font-variant: small-caps;">DumpRows</span> leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.  Use cases may include:</p>
     <ul>
       <li>seeing the results of a spatial query on a map</li>
       <li>saving URLs as bookmarks/favorites in your browser (convenient for viewing the results of frequently run queries)</li>
@@ -40,7 +40,7 @@ dumprows [OPTION]... <i>COMMAND</i></pre>
       <li>specify a database to connect to</li>
       <li>provide credentials for the specified database</li>
     </ul>
-    <p>If the <code>QUERY_STRING</code> environment variable is empty, D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span> outputs a web page that prompts for a query.  Otherwise, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL SELECT</a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
+    <p>If the <code>QUERY_STRING</code> environment variable is empty, <span style="font-variant: small-caps;">DumpRows</span> outputs a web page that prompts for a query.  Otherwise, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL SELECT</a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
     <h2>Options</h2>
     <dl>
       <dt><code>-h, --help</code></dt>
@@ -60,7 +60,7 @@ sudo chown www-data:www-data /var/log/dumprows.log</pre>
     <pre>
 #!/bin/sh
 dumprows --log "<i>COMMAND</i>"</pre>
-    <p>The examples below illustrate different values of <code><i>COMMAND</i></code> when using D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span> with various database providers and geometry types.</p>
+    <p>The examples below illustrate different values of <code><i>COMMAND</i></code> when using <span style="font-variant: small-caps;">DumpRows</span> with various database providers and geometry types.</p>
     <ol>
       <li>
         <h3>Oracle</h3>
@@ -121,7 +121,7 @@ http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+%27Linepipe%27+AS+"Compone
       </li>
     </ol>
     <h2>Download</h2>
-    <p>D<span style="font-size: 0.8em">UMP</span>R<span style="font-size: 0.8em">OWS</span> can be downloaded from its <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
+    <p><span style="font-variant: small-caps;">DumpRows</span> can be downloaded from its <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
     <footer>Copyright &copy; 2021 Jeffrey Paul Bourdier</footer>
   </body>
 </html>
