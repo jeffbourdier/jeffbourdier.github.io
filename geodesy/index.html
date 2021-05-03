@@ -10,7 +10,6 @@
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
     <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
-    <style>svg { padding: 16px; }</style>
     <script src="../graphics.js"></script>
     <script src="geo.js"></script>
     <script type="text/javascript">
@@ -35,16 +34,16 @@
         drawHorizontal(s, GLOBE_STROKE_COLOR);
         drawRadial(s, 150, true, LABEL_COLOR);
         createArrowheadMarker(s, LABEL_COLOR);
-        drawLabel(s, 342, GLOBE_RADIUS, -1, 332, 296, "equator", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, 350, 264, -1, 340, 304, "equator", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
 
         s = "LongitudeSVG";
         drawGlobePolar(s, GLOBE_RADIUS, 9, GLOBE_STROKE_COLOR, GLOBE_FILL_COLOR);
         drawHorizontal(s, GLOBE_STROKE_COLOR);
         drawRadial(s, -96, false, LABEL_COLOR);
         createArrowheadMarker(s, LABEL_COLOR);
-        drawLabel(s, 432, GLOBE_RADIUS, -1, 422, 216, "prime meridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
-        drawLabel(s, 80, GLOBE_RADIUS, -1, 90, 216, "antimeridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
-        drawLabel(s, GLOBE_RADIUS, GLOBE_RADIUS, -1, 246, 216, "north pole", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, 440, 264, -1, 430, 224, "prime meridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, 80, 264, -1, 90, 224, "antimeridian", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
+        drawLabel(s, 264, 264, -1, 254, 224, "north pole", LABEL_FONT_SIZE, LABEL_TEXT_ANCHOR, LABEL_COLOR);
       }
 
       //-->
