@@ -26,15 +26,15 @@ var DELIMITER_CHAR_CODES = [0x21, 0x25, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
  * @constant {string[]}
  */
 var KEYWORDS = [
-  /*     f > 20    */  "FROM", "SELECT", "END", "IN", "IF", "AS", "LOOP", "THEN", "VARCHAR2",
-  /* 20 >= f >= 10 */  "BY", "IS", "TABLE", "ORDER", "WHERE", "NULL", "FOR", "BEGIN", "INTO", "CREATE",
-  /*  10 > f > 5   */  "WHEN", "AND", "DECLARE", "ELSE", "COUNT", "CONSTRAINT", "BULK", "TRIM", "TYPE", "COLLECT",
-  /*     f = 5     */  "OF", "ON", "KEY", "NOT", "CASE", "DUAL", "ALTER", "UPPER", "NUMBER", "SUBSTR", "PRIMARY",
-  /*   5 > f > 2   */  "MAX", "MIN", "CHECK", "OR", "CEIL", "JOIN", "LAST", "FIRST", "INNER", "BITAND",
-  /*   5 > f > 2   */  "INSERT", "RETURN", "BOOLEAN", "DEFAULT", "INTEGER", "ROWTYPE", "PROCEDURE", "REFERENCES",
-  /*     f = 2     */  "ADD", "OUT", "CHAR", "DROP", "FLOOR", "GROUP", "LEVEL", "EXTEND", "NOCOPY", "VALUES",
-  /*     f = 2     */  "BETWEEN", "REPLACE", "DISTINCT", "EXCEPTION", "PLS_INTEGER", "REGEXP_SUBSTR",
-  /*     f = 1     */  "ASC", "RAW", "ROW", "EACH", "LIKE", "SIGN", "TRUE", "INDEX", "RAISE", "FALSE", "BEFORE", "COLUMN",
+  /*     f > 20    */  "END", "FROM", "SELECT", "IN", "IF", "AS", "LOOP", "THEN", "VARCHAR2",
+  /* 20 >= f >= 10 */  "IS", "TABLE", "BY", "NULL", "ORDER", "WHERE", "FOR", "BEGIN", "INTO", "CREATE",
+  /*  10 > f > 5   */  "WHEN", "DECLARE", "ELSE", "COUNT", "CONSTRAINT", "BULK", "TRIM", "TYPE", "COLLECT",
+  /*     f = 5     */  "OF", "KEY", "NOT", "CASE", "DUAL", "ALTER", "UPPER", "NUMBER", "SUBSTR", "PRIMARY", "ON",
+  /*   5 > f > 2   */  "MAX", "MIN", "CHECK", "OR", "AND", "CEIL", "LAST", "FIRST", "BITAND", "INSERT",
+  /*   5 > f > 2   */  "RETURN", "BOOLEAN", "DEFAULT", "INTEGER", "ROWTYPE", "PROCEDURE", "REFERENCES",
+  /*     f = 2     */  "ADD", "OUT", "CHAR", "DROP", "JOIN", "FLOOR", "GROUP", "INNER", "LEVEL", "EXTEND", "NOCOPY",
+  /*     f = 2     */  "VALUES", "BETWEEN", "REPLACE", "DISTINCT", "EXCEPTION", "PLS_INTEGER", "REGEXP_SUBSTR",
+  /*     f = 1     */  "RAW", "ROW", "EACH", "LIKE", "SIGN", "TRUE", "INDEX", "RAISE", "FALSE", "BEFORE", "COLUMN",
   /*     f = 1     */  "CURSOR", "MODIFY", "OTHERS", "UPDATE", "WITHIN", "CONNECT", "LISTAGG", "SQLERRM", "TRIGGER",
   /*     f = 1     */  "FUNCTION", "SIGNTYPE", "SYS_GUID", "INDEXTYPE", "SYS_CONTEXT", "RAISE_APPLICATION_ERROR"];
 

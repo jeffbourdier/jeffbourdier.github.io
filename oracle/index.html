@@ -123,18 +123,25 @@ SELECT * FROM V$VERSION;</pre>
         </tr>
       </tbody>
     </table>
-    <p>There are at least four different ways to get the name of the database: from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5127.htm">GLOBAL_NAME</a> data dictionary view,</p>
-    <pre>
+    <p>There are at least four different ways to get the name of the database:</p>
+    <ul>
+      <li>from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5127.htm">GLOBAL_NAME</a> data dictionary view,
+      <pre>
 SELECT * FROM GLOBAL_NAME;</pre>
-    <p>using the (undocumented) <code>ORA_DATABASE_NAME</code> event attribute function,</p>
-    <pre>
+      </li>
+      <li>using the (undocumented) <code>ORA_DATABASE_NAME</code> event attribute function,
+      <pre>
 SELECT ORA_DATABASE_NAME FROM DUAL;</pre>
-    <p>from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions184.htm">DB_NAME parameter of the USERENV namespace</a>,</p>
-    <pre>
+      </li>
+      <li>from the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions184.htm">DB_NAME parameter of the USERENV namespace</a>,
+      <pre>
 SELECT SYS_CONTEXT('USERENV', 'DB_NAME') AS DB_NAME FROM DUAL;</pre>
-    <p>and from the <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/dynviews_1097.htm">V$DATABASE</a> view (which can provide a lot more than just the database name).</p>
-    <pre>
+      </li>
+      <li>and from the <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/dynviews_1097.htm">V$DATABASE</a> view (which can provide a lot more than just the database name).
+      <pre>
 SELECT "NAME" FROM V$DATABASE;</pre>
+      </li>
+    </ul>
     <p>The <a href="https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions150.htm">REGEXP_SUBSTR</a> function can be used to "transpose" a comma-separated list to a recordset.</p>
     <pre>
 SELECT TRIM(REGEXP_SUBSTR('One, Two, Three', '[^,]+', 1, LEVEL)) AS "VALUE"
@@ -159,153 +166,36 @@ CONNECT BY (REGEXP_SUBSTR('One, Two, Three', '[^,]+', 1, LEVEL) IS NOT NULL);</p
       </tbody>
     </table>
     <h4>Data Dictionary Views</h4>
-    <p>Below are several of the more commonly used <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/toc.htm">data dictionary views</a> and their more interesting fields.  Most of these views have three versions, each of which begins with one of the following prefixes:</p>
+    <p>Most <a href="http://docs.oracle.com/cd/E11882_01/server.112/e40402/toc.htm">data dictionary views</a> have three versions, each of which begins with one of the following prefixes:</p>
     <ul>
       <li><code>USER_</code> - describes all objects of a given type <u>owned by the current user</u></li>
       <li><code>ALL_</code> - describes all objects of a given type <u>accessible to the current user</u></li>
       <li><code>DBA_</code> - describes all objects of a given type <u>in the database</u></li>
     </ul>
-    <p>In most cases, each version of the views has the same set of fields, except that the <code>USER_</code> version does not have the <code>OWNER</code> field.  Typically, Oracle documentation is found only under the <code>ALL_</code> version of each view, however this text uses the <code>DBA_</code> version in its examples.</p>
-    <p>USER_TABLES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2117.htm">ALL_TABLES</a> / DBA_TABLES</p>
-    <pre>
-SELECT OWNER, TABLE_NAME, NUM_ROWS FROM DBA_TABLES;</pre>
-    <p>USER_VIEWS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2133.htm">ALL_VIEWS</a> / DBA_VIEWS</p>
-    <pre>
-SELECT OWNER, VIEW_NAME, TEXT FROM DBA_VIEWS;</pre>
-    <p>USER_TAB_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2104.htm">ALL_TAB_COMMENTS</a> / DBA_TAB_COMMENTS (covers both tables and views)</p>
-    <pre>
-SELECT * FROM DBA_TAB_COMMENTS;</pre>
-    <p>USER_MVIEWS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1153.htm">ALL_MVIEWS</a> / DBA_MVIEWS (materialized views)</p>
-    <pre>
-SELECT OWNER, VIEW_NAME, "QUERY" FROM DBA_MVIEWS;</pre>
-    <p>USER_MVIEW_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1145.htm">ALL_MVIEW_COMMENTS</a> / DBA_MVIEW_COMMENTS</p>
-    <pre>
-SELECT * FROM DBA_MVIEW_COMMENTS;</pre>
-    <p>USER_SYNONYMS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2100.htm">ALL_SYNONYMS</a> / DBA_SYNONYMS</p>
-    <pre>
-SELECT * FROM DBA_SYNONYMS;</pre>
-    <p>USER_DB_LINKS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1067.htm">ALL_DB_LINKS</a> / DBA_DB_LINKS</p>
-    <pre>
-SELECT OWNER, DB_LINK, USERNAME, HOST FROM DBA_DB_LINKS;</pre>
-    <p>USER_TAB_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2103.htm">ALL_TAB_COLUMNS</a> / DBA_TAB_COLUMNS</p>
-    <pre>
-SELECT COLUMN_NAME, DATA_TYPE, DATA_PRECISION, DATA_SCALE, CHAR_LENGTH
-FROM DBA_TAB_COLUMNS
-WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
-ORDER BY COLUMN_ID;</pre>
-    <p>USER_COL_COMMENTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1039.htm">ALL_COL_COMMENTS</a> / DBA_COL_COMMENTS</p>
-    <pre>
-SELECT * FROM DBA_COL_COMMENTS;</pre>
-    <p>The following query is useful for seeing the attributes (including comments) of all columns of a table:</p>
-    <pre>
-SELECT TC.*, CC.COMMENTS
-FROM
-(
-  SELECT
-    COLUMN_ID, COLUMN_NAME, DATA_TYPE,
-    DATA_PRECISION, DATA_SCALE, CHAR_LENGTH
-  FROM DBA_TAB_COLUMNS
-  WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
-) TC
-INNER JOIN
-(
-  SELECT *
-  FROM DBA_COL_COMMENTS
-  WHERE (OWNER = 'schema') AND (TABLE_NAME = 'table')
-) CC
-ON (TC.COLUMN_NAME = CC.COLUMN_NAME)
-ORDER BY COLUMN_ID;</pre>
-    <p>USER_IND_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1103.htm">ALL_IND_COLUMNS</a> / DBA_IND_COLUMNS</p>
-    <pre>
-SELECT * FROM DBA_IND_COLUMNS;</pre>
-    <p>USER_INDEXES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1109.htm">ALL_INDEXES</a> / DBA_INDEXES</p>
-    <pre>
-SELECT
-  OWNER, INDEX_NAME, INDEX_TYPE, TABLE_NAME,
-  UNIQUENESS, ITYP_NAME, "PARAMETERS"
-FROM DBA_INDEXES;</pre>
-    <p>USER_CONS_COLUMNS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1045.htm">ALL_CONS_COLUMNS</a> / DBA_CONS_COLUMNS</p>
-    <pre>
-SELECT * FROM DBA_CONS_COLUMNS;</pre>
-    <p>USER_CONSTRAINTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1047.htm">ALL_CONSTRAINTS</a> / DBA_CONSTRAINTS</p>
-    <pre>
-SELECT OWNER, CONSTRAINT_NAME, CONSTRAINT_TYPE, R_CONSTRAINT_NAME, INDEX_NAME
-FROM DBA_CONSTRAINTS;</pre>
-    <p>USER_TRIGGERS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2121.htm">ALL_TRIGGERS</a> / DBA_TRIGGERS</p>
-    <pre>
-SELECT
-  OWNER, TRIGGER_NAME, TRIGGER_TYPE, TRIGGERING_EVENT,
-  TABLE_NAME, WHEN_CLAUSE, DESCRIPTION, TRIGGER_BODY
-FROM DBA_TRIGGERS;</pre>
-    <p>USER_PROCEDURES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2013.htm">ALL_PROCEDURES</a> / DBA_PROCEDURES (covers packages, procedures, functions, triggers, and types)</p>
-    <pre>
-SELECT OWNER, OBJECT_NAME, PROCEDURE_NAME, OBJECT_TYPE FROM DBA_PROCEDURES;</pre>
-    <p>USER_SOURCE / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2064.htm">ALL_SOURCE</a> / DBA_SOURCE (covers packages, procedures, functions, triggers, and types)</p>
-    <pre>
-SELECT LINE, TEXT
-FROM DBA_SOURCE
-WHERE
-  (OWNER = 'schema') AND
-  ("NAME" = 'package_name') AND
-  ("TYPE" = 'PACKAGE BODY')
-ORDER BY LINE ASC;</pre>
-    <p>USER_PLSQL_OBJECT_SETTINGS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2009.htm">ALL_PLSQL_OBJECT_SETTINGS</a> / DBA_PLSQL_OBJECT_SETTINGS (covers packages, procedures, functions, triggers, and types)</p>
-    <pre>
-SELECT OWNER, "NAME", "TYPE", "PLSQL_OPTIMIZE_LEVEL"
-FROM DBA_PLSQL_OBJECT_SETTINGS
-WHERE ("PLSQL_DEBUG" = 'TRUE')
-ORDER BY OWNER, "TYPE", "NAME";</pre>
-    <p>There's also the undocumented <a href="https://asktom.oracle.com/pls/apex/asktom.search?tag=all-probe-objects">SYS.ALL_PROBE_OBJECTS</a> view, which reports similar information (though I consider the <code>_PLSQL_OBJECT_SETTINGS</code> views more reliable).  If installed, it can be queried thus:</p>
+    <p>In most cases, each version of the views has the same set of fields, except that the <code>USER_</code> version does not have the <code>OWNER</code> field.  Some exceptions are noted below.</p>
+    <ul>
+      <li>USER_USERS shows only the current user, and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5081.htm">DBA_USERS</a> has many more fields than ALL_USERS.</li>
+      <li>There is no USER_DIRECTORIES view; only <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1078.htm">ALL_DIRECTORIES</a> and DBA_DIRECTORIES.</li>
+      <li>There is no USER_ROLES or ALL_ROLES view; only <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4220.htm">DBA_ROLES</a>.</li>
+      <li>There is no ALL_ROLE_PRIVS view; only USER_ROLE_PRIVS and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4219.htm">DBA_ROLE_PRIVS</a>.  (USER_ROLE_PRIVS describes roles granted to the current user.)</li>
+      <li>There is no ALL_SYS_PRIVS view; only USER_SYS_PRIVS and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5041.htm">DBA_SYS_PRIVS</a>.  (USER_SYS_PRIVS describes system privileges granted to the current user.)</li>
+      <li>There is no ALL_FREE_SPACE view; only USER_FREE_SPACE and <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_3194.htm">DBA_FREE_SPACE</a>.</li>
+    </ul>
+    <p>(Several of the more commonly used data dictionary views and their more interesting fields are demonstrated by the <a href="https://github.com/jeffbourdier/dumprows/blob/main/templates/oracle.json">Oracle query template file</a> in the <a href="https://github.com/jeffbourdier/dumprows"><span style="font-variant: small-caps;">DumpRows</span></a> project.)</p>
+    <p>The undocumented <a href="https://asktom.oracle.com/pls/apex/asktom.search?tag=all-probe-objects">SYS.ALL_PROBE_OBJECTS</a> view reports similar information to the <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2009.htm">PLSQL_OBJECT_SETTINGS</a> data dictionary views (though the latter are probably more reliable).  If installed, it can be queried thus:</p>
     <pre>
 SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, CREATED, LAST_DDL_TIME
 FROM SYS.ALL_PROBE_OBJECTS
 WHERE (DEBUGINFO = 'T')
 ORDER BY OWNER, OBJECT_TYPE, OBJECT_NAME;</pre>
-    <p>Note some key differences between this and the <code>_PLSQL_OBJECT_SETTINGS</code> views:</p>
+    <p>Note some key differences between this and the <code>PLSQL_OBJECT_SETTINGS</code> views:</p>
     <ul>
       <li>The <code>SYS.</code> schema qualifier is required, as there is no public synonym for <code>ALL_PROBE_OBJECTS</code>.</li>
-      <li><code>SYS.ALL_PROBE_OBJECTS</code> does not provide optimization level (whereas the <code>_PLSQL_OBJECT_SETTINGS</code> views do).</li>
-      <li><code>SYS.ALL_PROBE_OBJECTS</code> uses <code>'T'</code> and <code>'F'</code> (for <code>DEBUGINFO</code>), whereas the <code>_PLSQL_OBJECT_SETTINGS</code> views use <code>'TRUE'</code> and <code>'FALSE'</code> (for <code>PLSQL_DEBUG</code>).</li>
+      <li><code>SYS.ALL_PROBE_OBJECTS</code> does not provide optimization level (whereas the <code>PLSQL_OBJECT_SETTINGS</code> views do).</li>
+      <li><code>SYS.ALL_PROBE_OBJECTS</code> uses <code>'T'</code> and <code>'F'</code> (for <code>DEBUGINFO</code>), whereas the <code>PLSQL_OBJECT_SETTINGS</code> views use <code>'TRUE'</code> and <code>'FALSE'</code> (for <code>PLSQL_DEBUG</code>).</li>
     </ul>
     <p>More details about PL/SQL debug settings are given in the <b>Debug Settings</b> section (under <b>PL/SQL</b>, below).</p>
-    <p>USER_SCHEDULER_JOBS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2046.htm">ALL_SCHEDULER_JOBS</a> / DBA_SCHEDULER_JOBS</p>
-    <pre>
-SELECT
-  OWNER, JOB_NAME, PROGRAM_NAME, JOB_TYPE, JOB_ACTION, SCHEDULE_NAME,
-  REPEAT_INTERVAL, ENABLED, AUTO_DROP, STATE, LAST_START_DATE,
-  LAST_RUN_DURATION, NEXT_RUN_DATE, REPEAT_INTERVAL, COMMENTS
-FROM DBA_SCHEDULER_JOBS;</pre>
-    <p><a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1078.htm">ALL_DIRECTORIES</a> / DBA_DIRECTORIES  (there is no USER_DIRECTORIES)</p>
-    <pre>
-SELECT * FROM DBA_DIRECTORIES;</pre>
-    <p>USER_USERS / ALL_USERS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5081.htm">DBA_USERS</a><br />(In this case, <code>USER_USERS</code> shows only the current user, and <code>DBA_USERS</code> has many more fields than <code>ALL_USERS</code>.)</p>
-    <pre>
-SELECT USERNAME FROM DBA_USERS;</pre>
-    <p><a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4220.htm">DBA_ROLES</a>  (there is no USER_ROLES or ALL_ROLES)</p>
-    <pre>
-SELECT "ROLE" FROM DBA_ROLES;</pre>
-    <p>USER_ROLE_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_4219.htm">DBA_ROLE_PRIVS</a><br />(<code>USER_ROLE_PRIVS</code> describes roles granted to the current user.  There is no ALL_ROLE_PRIVS view.)</p>
-    <pre>
-SELECT GRANTEE, GRANTED_ROLE FROM DBA_ROLE_PRIVS;</pre>
-    <p>USER_SYS_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5041.htm">DBA_SYS_PRIVS</a><br />(<code>USER_SYS_PRIVS</code> describes system privileges granted to the current user.  There is no ALL_SYS_PRIVS view.)</p>
-    <pre>
-SELECT GRANTEE, "PRIVILEGE" FROM DBA_SYS_PRIVS;</pre>
-    <p>USER_TAB_PRIVS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_2110.htm">ALL_TAB_PRIVS</a> / DBA_TAB_PRIVS (covers all objects, not just tables)</p>
-    <pre>
-SELECT GRANTEE, OWNER, TABLE_NAME, "PRIVILEGE" FROM DBA_TAB_PRIVS;</pre>
-    <p>USER_OBJECTS / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1158.htm">ALL_OBJECTS</a> / DBA_OBJECTS</p>
-    <pre>
-SELECT OWNER, OBJECT_NAME, OBJECT_TYPE FROM DBA_OBJECTS;</pre>
-    <p>USER_DEPENDENCIES / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_1069.htm">ALL_DEPENDENCIES</a> / DBA_DEPENDENCIES</p>
-    <pre>
-SELECT * FROM DBA_DEPENDENCIES;</pre>
-    <p><a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_5157.htm">PUBLIC_DEPENDENCY</a></p>
-    <pre>
-SELECT * FROM PUBLIC_DEPENDENCY;</pre>
-    <p>USER_FREE_SPACE / <a href="https://docs.oracle.com/cd/E11882_01/server.112/e40402/statviews_3194.htm">DBA_FREE_SPACE</a>  (there is no ALL_FREE_SPACE)</p>
-    <pre>
-SELECT * FROM DBA_FREE_SPACE;</pre>
-    <p><code>DBA_VIEWS.TEXT</code>, <code>DBA_MVIEWS."QUERY"</code>, <code>DBA_TRIGGERS.TRIGGER_BODY</code>, and <code>DBA_SOURCE.TEXT</code> can be used to get the DDL of a view, materialized view, trigger, or package/procedure/function/trigger/type (respectively).  The <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/d_metada.htm#ARPLS66885">DBMS_METADATA.GET_DDL</a> function can be used to get the DDL of any object.</p>
+    <p>While <code>DBA_VIEWS.TEXT</code>, <code>DBA_MVIEWS."QUERY"</code>, <code>DBA_TRIGGERS.TRIGGER_BODY</code>, and <code>DBA_SOURCE.TEXT</code> can be used to get the DDL of a view, materialized view, trigger, or package/procedure/function/trigger/type (respectively); the <a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e40758/d_metada.htm#ARPLS66885">DBMS_METADATA.GET_DDL</a> function can be used to get the DDL of any object.</p>
     <pre>
 SELECT DBMS_METADATA.GET_DDL(OBJECT_TYPE, OBJECT_NAME, OWNER) AS TEXT
 FROM (SELECT * FROM DBA_OBJECTS WHERE (OBJECT_NAME = 'name'));</pre>
