@@ -22,21 +22,17 @@ var DELIMITER_CHAR_CODES = [0x21, 0x25, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
 /**
  * Identifiers that have special meaning in PL/SQL (must be followed and preceded by non-keyword characters).
  * @see [PL/SQL Reserved Words and Keywords]{@link https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/reservewords.htm}
- * For performance reasons, this list should be sorted by frequency (descending).
  * @constant {string[]}
  */
-var KEYWORDS = [
-  /*     f > 20    */  "END", "FROM", "SELECT", "IN", "IF", "AS", "LOOP", "THEN", "VARCHAR2",
-  /* 20 >= f >= 10 */  "IS", "TABLE", "BY", "NULL", "ORDER", "WHERE", "FOR", "BEGIN", "INTO", "CREATE",
-  /*  10 > f > 5   */  "WHEN", "DECLARE", "ELSE", "COUNT", "CONSTRAINT", "BULK", "TRIM", "TYPE", "COLLECT",
-  /*     f = 5     */  "OF", "KEY", "NOT", "CASE", "DUAL", "ALTER", "UPPER", "NUMBER", "SUBSTR", "PRIMARY", "ON",
-  /*   5 > f > 2   */  "MAX", "MIN", "CHECK", "OR", "AND", "CEIL", "LAST", "FIRST", "BITAND", "INSERT",
-  /*   5 > f > 2   */  "RETURN", "BOOLEAN", "DEFAULT", "INTEGER", "ROWTYPE", "PROCEDURE", "REFERENCES",
-  /*     f = 2     */  "ADD", "OUT", "CHAR", "DROP", "JOIN", "FLOOR", "GROUP", "INNER", "LEVEL", "EXTEND", "NOCOPY",
-  /*     f = 2     */  "VALUES", "BETWEEN", "REPLACE", "DISTINCT", "EXCEPTION", "PLS_INTEGER", "REGEXP_SUBSTR",
-  /*     f = 1     */  "RAW", "ROW", "EACH", "LIKE", "SIGN", "TRUE", "INDEX", "RAISE", "FALSE", "BEFORE", "COLUMN",
-  /*     f = 1     */  "CURSOR", "MODIFY", "OTHERS", "UPDATE", "WITHIN", "CONNECT", "LISTAGG", "SQLERRM", "TRIGGER",
-  /*     f = 1     */  "FUNCTION", "SIGNTYPE", "SYS_GUID", "INDEXTYPE", "SYS_CONTEXT", "RAISE_APPLICATION_ERROR"];
+var KEYWORDS = ["ADD", "ALTER", "AND", "AS", "BEFORE", "BEGIN", "BETWEEN", "BITAND", "BOOLEAN", "BULK", "BY",
+  "CASE", "CEIL", "CHAR", "CHECK", "COLLECT", "COLUMN", "CONNECT", "CONSTRAINT", "COUNT", "CREATE", "CURSOR",
+  "DATE", "DECLARE", "DEFAULT", "DISTINCT", "DROP", "DUAL", "EACH", "ELSE", "END", "EXCEPTION", "EXIT", "EXTEND",
+  "FALSE", "FIRST", "FLOOR", "FOR", "FROM", "FUNCTION", "GROUP", "IF", "IN", "INDEX", "INDEXTYPE", "INNER",
+  "INSERT", "INTEGER", "INTO", "IS", "JOIN", "KEY", "LAST", "LEVEL", "LIKE", "LISTAGG", "LOOP", "MAX", "MIN",
+  "MODIFY", "NOCOPY", "NOT", "NULL", "NUMBER", "OF", "ON", "OR", "ORDER", "OTHERS", "OUT", "PLS_INTEGER",
+  "PRIMARY", "PROCEDURE", "RAISE", "RAISE_APPLICATION_ERROR", "RAW", "REFERENCES", "REGEXP_SUBSTR", "REPLACE",
+  "RETURN", "ROW", "ROWTYPE", "SELECT", "SIGN", "SIGNTYPE", "SQLERRM", "SUBSTR", "SYS_CONTEXT", "SYS_GUID", "TABLE",
+  "THEN", "TRIGGER", "TRIM", "TRUE", "TYPE", "UPDATE", "UPPER", "VALUES", "VARCHAR2", "WHEN", "WHERE", "WITHIN"];
 
 
 /**
@@ -96,10 +92,6 @@ function highlightSyntax(element)
     {
       s = chars.join("");
       addElement("keyword", s, nodes);
-
-      /* Uncomment this to track keyword frequency (see index.html). */
-      //keywordFrequency[k]++;
-
       i += chars.length;
       chars.splice(0);
       if (fn == null) { j = i; continue; }

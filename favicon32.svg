@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
-  <rect x="16" y="0" width="16" height="32" stroke="maroon" fill="maroon" />
-  <rect x="0" y="0" width="16" height="32" stroke="maroon" fill="yellow" />
-  <path d="m 15 29 h 4 l -2,-8 a 6,6 0,1,0 2,-7 a 6,6 0,0,0 -4,-11" fill="yellow" />
-  <path d="m 16 29 h -4 l 2,-8 a 6,6 0,1,1 -2,-7 a 6,6 0,0,1 4,-11" fill="maroon" />
-</svg>

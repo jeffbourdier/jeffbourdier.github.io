@@ -41,13 +41,19 @@ dumprows [OPTION]... <i>COMMAND</i></pre>
       <li>provide credentials for the specified database</li>
     </ul>
     <p>If the <code>QUERY_STRING</code> environment variable is empty, <span style="font-variant: small-caps;">DumpRows</span> outputs a web page that prompts for a query.  The query can be generated using a <i>query template</i> (parameterized <a href="https://en.wikipedia.org/wiki/Select_(SQL)"><code>SELECT</code></a> statement), or can be entered directly into the <b>Query</b> text area.  (The web page includes a few built-in query templates, and several more sample templates are available in the <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>.  To see the web page that prompts for a query, <a href="prompt.html">click here</a>.)</p>
-    <p>When non-empty, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL <code>SELECT</code></a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), ideally using the <a href="https://epsg.io/3857">EPSG:3857</a> spatial reference system.)</p>
+    <p>When non-empty, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL <code>SELECT</code></a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), using the <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84">WGS 84</a> spheroid.)</p>
     <h2>Options</h2>
     <dl>
       <dt><code>-h, --help</code></dt>
-      <dd>Output a help message and exit.</dd><br />
+      <dd>Output a help message and exit.</dd>
+    </dl>
+    <dl>
       <dt><code>-l, --log</code></dt>
       <dd>Write a message to the default log file (<code>C:\ProgramData\dumprows.log</code> on Windows, <code>/var/log/dumprows.log</code> on Linux).</dd>
+    </dl>
+    <dl>
+      <dt><code>-t, --template=FILE</code></dt>
+      <dd>Load query templates from FILE.  These templates are included in the web page that prompts for a query (if said page is needed).</dd>
     </dl>
     <h2>Examples</h2>
     <p>These examples were tested on <a href="https://ubuntu.com/">Ubuntu</a> running <a href="https://httpd.apache.org/">Apache HTTP Server (httpd)</a>.  CGI was enabled as follows:</p>
@@ -68,7 +74,7 @@ dumprows --log "<i>COMMAND</i>"</pre>
         <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> (version 12.2 or later, with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>).  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
         <pre>
 #!/bin/sh
-dumprows --log "sqlplus -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
+dumprows --log --template=oracle.json "sqlplus -F -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
         <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that if the 64-bit version of the Oracle client is installed, the command would be <code>sqlplus64</code> instead of <code>sqlplus</code>.)</p>
         <p>Let's say the following query returns a set of point features representing school buildings in Brockport, New York:</p>
         <pre>
@@ -86,7 +92,7 @@ http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+DESCRIPTION+AS+"Descriptio
         <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  The CGI script would invoke <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> as follows:</p>
         <pre>
 #!/bin/sh
-dumprows --log "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
+dumprows -l -tpostgresql.json "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
         <p>with <code><i>hostname</i></code>, <code><i>dbname</i></code>, <code><i>username</i></code>, and <code><i>password</i></code> populated appropriately.</p>
         <p>Let's say the following query returns a set of polygon features representing the coterminous United States:</p>
         <pre>
@@ -105,7 +111,7 @@ http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+fips_code+AS+"FIPS"%2C+usp
         <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a> (version 5 or later, with the GPKG (GeoPackage) extension module), though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functionality.  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> (or <a href="https://www.sqlite.org/cli.html">sqlite3</a>) as follows:</p>
         <pre>
 #!/bin/sh
-dumprows --log "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
+dumprows "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
         <p>with <code><i>FILENAME</i></code> populated appropriately.  (For plain SQLite (instead of SpatiaLite), substitute <code>sqlite3</code> for <code>spatialite</code>.)</p>
         <p>Let's say the following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
         <pre>

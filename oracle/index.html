@@ -11,32 +11,21 @@
     <link rel="stylesheet" type="text/css" href="../mobile.css" media="only screen and (max-device-width: 511px)" />
     <link rel="stylesheet" type="text/css" href="../desktop.css" media="only screen and (min-device-width: 512px)" />
     <style>
-      pre span.comment { color: green; }
-      pre span.string { color: red; }
-      pre span.number { color: fuchsia; }
-      pre span.delimiter { color: purple; }
-      pre span.keyword { color: blue; }
+      pre span.comment   { color: green;   }
+      pre span.string    { color: red;     }
+      pre span.number    { color: fuchsia; }
+      pre span.delimiter { color: purple;  }
+      pre span.keyword   { color: blue;    }
     </style>
     <script src="ora.js"></script>
     <script type="text/javascript">
       <!--
 
-      /* Uncomment this to track keyword frequency. */
-      //var keywordFrequency = [];
-
       function initPage()
       {
-        var elements, i;
-
-        /* Uncomment this to track keyword frequency. */
-        //for (i = 0; i < KEYWORDS.length; i++) keywordFrequency.push(0);
-
         /* Apply syntax-highlighting to each block of preformatted text (which should contain Oracle SQL code). */
-        elements = document.body.getElementsByTagName("pre");
-        for (i = 0; i < elements.length; i++) highlightSyntax(elements[i]);
-
-        /* Uncomment this to track keyword frequency. */
-        //for (i = 0; i < KEYWORDS.length; i++) console.log(KEYWORDS[i] + "\t" + keywordFrequency[i]);
+        var i, elements = document.body.getElementsByTagName("pre");
+        for (i = 0; i < elements.length; ++i) highlightSyntax(elements[i]);
       }
 
       //-->
@@ -925,6 +914,84 @@ BEGIN
     s := privs(i)."PRIVILEGE" || ' on ' || privs(i).OWNER || '.' || privs(i).TABLE_NAME;
     DBMS_OUTPUT.PUT_LINE(s);
   END LOOP;
+END;
+/</pre>
+    <p>The following demonstrates "Method 4" dynamic SQL using the <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/arpls/DBMS_SQL.html">DBMS_SQL</a> package.</p>
+    <pre>
+DECLARE
+  c INTEGER;
+  i INTEGER;
+  s VARCHAR2(64);
+  n NUMBER;
+  d DATE;
+  dt DBMS_SQL.DESC_TAB;
+BEGIN
+  /* Open a new cursor.  When no longer needed, it should be closed with CLOSE_CURSOR. */
+  c := DBMS_SQL.OPEN_CURSOR;
+
+  /* Associate the cursor with an SQL statement.  Argument 3 is the
+   * "language flag."  It should pretty much always be DBMS_SQL.NATIVE.
+   */
+  s := 'SELECT * FROM table';
+  DBMS_SQL.PARSE(c, s, DBMS_SQL.NATIVE);
+
+  /* Describe the fields of the cursor.  Argument 2 receives the number of fields.  Argument 3
+   * receives a DBMS_SQL.DESC_TAB, which is a table whose records are of type DBMS_SQL.DESC_REC.
+   */
+  DBMS_SQL.DESCRIBE_COLUMNS(c, i, dt);
+
+  /* Iterate through each field. */
+  FOR j IN dt.FIRST .. dt.LAST LOOP
+    /* Not calling DEFINE_COLUMN for each field results in an error when EXECUTE is called.  Argument 3
+     * specifies the type.  Argument 4, which applies only to variable-length types, is the max length.
+     */
+    CASE dt(j).col_type
+      WHEN DBMS_TYPES.TYPECODE_VARCHAR THEN DBMS_SQL.DEFINE_COLUMN(c, j, s, 40);
+      WHEN DBMS_TYPES.TYPECODE_NUMBER THEN DBMS_SQL.DEFINE_COLUMN(c, j, n);
+      WHEN DBMS_TYPES.TYPECODE_DATE THEN DBMS_SQL.DEFINE_COLUMN(c, j, d);
+      ELSE DBMS_OUTPUT.PUT_LINE(dt(j).col_name || ' has unrecognized type: ' || dt(j).col_type);
+    END CASE;
+  END LOOP;
+
+  /* Execute the cursor.  (Return value is not meaningful for SELECT statements.) */
+  i := DBMS_SQL.EXECUTE(c);
+
+  /* Iterate through each record. */
+  LOOP
+    /* Fetch one or more records from the cursor.  The number of records fetched is returned.  The cursor is
+     * advanced by the number of records fetched.  When there are no more records to fetch, zero is returned.
+     */
+    i := DBMS_SQL.FETCH_ROWS(c);
+
+    /* When all records have been fetched, we're done. */
+    EXIT WHEN i = 0;
+
+    DBMS_OUTPUT.PUT_LINE('Fetched ' || i || ' record(s)');
+    DBMS_OUTPUT.PUT_LINE('-----');
+    DBMS_OUTPUT.PUT_LINE('Record ' || DBMS_SQL.LAST_ROW_COUNT);
+
+    /* Iterate through each field. */
+    FOR j IN dt.FIRST .. dt.LAST LOOP
+      /* COLUMN_VALUE sets the value of a variable to that of a given field from the current
+       * record in a given cursor.  Argument 3 is the variable that receives the value.
+       */
+      CASE dt(j).col_type
+        WHEN DBMS_TYPES.TYPECODE_VARCHAR THEN DBMS_SQL.COLUMN_VALUE(c, j, s);
+        WHEN DBMS_TYPES.TYPECODE_NUMBER THEN DBMS_SQL.COLUMN_VALUE(c, j, n); s := n;
+        WHEN DBMS_TYPES.TYPECODE_DATE THEN DBMS_SQL.COLUMN_VALUE(c, j, d); s := d;
+        ELSE s := '(unrecognized type: ' || dt(j).col_type || ')';
+      END CASE;
+
+      DBMS_OUTPUT.PUT_LINE(dt(j).col_name || ': ' || s);
+    END LOOP;
+
+    DBMS_OUTPUT.PUT_LINE('-----');
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('All done!');
+
+  /* The cursor is no longer needed, so close it. */
+  DBMS_SQL.CLOSE_CURSOR(c);
 END;
 /</pre>
     <p>The following function demonstrates:</p>
