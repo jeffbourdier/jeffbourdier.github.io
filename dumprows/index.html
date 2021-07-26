@@ -48,6 +48,10 @@ dumprows [OPTION]... <i>COMMAND</i></pre>
       <dd>Output a help message and exit.</dd>
     </dl>
     <dl>
+      <dt><code>-k, --keep-files</code></dt>
+      <dd>Do not delete temporary files created for I/O processing.  (By default, they are deleted, but keeping them can be helpful for debugging purposes.)</dd>
+    </dl>
+    <dl>
       <dt><code>-l, --log</code></dt>
       <dd>Write a message to the default log file (<code>C:\ProgramData\dumprows.log</code> on Windows, <code>/var/log/dumprows.log</code> on Linux).</dd>
     </dl>
@@ -63,18 +67,14 @@ sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/</pre>
     <pre>
 sudo touch /var/log/dumprows.log
 sudo chown www-data:www-data /var/log/dumprows.log</pre>
-    <p>A script of the following form was created in <code>/usr/lib/cgi-bin/</code>:</p>
-    <pre>
-#!/bin/sh
-dumprows --log "<i>COMMAND</i>"</pre>
-    <p>The examples below illustrate different values of <code><i>COMMAND</i></code> when using <span style="font-variant: small-caps;">DumpRows</span> with various database providers and geometry types.</p>
+    <p>CGI scripts were created in <code>/usr/lib/cgi-bin/</code>.  The examples below demonstrate different command lines and options when using <span style="font-variant: small-caps;">DumpRows</span> with various database providers and geometry types.</p>
     <ol>
       <li>
         <h3>Oracle</h3>
         <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> (version 12.2 or later, with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>).  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
         <pre>
 #!/bin/sh
-dumprows --log --template=oracle.json "sqlplus -F -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
+dumprows -lk --template=oracle.json "sqlplus -F -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
         <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that if the 64-bit version of the Oracle client is installed, the command would be <code>sqlplus64</code> instead of <code>sqlplus</code>.)</p>
         <p>Let's say the following query returns a set of point features representing school buildings in Brockport, New York:</p>
         <pre>
@@ -92,7 +92,7 @@ http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+DESCRIPTION+AS+"Descriptio
         <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  The CGI script would invoke <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> as follows:</p>
         <pre>
 #!/bin/sh
-dumprows -l -tpostgresql.json "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
+dumprows --log -tpostgresql.json "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
         <p>with <code><i>hostname</i></code>, <code><i>dbname</i></code>, <code><i>username</i></code>, and <code><i>password</i></code> populated appropriately.</p>
         <p>Let's say the following query returns a set of polygon features representing the coterminous United States:</p>
         <pre>
@@ -111,7 +111,7 @@ http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+fips_code+AS+"FIPS"%2C+usp
         <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a> (version 5 or later, with the GPKG (GeoPackage) extension module), though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functionality.  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> (or <a href="https://www.sqlite.org/cli.html">sqlite3</a>) as follows:</p>
         <pre>
 #!/bin/sh
-dumprows "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
+dumprows --keep-files "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
         <p>with <code><i>FILENAME</i></code> populated appropriately.  (For plain SQLite (instead of SpatiaLite), substitute <code>sqlite3</code> for <code>spatialite</code>.)</p>
         <p>Let's say the following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
         <pre>
