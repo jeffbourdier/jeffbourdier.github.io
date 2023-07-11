@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Geographic Information System (proof of concept) for Transitional Energy - Software by Jeff Bourdier</title>
+    <style>
+      #panelDiv { float: left; height: 100%; width: 240px; overflow: auto; }
+      #mapDiv { border: 2px solid gray; }
+      h1, h2 { text-align: center; }
+      table { border-collapse: collapse; }
+      table, th, td { border: 1px solid; padding: 4px; }
+      th { background-color: #DFDFDF; }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+      /* This code Copyright (c) 2022-3 Jeffrey Paul Bourdier */
+
+      var mapDiv, map, control, tileLayer, pointLayer, nonpointLayer, selectedIndex = 0, selectedGeometry, backPoint,
+        forePoint, backLine, foreLine, backPolygon, forePolygon, table, extents = [[39.6, -105.2], [39.9, -104.8]],
+        geoObject =
+        {
+          type: 'FeatureCollection',
+          features:
+          [
+            {type:'Feature',properties:{index:1,API:'05001052150000',StatusDescription:'DRY AND ABANDONED',OperatorName:'U S ARMY CORPS OF ENGINEERS',WellName:'ROCKY MOUNTAIN ARSENAL GO',MeasuredDepth:12045},geometry:{type:'Point',coordinates:[-104.85387,39.854381]}},
+            {type:'Feature',properties:{index:2,API:'05001052960000',StatusDescription:'DRY AND ABANDONED',OperatorName:'FISHER EDDIE',WellName:'PATENTED (FINNERTY)',MeasuredDepth:6014},geometry:{type:'Point',coordinates:[-104.962583,39.868]}},
+            {type:'Feature',properties:{index:3,API:'05001053150000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'UNKNOWN',WellName:'MAUL',MeasuredDepth:2027},geometry:{type:'Point',coordinates:[-104.84899,39.87341]}},
+            {type:'Feature',properties:{index:4,API:'05001053180000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'SNYDER* HUGH B',WellName:'STRAT TEST',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-104.85291,39.87341]}},
+            {type:'Feature',properties:{index:5,API:'05001053260000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'SNYDER DRILLING CO* JIM',WellName:'OTTO MAUL (STRAT TEST)',MeasuredDepth:387},geometry:{type:'Point',coordinates:[-104.84799,39.87701]}},
+            {type:'Feature',properties:{index:6,API:'05001053170000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'SNYDER* HUGH B',WellName:'OTTO MUAL',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-104.85274,39.8734]}},
+            {type:'Feature',properties:{index:7,API:'05001053320000',StatusDescription:'ABANDONED LOCATION',OperatorName:'SNYDER DRILLING CO* JIM',WellName:'OTTO MAUL',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-104.84799,39.87755]}},
+            {type:'Feature',properties:{index:8,API:'05001067910000',StatusDescription:'DRY AND ABANDONED',OperatorName:'FUEL RESOURCES DEVELOPMENT CO',WellName:'HEINZE',MeasuredDepth:5250},geometry:{type:'Point',coordinates:[-104.87251,39.8762]}},
+            {type:'Feature',properties:{index:9,API:'05001075000000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'KP KAUFFMAN COMPANY INC',WellName:'BURLINGTON NORTHERN',MeasuredDepth:5340},geometry:{type:'Point',coordinates:[-104.88881,39.86281]}},
+            {type:'Feature',properties:{index:10,API:'05001075010000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'KP KAUFFMAN COMPANY INC',WellName:'MARTY BROTHERS',MeasuredDepth:5335},geometry:{type:'Point',coordinates:[-104.893041,39.86396]}},
+            {type:'Feature',properties:{index:11,API:'05001075360000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'VESSELS OIL & GAS COMPANY',WellName:'MUNSON-PALOMBO',MeasuredDepth:5378},geometry:{type:'Point',coordinates:[-104.881351,39.86792]}},
+            {type:'Feature',properties:{index:12,API:'05001075480000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'VESSELS OIL & GAS COMPANY',WellName:'POWERS',MeasuredDepth:5350},geometry:{type:'Point',coordinates:[-104.882271,39.87169]}},
+            {type:'Feature',properties:{index:13,API:'05001065950000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'MARTY BROTHERS',WellName:'MARTY BROTHERS',MeasuredDepth:8615},geometry:{type:'Point',coordinates:[-104.88764,39.86517]}},
+            {type:'Feature',properties:{index:14,API:'05001082700000',StatusDescription:'ABANDONED LOCATION',OperatorName:'GEMINI ENERGY RESOURCES INC',WellName:'HOGAN',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-104.807128,39.88358]}},
+            {type:'Feature',properties:{index:15,API:'05001082730000',StatusDescription:'ABANDONED LOCATION',OperatorName:'GEMINI ENERGY RESOURCES INC',WellName:'SCHNEIDER',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-104.807168,39.879951]}},
+            {type:'Feature',properties:{index:16,API:'05005050560000',StatusDescription:'DRY AND ABANDONED',OperatorName:'MC DEBB DRILLING COMPANY',WellName:'SIMONSON',MeasuredDepth:6128},geometry:{type:'Point',coordinates:[-104.815701,39.713888]}},
+            {type:'Feature',properties:{index:17,API:'05031050270000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'MID-COLORADO OIL COMPANY',WellName:'RICHARDSON RANCH',MeasuredDepth:3790},geometry:{type:'Point',coordinates:[-104.838791,39.777334]}},
+            {type:'Feature',properties:{index:18,API:'05031050010000',StatusDescription:'DRY AND ABANDONED',OperatorName:'MR HALL',WellName:'STATE',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-105.012213,39.704812]}},
+            {type:'Feature',properties:{index:19,API:'05031050050000',StatusDescription:'DRY AND ABANDONED',OperatorName:'SWIFT & COMPANY',WellName:'SWIFT',MeasuredDepth:1470},geometry:{type:'Point',coordinates:[-104.970876,39.778052]}},
+            {type:'Feature',properties:{index:20,API:'05031050240000',StatusDescription:'DRY AND ABANDONED',OperatorName:'SUHR-FIEDLER-LOCK DRLG CO',WellName:'MILLER',MeasuredDepth:5702},geometry:{type:'Point',coordinates:[-104.82236,39.777448]}},
+            {type:'Feature',properties:{index:21,API:'05059050040000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'GREAT BASINS PETR CO',WellName:'COORS',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-105.158967,39.629502]}},
+            {type:'Feature',properties:{index:22,API:'05059050050000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'HOME DEPOT USA INC',WellName:'PALLAORO*LILLIE',MeasuredDepth:9652},geometry:{type:'Point',coordinates:[-105.16022,39.63622]}},
+            {type:'Feature',properties:{index:23,API:'05059050060000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'UNKNOWN',WellName:'PALLAORO',MeasuredDepth:9585},geometry:{type:'Point',coordinates:[-105.156644,39.640245]}},
+            {type:'Feature',properties:{index:24,API:'05059050080000',StatusDescription:'DRY AND ABANDONED',OperatorName:'UNKNOWN',WellName:'FEE',MeasuredDepth:1962},geometry:{type:'Point',coordinates:[-105.067405,39.671312]}},
+            {type:'Feature',properties:{index:25,API:'05059050090000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'UNKNOWN',WellName:'BRADEN',MeasuredDepth:4475},geometry:{type:'Point',coordinates:[-105.055574,39.682432]}},
+            {type:'Feature',properties:{index:26,API:'05059050120000',StatusDescription:'DRY AND ABANDONED',OperatorName:'JOHNSON* S D',WellName:'FARMERS HIGHLINE',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-105.156979,39.80633]}},
+            {type:'Feature',properties:{index:27,API:'05059050640000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'HLM DRILLING COMPANY',WellName:'ROHLAS-WALLEN',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-105.165227,39.631002]}},
+            {type:'Feature',properties:{index:28,API:'05059060200000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN GAS STORAGE',MeasuredDepth:937},geometry:{type:'Point',coordinates:[-105.18014,39.84433]}},
+            {type:'Feature',properties:{index:29,API:'05059060250000',StatusDescription:'DRY AND ABANDONED',OperatorName:'JOHNSON* S D',WellName:'PALLAORO*LILLIE',MeasuredDepth:0},geometry:{type:'Point',coordinates:[-105.16028,39.63622]}},
+            {type:'Feature',properties:{index:30,API:'05059400030000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN GAS STORAGE',MeasuredDepth:751},geometry:{type:'Point',coordinates:[-105.19547,39.85139]}},
+            {type:'Feature',properties:{index:31,API:'05059400050000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN GAS STORAGE',MeasuredDepth:688},geometry:{type:'Point',coordinates:[-105.19614,39.85275]}},
+            {type:'Feature',properties:{index:32,API:'05059400070000',StatusDescription:'SHUT IN',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:740},geometry:{type:'Point',coordinates:[-105.19669,39.84331]}},
+            {type:'Feature',properties:{index:33,API:'05059400130000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:862},geometry:{type:'Point',coordinates:[-105.19592,39.84178]}},
+            {type:'Feature',properties:{index:34,API:'05059400170000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:749},geometry:{type:'Point',coordinates:[-105.19975,39.84606]}},
+            {type:'Feature',properties:{index:35,API:'05059400190000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'SHAFT-LEYDEN GAS STORAGE',MeasuredDepth:603},geometry:{type:'Point',coordinates:[-105.19311,39.84581]}},
+            {type:'Feature',properties:{index:36,API:'05059400200000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'SHAFT-LEYDEN GAS STORAGE',MeasuredDepth:615},geometry:{type:'Point',coordinates:[-105.19425,39.84567]}},
+            {type:'Feature',properties:{index:37,API:'05059050100000',StatusDescription:'DRY AND ABANDONED',OperatorName:'SHERROD & APPERSON',WellName:'RICHTERS',MeasuredDepth:5970},geometry:{type:'Point',coordinates:[-105.080475,39.695712]}},
+            {type:'Feature',properties:{index:38,API:'05059050110000',StatusDescription:'DRY AND ABANDONED',OperatorName:'PRODUCERS & REFINERS CORP',WellName:'WOODS',MeasuredDepth:3003},geometry:{type:'Point',coordinates:[-105.156878,39.76237]}},
+            {type:'Feature',properties:{index:39,API:'05059060030000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:520},geometry:{type:'Point',coordinates:[-105.19372,39.84572]}},
+            {type:'Feature',properties:{index:40,API:'05059060080000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:500},geometry:{type:'Point',coordinates:[-105.19536,39.85339]}},
+            {type:'Feature',properties:{index:41,API:'05059060150000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN GS',MeasuredDepth:514},geometry:{type:'Point',coordinates:[-105.19567,39.85167]}},
+            {type:'Feature',properties:{index:42,API:'05059060230000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN GAS STORAGE',MeasuredDepth:1209},geometry:{type:'Point',coordinates:[-105.19819,39.84064]}},
+            {type:'Feature',properties:{index:43,API:'05059400060000',StatusDescription:'ABANDONED WELLBORE/COMPLETION',OperatorName:'WESTERN GAS SUPPLY COMPANY',WellName:'LEYDEN',MeasuredDepth:816},geometry:{type:'Point',coordinates:[-105.19228,39.85317]}},
+            {type:'Feature',properties:{index:44,API:'05059400100000',StatusDescription:'PLUGGED AND ABANDONED',OperatorName:'PUBLIC SERVICE COMPANY OF COLORADO',WellName:'LEYDEN',MeasuredDepth:400},geometry:{type:'Point',coordinates:[-105.19056,39.84756]}},
+            {type:'Feature',properties:{index:45,API:'05059400250000',StatusDescription:'DRY AND ABANDONED',OperatorName:'CARMACK DRILLING CO',WellName:'BRADEN',MeasuredDepth:3565},geometry:{type:'Point',coordinates:[-105.055615,39.691292]}}
+          ]
+        };
+
+      function init()
+      {
+        mapDiv = document.getElementById('mapDiv');
+        window.onresize = function () { mapDiv.style.height = window.innerHeight - 20 + 'px'; };
+        window.onresize();
+
+        /* Initialize controls and layers for the Leaflet map. */
+        control = L.control();
+        control.onAdd = function ()
+        {
+          var n, i, q, p = L.DomUtil.create('div', 'leaflet-bar'), a =
+            [
+              { svg: '<rect stroke="gray" fill="#FFD" x="1" y="1" width="16" height="16" /><line stroke-width="2" stroke="black" x1="18" y1="18" x2="9" y2="9" /><circle stroke="black" fill="silver" cx="9" cy="9" r="4" /><polygon stroke="black" fill="black" points="16,2 12,2 16,6" /><polygon stroke="black" fill="black" points="2,2 2,6 6,2" /><polygon stroke="black" fill="black" points="2,16 6,16 2,12" />', title: 'Zoom to Full Extent', call: 'zoomToFullExtent()' },
+              { svg: '<polygon stroke="maroon" fill="#FFCCCC" points="8,1 17,1 17,4 11,7" /><polygon stroke="maroon" fill="#FFCCCC" points="17,4 17,13 14,13 11,7" /><polygon stroke="teal" fill="aqua" points="5,1 8,1 14,13 5,13" /><line stroke-width="2" stroke="black" x1="12" y1="18" x2="5" y2="11" /><circle stroke="black" fill="silver" cx="5" cy="11" r="4" />', title: 'Zoom to Selection', call: 'zoomToSelection()' },
+              { svg: '<polygon stroke="maroon" fill="#FFCCCC" points="8,1 17,1 17,4 11,7" /><polygon stroke="maroon" fill="#FFCCCC" points="17,4 17,13 14,13 11,7" /><polygon stroke="teal" fill="aqua" points="5,1 8,1 14,13 5,13" /><path stroke="black" fill="white" d="m 5,19 -4,-4 0,-1 1,-1 1,0 2,2 1,-1 -4,-4 0,-1 1,-1 1,0 0,1 0,-2 1,0 1,1 0,1 0,-1 1,-1 1,1 0,1 1,-1 1,1 2,10 z" /><path stroke="white" fill="black" d="m 3,9 4,4 1,0 -3,-5 3,5 1,0 -2,-5 2,5 1,0 -1,-4" />', title: 'Pan to Selection', call: 'panToSelection()' },
+              { svg: '<polygon stroke="maroon" fill="#FFCCCC" points="5,1 17,1 17,5 9,9" /><polygon stroke="maroon" fill="#FFCCCC" points="17,5 17,17 13,17 9,9" /><polygon stroke="maroon" fill="#FFCCCC" points="1,1 5,1 13,17 1,17" />', title: 'Clear Selection', call: 'clearSelection()' }
+            ];
+          for (n = a.length, i = 0; i < n; ++i)
+          {
+            q = L.DomUtil.create('a', null, p);
+            q.innerHTML = '<svg width="18" height="18">' + a[i].svg + '</svg>';
+            q.title = a[i].title;
+            q.href = 'javascript:' + a[i].call;
+          };
+          return p;
+        };
+        const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          osm = 'Base data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+        tileLayer = L.tileLayer(url, { attribution: osm });
+        pointLayer = L.geoJSON(null, { pointToLayer: stylePoint, onEachFeature: addListener });
+        nonpointLayer = L.geoJSON(null, { style: { color: 'maroon', fillColor: 'red' }, onEachFeature: addListener });
+
+        /* Add a GeoJSON feature to the appropriate layer. */
+        for (let n = geoObject.features.length, i = 0; i < n; ++i)
+          if (geoObject.features[i].geometry.type == 'Point') pointLayer.addData(geoObject.features[i]);
+          else nonpointLayer.addData(geoObject.features[i]);
+
+        /* Initialize the Leaflet map. */
+        initMap();
+
+        /* Initialize variables for feature selection. */
+        backPoint = L.circleMarker(null, { radius: 7, color: 'aqua', fillOpacity: 1 });
+        forePoint = L.circleMarker(null, { radius: 5, color: 'teal', fill: false });
+        backLine = L.polyline([null], { color: 'aqua', weight: 7 });
+        foreLine = L.polyline([null], { color: 'teal' });
+        backPolygon = L.polygon([null], { color: 'aqua', fillOpacity: 0.8, weight: 7 });
+        forePolygon = L.polygon([null], { color: 'teal', fill: false });
+        table = document.createElement('table');
+      }
+
+      function stylePoint(feature, latLng)
+      { return L.circleMarker(latLng, { radius: 5, color: 'maroon', fillColor: 'red', fillOpacity: 1 }); }
+
+      function addListener(feature, layer)
+      { layer.on('click', function () { selectFeature(feature.properties.index, true); }); }
+
+      function initMap()
+      {
+        map = L.map(mapDiv, { closePopupOnClick: false }).fitBounds(extents);
+        control.addTo(map);
+        tileLayer.addTo(map);
+        pointLayer.addTo(map);
+        nonpointLayer.addTo(map);
+      }
+
+      function selectFeature(index, scroll)
+      {
+        clearSelection();
+        var latLng, latLngs, feature = geoObject.features[(selectedIndex = index) - 1], keys = Object.keys(feature.properties);
+        table.innerHTML = '';
+        for (let key, row, th, n = keys.length, i = 1; i < n; ++i)
+        {
+          key = keys[i];
+          row = table.insertRow(-1);
+          th = document.createElement('th');
+          th.textContent = key;
+          row.appendChild(th);
+          row.insertCell(-1).textContent = feature.properties[key];
+        }
+        selectedGeometry = feature.geometry;
+        switch (selectedGeometry.type)
+        {
+          case 'Point':
+            latLng = L.GeoJSON.coordsToLatLng(selectedGeometry.coordinates);
+            backPoint.setLatLng(latLng).addTo(map).bindPopup(table).openPopup();
+            forePoint.setLatLng(latLng).addTo(map);
+            break;
+          case 'LineString':
+            latLngs = L.GeoJSON.coordsToLatLngs(selectedGeometry.coordinates);
+            backLine.setLatLngs(latLngs).addTo(map);
+            foreLine.setLatLngs(latLngs).addTo(map);
+            break;
+          case 'Polygon': case 'MultiPolygon':
+            latLngs = L.GeoJSON.coordsToLatLngs(selectedGeometry.coordinates,
+              (selectedGeometry.type == 'MultiPolygon') ? 2 : 1);
+            backPolygon.setLatLngs(latLngs).addTo(map);
+            forePolygon.setLatLngs(latLngs).addTo(map);
+            break;
+        }
+      }
+
+      function zoomToFullExtent() { map.flyToBounds(extents); }
+
+      function zoomToSelection()
+      {
+        if (!selectedIndex) return;
+        var latLng, bounds;
+        switch (selectedGeometry.type)
+        {
+          case 'Point': latLng = forePoint.getLatLng(); bounds = L.latLngBounds(latLng, latLng); break;
+          case 'LineString': bounds = foreLine.getBounds(); break;
+          case 'Polygon': case 'MultiPolygon': bounds = forePolygon.getBounds(); break;
+          default: return;
+        }
+        map.flyToBounds(bounds);
+      }
+
+      function panToSelection()
+      {
+        if (!selectedIndex) return;
+        var latLng;
+        switch (selectedGeometry.type)
+        {
+          case 'Point': latLng = forePoint.getLatLng(); break;
+          case 'LineString': latLng = foreLine.getCenter(); break;
+          case 'Polygon': case 'MultiPolygon': latLng = forePolygon.getCenter(); break;
+          default: return;
+        }
+        map.panTo(latLng);
+      }
+
+      function clearSelection()
+      {
+        if (!selectedIndex) return;
+        forePolygon.remove();
+        foreLine.remove();
+        forePoint.remove();
+        backPolygon.remove();
+        backLine.remove();
+        backPoint.remove();
+        selectedIndex = 0;
+      }
+    </script>
+  </head>
+  <body onload="init()">
+    <div id="panelDiv">
+      <h1>Geographic Information System (GIS)</h1>
+      <h2>(proof of concept)</h2>
+      <h2>Prepared for <a target="_blank" href="https://transitionalenergy.us/">Transitional Energy</a></h2>
+      <br />
+      <p>Each red circle marker on the map represents a well.  Click one to select it and see its attributes.</p>
+      <p>Use the toolbar in the upper right corner of the map to:</p>
+      <ul>
+        <li>Zoom to Full Extent</li>
+        <li>Zoom to Selection</li>
+        <li>Pan to Selection</li>
+        <li>Clear Selection</li>
+      </ul>
+    </div>
+    <div id="mapDiv"></div>
+  </body>
+</html>

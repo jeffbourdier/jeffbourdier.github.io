@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Power Plant Model (proof of concept) for Geothermal Core - Software by Jeff Bourdier</title>
+    <style>
+      h1, h2 { text-align: center; }
+      input { text-align: right; height: 20px; }
+      select { width: 60px; height: 24px; }
+      button { width: 180px; height: 45px; }
+      #errors
+      {
+        display: none;
+        color: red;
+        border: 1px solid red;
+        background-color: lavenderblush;
+        padding: 0px 20px 0px;
+        max-width: 500px;
+      }
+    </style>
+    <script>
+      /* This code Copyright (c) 2023 Jeffrey Paul Bourdier */
+
+      var inputs, selects, errorSection, errorList,
+        brineWaterEnthalpy =
+        {
+          n: 2, offsets: [300, 1000000], steps: [10, 1000000], endexes: [20, 9],
+          values:
+          [
+            [113482, 114402, 115321, 116239, 117157, 118074, 118990, 119905, 120820, 121734],
+            [155255, 156148, 157041, 157933, 158825, 159716, 160607, 161497, 162386, 163276],
+            [197030, 197899, 198768, 199636, 200505, 201372, 202239, 203106, 203973, 204839],
+            [238829, 239676, 240522, 241368, 242214, 243059, 243904, 244749, 245594, 246438],
+            [280668, 281492, 282317, 283141, 283965, 284789, 285613, 286437, 287260, 288084],
+            [322561, 323363, 324166, 324969, 325772, 326575, 327378, 328181, 328983, 329786],
+            [364523, 365305, 366086, 366867, 367648, 368430, 369212, 369993, 370775, 371557],
+            [406574, 407333, 408092, 408851, 409611, 410370, 411130, 411891, 412651, 413412],
+            [448733, 449468, 450204, 450941, 451678, 452415, 453153, 453891, 454629, 455368],
+            [491022, 491734, 492446, 493159, 493872, 494585, 495300, 496014, 496730, 497445],
+            [533469, 534155, 534842, 535529, 536217, 536905, 537595, 538285, 538976, 539667],
+            [576102, 576761, 577420, 578080, 578741, 579402, 580065, 580729, 581393, 582059],
+            [618954, 619582, 620211, 620842, 621473, 622106, 622740, 623375, 624011, 624649],
+            [662059, 662654, 663251, 663849, 664449, 665050, 665652, 666256, 666862, 667468],
+            [705458, 706017, 706578, 707140, 707705, 708271, 708839, 709408, 709979, 710552],
+            [749197, 749715, 750235, 750758, 751283, 751810, 752339, 752871, 753404, 753940],
+            [     0, 793797, 794273, 794750, 795231, 795714, 796200, 796689, 797180, 797674],
+            [     0, 838323, 838746, 839173, 839604, 840037, 840474, 840914, 841357, 841804],
+            [     0, 883358, 883722, 884091, 884463, 884840, 885220, 885605, 885994, 886386],
+            [     0,      0, 929278, 929578, 929884, 930194, 930510, 930830, 931156, 931486],
+            [     0,      0, 975508, 975728, 975954, 976187, 976426, 976672, 976924, 977182]
+          ],
+          log: function (p, v, m) { console.log(`Enthalpy of brine water at ${p[0]} K and ${p[1]} Pa: ${v} J/kg (${m})`); }
+        },
+        isobutaneEnthalpy =
+        {
+          n: 2, offsets: [290, 2000000], steps: [5, 2000000], endexes: [8, 9],
+          values:
+          [
+            [240495, 241915, 243411, 244972, 246591, 248260, 249974, 251729, 253520, 255344],
+            [252382, 253716, 255138, 256635, 258196, 259814, 261483, 263196, 264949, 266739],
+            [264419, 265659, 266999, 268425, 269924, 271487, 273106, 274775, 276488, 278241],
+            [276615, 277748, 278998, 280346, 281777, 283281, 284847, 286468, 288139, 289853],
+            [288974, 289988, 291139, 292401, 293759, 295197, 296706, 298277, 299902, 301576],
+            [301506, 302386, 303425, 304594, 305871, 307240, 308687, 310204, 311780, 313410],
+            [314219, 314948, 315863, 316928, 318117, 319409, 320791, 322249, 323774, 325357],
+            [327125, 327680, 328456, 329406, 330499, 331709, 333019, 334415, 335884, 337419],
+            [340236, 340591, 341211, 342034, 343021, 344141, 345374, 346703, 348113, 349596]
+          ],
+          log: function (p, v, m) { console.log(`Enthalpy of isobutane at ${p[0]} K and ${p[1]} Pa: ${v} J/kg (${m})`); }
+        },
+        isobutaneTemperature =
+        {
+          n: 2, offsets: [500000, 2000000], steps: [100000, 2000000], endexes: [10, 9],
+          values:
+          [
+            [373.51, 385.28, 386.71, 387.58, 388.10, 388.39, 388.51, 388.49, 388.37, 388.16],
+            [373.51, 409.65, 416.21, 419.18, 420.94, 422.07, 422.81, 423.28, 423.56, 423.68],
+            [381.53, 417.35, 438.46, 446.61, 450.71, 453.19, 454.83, 455.94, 456.71, 457.23],
+            [420.27, 440.70, 459.34, 471.33, 478.18, 482.34, 485.06, 486.94, 488.26, 489.21],
+            [459.59, 473.43, 486.80, 497.69, 505.40, 510.64, 514.25, 516.81, 518.67, 520.03],
+            [497.65, 507.95, 517.93, 526.77, 533.85, 539.21, 543.18, 546.14, 548.36, 550.04],
+            [534.21, 542.31, 550.14, 557.29, 563.39, 568.35, 572.25, 575.30, 577.68, 579.54],
+            [569.36, 575.97, 582.34, 588.23, 593.43, 597.84, 601.47, 604.41, 606.79, 608.69],
+            [603.26, 608.79, 614.11, 619.05, 623.51, 627.39, 630.68, 633.43, 635.70, 637.57],
+            [636.05, 640.77, 645.29, 649.52, 653.37, 656.78, 659.74, 662.26, 664.38, 666.16],
+            [667.86, 671.95, 675.86, 679.52, 682.88, 685.89, 688.54, 690.83, 692.80, 694.46]
+          ],
+          log: function (p, v, m) { console.log(`Isobutane temperature (high): ${v - 273.15} °C (${v} K, ${m})`); }
+        },
+        isobutaneSaturated =
+        {
+          n: 1, offsets: [290], steps: [5], endexes: [8],
+          values: [576981, 583686, 590372, 597030, 603652, 610229, 616749, 623201, 629568],
+          log: function (p, v, m) { console.log(`Enthalpy of saturated isobutane vapor at ${p[0]} K: ${v} J/kg (${m})`); }
+        };
+
+      function init()
+      {
+        inputs = document.getElementsByTagName('input');
+        selects = document.getElementsByTagName('select');
+        errorSection = document.getElementById('errors');
+        errorList = errorSection.lastChild;
+      }
+
+      function addError(text)
+      {
+        var item = document.createElement('li');
+        item.textContent = text;
+        errorList.appendChild(item);
+      }
+
+      function getFlowRate(fluid)
+      {
+        fluid.flowRate = inputs[fluid.flowRateIndex].valueAsNumber;
+        if (isNaN(fluid.flowRate) || fluid.flowRate <= 0)
+        { addError(`${fluid.name} flow rate must be a number greater than zero.`); return; }
+        if (!selects[fluid.flowRateIndex].selectedIndex) fluid.flowRate /= fluid.bpdPerKgPerS;
+        console.log(`${fluid.name} mass flow rate: ${fluid.flowRate} kg/s`);
+      }
+
+      function getPressure(fluid)
+      {
+        fluid.pressure = inputs[fluid.pressureIndex].valueAsNumber;
+        if (isNaN(fluid.pressure)) { addError(`${fluid.name} pressure must be a number.`); return; }
+        if (!selects[fluid.pressureIndex].selectedIndex) fluid.pressure *= 6894.7;
+        console.log(`${fluid.name} pressure: ${fluid.pressure} Pa`);
+        if (fluid.pressure <= fluid.triplePoint.pressure || fluid.pressure >= fluid.criticalPoint.pressure)
+          fluid.isStateValid = false;
+      }
+
+      function getTemperature(fluid, i)
+      {
+        var index, descriptor, temperature, temperatureK, vaporPressure, a = fluid.antoineConstants[i];
+        if (i) { index = fluid.highTemperatureIndex; descriptor = 'high'; }
+        else { index = fluid.lowTemperatureIndex; descriptor = 'low'; }
+        temperature = inputs[index].valueAsNumber;
+        if (isNaN(fluid.pressure)) { addError(`${fluid.name} ${descriptor} temperature must be a number.`); return; }
+        if (!selects[index].selectedIndex) temperature = (temperature - 32) / 1.8;
+        temperatureK = temperature + 273.15;
+        console.log(`${fluid.name} temperature (${descriptor}): ${temperature} °C (${temperatureK} K)`);
+        vaporPressure = 10 ** (a.A - a.B / (a.C + temperature)) * 133.322;
+        console.log(`Vapor pressure of ${fluid.name.toLowerCase()} at ${temperature} °C: ${vaporPressure} Pa`);
+        if (temperature <= fluid.triplePoint.temperature || temperature >= fluid.criticalPoint.temperature
+          || fluid.pressure < 0.99 * vaporPressure) fluid.isStateValid = false;
+        if (i) fluid.highTemperature = temperatureK;
+        else fluid.lowTemperature = temperatureK;
+      }
+
+      function polate(valueI, valueJ, step, a) { return ((valueJ - valueI) / step) * (a.d - a.i * step) + valueI; }
+
+      function getProperty(lookup, params)
+      {
+        var i, p, q, d0i, d0j, d1i, d1j, a = [];
+        for (i = 0; i < lookup.n; ++i)
+        {
+          p = { d: params[i] - lookup.offsets[i] };
+          if (p.d < 0) { p.i = 0; p.j = 1; p.r = -1; }
+          else
+          {
+            q = lookup.endexes[i];
+            if (p.d > q * lookup.steps[i]) { p.i = q - 1; p.j = q; p.r = -1; }
+            else
+            {
+              q = p.d / lookup.steps[i];
+              p.i = Math.floor(q);
+              p.j = Math.ceil(q);
+              p.r = (p.i == p.j) ? 0 : 1;
+            }
+          }
+          a.push(p);
+        }
+        if (lookup.n == 1)
+        {
+          if (!a[0].r) { q = lookup.values[a[0].i]; lookup.log(params, q, 'direct lookup'); return q; }
+          q = polate(lookup.values[a[0].i], lookup.values[a[0].j], lookup.steps[0], a[0]);
+          lookup.log(params, q, `linear ${(a[0].r > 0) ? 'inter' : 'extra'}polation`);
+          return q;
+        }
+        if (!a[0].r && !a[1].r) { q = lookup.values[a[0].i][a[1].i]; lookup.log(params, q, 'direct lookup'); return q; }
+        if (!a[0].r && a[1].r)
+        {
+          q = polate(lookup.values[a[0].i][a[1].i], lookup.values[a[0].i][a[1].j], lookup.steps[1], a[1]);
+          lookup.log(params, q, `linear ${(a[1].r > 0) ? 'inter' : 'extra'}polation`);
+          return q;
+        }
+        if (a[0].r && !a[1].r)
+        {
+          q = polate(lookup.values[a[0].i][a[1].i], lookup.values[a[0].j][a[1].i], lookup.steps[0], a[0]);
+          lookup.log(params, q, `linear ${(a[0].r > 0) ? 'inter' : 'extra'}polation`);
+          return q;
+        }
+        d0i = a[0].d - a[0].i * lookup.steps[0];
+        d0j = a[0].j * lookup.steps[0] - a[0].d;
+        d1i = a[1].d - a[1].i * lookup.steps[1];
+        d1j = a[1].j * lookup.steps[1] - a[1].d;
+        q = (
+          lookup.values[a[0].i][a[1].i] * d0j * d1j +
+          lookup.values[a[0].j][a[1].i] * d0i * d1j +
+          lookup.values[a[0].i][a[1].j] * d0j * d1i +
+          lookup.values[a[0].j][a[1].j] * d0i * d1i) / (lookup.steps[0] * lookup.steps[1]);
+        lookup.log(params, q, `bilinear ${(a[0].r > 0 && a[1].r > 0) ? 'inter' : 'extra'}polation`);
+        return q;
+      }
+
+      function compute()
+      {
+        /* Clear errors. */
+        errorSection.style.display = 'none';
+        errorList.innerHTML = '';
+
+        /* Initialize objects representing fluids. */
+        var r, generatorEfficiency = inputs[7].valueAsNumber,
+          isobutane =
+          {
+            name: 'Isobutane',
+            bpdPerKgPerS: 965.26,
+            triplePoint: { pressure: 0.019481, temperature: -159.6 },
+            criticalPoint: { pressure: 3650000, temperature: 134.6 },
+            antoineConstants: [{ A: 6.74808, B: 882.8, C: 240 }],
+            flowRateIndex: 0,
+            pressureIndex: 1,
+            lowTemperatureIndex: 2,
+            isStateValid: true
+          },
+          brineWater =
+          {
+            name: 'Brine water',
+            bpdPerKgPerS: 543.44,
+            triplePoint: { pressure: 611.73, temperature: 0.01 },
+            criticalPoint: { pressure: 22100000, temperature: 374 },
+            antoineConstants: [{ A: 8.07131, B: 1730.63, C: 233.426 }, { A: 8.14019, B: 1810.94, C: 244.485 }],
+            flowRateIndex: 3,
+            pressureIndex: 4,
+            highTemperatureIndex: 5,
+            lowTemperatureIndex: 6,
+            isStateValid: true
+          };
+
+        /* Retrieve and validate each input, converting to SI units if necessary. */
+        getFlowRate(isobutane);
+        getPressure(isobutane);
+        getTemperature(isobutane, 0);
+        if (!isobutane.isStateValid) addError('Isobutane must enter evaporator as compressed liquid.');
+        getFlowRate(brineWater);
+        getPressure(brineWater);
+        getTemperature(brineWater, 1);
+        getTemperature(brineWater, 0);
+        if (!brineWater.isStateValid) addError('Brine water must be compressed liquid.');
+        if (brineWater.lowTemperature <= isobutane.lowTemperature)
+          addError('Temperature at which brine water exits evaporator must be higher than temperature at which isobutane enters evaporator.');
+        if (brineWater.lowTemperature >= brineWater.highTemperature)
+          addError('Temperature at which brine water exits evaporator must be lower than temperature at which brine water enters evaporator.');
+        if (!isNaN(generatorEfficiency) && generatorEfficiency > 0 && generatorEfficiency <= 100) generatorEfficiency /= 100;
+        else addError('Generator efficiency must be a number between 0% and 100%.');
+
+        /* If there are errors, show them and abort. */
+        if (errorList.hasChildNodes()) { errorSection.style.display = 'block'; return; }
+
+        /* Determine enthalpies at evaporator, based on input temperatures and pressures. */
+        brineWater.evaporatorInletEnthalpy = getProperty(brineWaterEnthalpy, [brineWater.highTemperature, brineWater.pressure]);
+        brineWater.evaporatorOutletEnthalpy = getProperty(brineWaterEnthalpy, [brineWater.lowTemperature, brineWater.pressure]);
+        isobutane.evaporatorInletEnthalpy = getProperty(isobutaneEnthalpy, [isobutane.lowTemperature, isobutane.pressure]);
+
+        /* Calculate enthalpy of isobutane at evaporator outlet (and at
+         * turbine inlet), based on heat transferred from brine water.
+         */
+        r = (brineWater.evaporatorInletEnthalpy - brineWater.evaporatorOutletEnthalpy) * brineWater.flowRate;
+        isobutane.evaporatorOutletEnthalpy = isobutane.evaporatorInletEnthalpy + r / isobutane.flowRate;
+        console.log(`Enthalpy of isobutane at evaporator outlet (and at turbine inlet): ${isobutane.evaporatorOutletEnthalpy} J/kg`);
+
+        /* Determine temperature of isobutane at evaporator outlet (and at turbine inlet), based on enthalpy and pressure. */
+        isobutane.highTemperature = getProperty(isobutaneTemperature, [isobutane.evaporatorOutletEnthalpy, isobutane.pressure]);
+
+        /* Determine enthalpy of isobutane at turbine outlet, based on
+         * (input) temperature and vapor quality of 1 (i.e., saturated).
+         */
+        isobutane.turbineInletEnthalpy = isobutane.evaporatorOutletEnthalpy;
+        isobutane.turbineOutletEnthalpy = getProperty(isobutaneSaturated, [isobutane.lowTemperature]);
+
+        /* Calculate electricity produced, based on enthalpy drop across turbine and generator efficiency. */
+        r = (isobutane.turbineInletEnthalpy - isobutane.turbineOutletEnthalpy) * isobutane.flowRate;
+        inputs[8].value = Math.round(r * generatorEfficiency);
+      }
+    </script>
+  </head>
+  <body onload="init()">
+    <div style="width: fit-content; margin: auto;">
+      <div style="float: left; margin-right: 20px;">
+        <h1>Power Plant Model</h1>
+        <h2>(proof of concept)</h2>
+        <h2>Prepared for <a target="_blank" href="https://www.geothermalcore.com/">Geothermal Core</a></h2>
+        <br />
+        <h3>Instructions:</h3>
+        <ol>
+          <li>Provide all inputs.</li>
+          <li>Click the <b>Compute</b> button.</li>
+          <li>If there are errors, correct them and try again.</li>
+        </ol>
+        <br />
+        <h3>Assumptions:</h3>
+        <ul>
+          <li>Heat exchanges are isobaric.</li>
+          <li>Expansion and pumping are isentropic.</li>
+          <li>The following applies to brine water:
+            <ul>
+              <li>State is compressed liquid.</li>
+              <li>Production rate equals injection rate.</li>
+              <li>Enthalpy is equivalent to that of "pure" water.</li>
+            </ul>
+          </li>
+          <li>Isobutane:
+            <ul>
+              <li>Enters evaporator as compressed liquid.</li>
+              <li>Exits evaporator and enters turbine as superheated vapor.</li>
+              <li>Exits turbine as saturated vapor.</li>
+              <li>Is at constant pressure and temperature (in piping) between components.</li>
+            </ul>
+          </li>
+        </ul>
+        <br />
+        <section id="errors"><h3>Errors:</h3><ul></ul></section>
+      </div>
+      <div style="float: right;">
+        <svg width="700" height="760">
+          <rect stroke="black" fill="whitesmoke" x="10" y="10" width="310" height="580" />
+          <text text-anchor="start" x="20" y="30">Input</text>
+
+          <rect stroke="purple" fill="thistle" x="20" y="40" width="290" height="210" />
+          <text text-anchor="start" x="30" y="60">Isobutane</text>
+
+          <rect stroke="purple" fill="purple" x="30" y="70" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="85">Flow rate:</text>
+          <foreignObject x="35" y="90" width="260" height="26"><input type="number" style="width: 192px;" value="100000" /><select><option>BPD</option><option>kg/s</option></select></foreignObject>
+
+          <rect stroke="purple" fill="purple" x="30" y="130" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="145">Pressure:</text>
+          <foreignObject x="35" y="150" width="260" height="26"><input type="number" style="width: 192px;" value="300" /><select><option>psi</option><option>Pa</option></select></foreignObject>
+
+          <rect stroke="purple" fill="purple" x="30" y="190" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="205">Temperature:</text>
+          <foreignObject x="35" y="210" width="260" height="26"><input type="number" style="width: 192px;" value="100" /><select><option>&deg; F</option><option>&deg; C</option></select></foreignObject>
+
+          <rect stroke="orangered" fill="peachpuff" x="20" y="260" width="290" height="220" />
+          <text text-anchor="start" x="30" y="280">Brine water</text>
+
+          <rect stroke="orangered" fill="orangered" x="30" y="290" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="305">Flow rate:</text>
+          <foreignObject x="35" y="310" width="260" height="26"><input type="number" style="width: 192px;" value="100000" /><select><option>BPD</option><option>kg/s</option></select></foreignObject>
+
+          <rect stroke="orangered" fill="orangered" x="30" y="350" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="365">Pressure:</text>
+          <foreignObject x="35" y="370" width="260" height="26"><input type="number" style="width: 192px;" value="150" /><select><option>psi</option><option>Pa</option></select></foreignObject>
+
+          <rect stroke="orangered" fill="orangered" x="30" y="410" width="130" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="425">High temperature:</text>
+          <foreignObject x="35" y="430" width="120" height="26"><input type="number" style="width: 52px;" value="310" /><select><option>&deg; F</option><option>&deg; C</option></select></foreignObject>
+
+          <rect stroke="orangered" fill="orangered" x="170" y="410" width="130" height="50" />
+          <text fill="white" text-anchor="start" x="175" y="425">Low temperature:</text>
+          <foreignObject x="175" y="430" width="120" height="26"><input type="number" style="width: 52px;" value="160" /><select><option>&deg; F</option><option>&deg; C</option></select></foreignObject>
+
+          <rect stroke="green" fill="palegreen" x="20" y="490" width="290" height="90" />
+          <text text-anchor="start" x="30" y="510">Generator</text>
+
+          <rect stroke="green" fill="green" x="30" y="520" width="270" height="50" />
+          <text fill="white" text-anchor="start" x="35" y="535">Efficiency:</text>
+          <foreignObject x="35" y="540" width="240" height="26"><input type="number" min="1" max="100" style="width: 232px;" value="85" /></foreignObject>
+          <text fill="white" text-anchor="start" x="280" y="560">%</text>
+
+          <foreignObject x="75" y="600" width="180" height="45"><button onclick="compute();">Compute</button></foreignObject>
+
+          <rect stroke="black" fill="whitesmoke" x="10" y="655" width="310" height="45" />
+          <text text-anchor="end" x="160" y="685">Electricity produced:</text>
+          <foreignObject x="165" y="665" width="100" height="26"><input readonly type="text" style="width: 92px;" /></foreignObject>
+          <text text-anchor="start" x="270" y="685">Watts</text>
+
+          <rect stroke="none" fill="maroon" x="340" y="240" width="60" height="280" />
+          <path id="geothermal" d="m 375,252 v 106" />
+          <text fill="white"><textPath xlink:href="#geothermal">GEOTHERMAL</textPath></text>
+          <path id="reservoir" d="m 355,263 v 84" />
+          <text fill="white"><textPath xlink:href="#reservoir">RESERVOIR</textPath></text>
+
+          <rect stroke="gray" fill="silver" x="470" y="400" width="80" height="120" rx="20" ry="20" />
+          <path id="evaporator" d="m 530,408 v 104" />
+          <text><textPath xlink:href="#evaporator">EVAPORATOR</textPath></text>
+
+          <polygon stroke="gray" fill="silver" points="440,640 520,660 520,700 440,720" />
+          <text text-anchor="middle" x="480" y="685">TURBINE</text>
+          <marker id="grayArrowhead" refX="0" refY="2" markerWidth="4" markerHeight="4" orient="auto"><path fill="gray" d="m 0,0 4,2 -4,2 z" /></marker>
+          <path stroke="gray" stroke-width="5" fill="none" d="m 440,680 h -100" marker-end="url(#grayArrowhead)" />
+
+          <!-- generator -->
+          <circle stroke="green" stroke-width="2" fill="palegreen" cx="390" cy="680" r="30" />
+          <path stroke="green" stroke-width="2" fill="none" d="m 390,680 a 10,8 0,0,0 -20,0 m 20,0 a 10,8 0,0,0 20,0" />
+          <path stroke="green" fill="none" d="m 300,550 h 80 a 10,10 0,0,1 10,10 v 90" />
+
+          <rect stroke="gray" fill="silver" x="560" y="180" width="80" height="120" rx="20" ry="20" />
+          <path id="condenser" d="m 570,192 v 96" />
+          <text><textPath xlink:href="#condenser">CONDENSER</textPath></text>
+
+          <!-- brine water -->
+          <marker id="orangeredArrowhead" refX="0" refY="2" markerWidth="4" markerHeight="4" orient="auto"><path fill="orangered" d="m 0,0 4,2 -4,2 z" /></marker>
+          <path stroke="orangered" stroke-width="5" fill="none" d="m 360,500 h 140 l -20,-20 20,-20 -20,-20 20,-20 h -120" marker-end="url(#orangeredArrowhead)" />
+          <path stroke="orangered" fill="none" d="m 300,320 h 20 a 10,10 0,0,1 10,10 v 30 a 10,10 0,0,0 10,10 h 90 a 10,10 0,0,1 10,10 v 40" />
+          <path stroke="orangered" fill="none" d="m 300,380 h 120 a 10,10 0,0,1 10,10 v 30" />
+          <path stroke="orangered" fill="none" d="m 95,460 a 10,10 0,0,0 10,10 h 335 a 10,10 0,0,1 10,10 v 20" />
+          <path stroke="orangered" fill="none" d="m 300,440 h 140 a 10,10 0,0,0 10,-10 v -10" />
+
+          <!-- cooling water -->
+          <marker id="blueArrowhead" refX="0" refY="2" markerWidth="4" markerHeight="4" orient="auto"><path fill="blue" d="m 0,0 4,2 -4,2 z" /></marker>
+          <path stroke="blue" stroke-width="5" fill="none" d="m 680,200 h -70 l 20,20 -20,20 20,20 -20,20 h 50" marker-end="url(#blueArrowhead)" />
+
+          <!-- isobutane -->
+          <marker id="purpleArrowhead" refX="0" refY="2" markerWidth="4" markerHeight="4" orient="auto"><path fill="purple" d="m 0,0 4,2 -4,2 z" /></marker>
+          <path stroke="purple" stroke-width="5" fill="none" d="m 590,23 h -70 v 397 l -20,20 20,20 -20,20 20,20 v 140" marker-end="url(#purpleArrowhead)" />
+          <circle stroke="gray" fill="silver" cx="590" cy="50" r="30" />
+          <text text-anchor="middle" x="590" y="45">PUMP</text>
+          <path stroke="purple" stroke-width="5" fill="none" d="m 444,719 v 21 h 146 v -460 l 20,-20 -20,-20 20,-20 -20,-20 v -130" marker-end="url(#purpleArrowhead)" />
+          <path stroke="purple" fill="none" d="m 300,100 h 220" />
+          <path stroke="purple" fill="none" d="m 300,160 h 220" />
+          <path stroke="purple" fill="none" d="m 300,220 h 220" />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>
