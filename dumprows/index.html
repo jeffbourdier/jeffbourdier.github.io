@@ -25,75 +25,75 @@
     </header>
     <h1 style="color: green;"><span style="font-variant: small-caps;">DumpRows</span></h1>
     <p><span style="font-variant: small-caps;">DumpRows</span> (Database Utility Map-Producing Read-Only Web Service) is a <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">Common Gateway Interface (CGI)</a> program that allows a geospatial database to be queried using a web browser.  It is a native application (written in <a href="http://www.open-std.org/jtc1/sc22/wg14/">C</a>), and its only dependency is the C standard library.  It is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free, open-source software (FOSS)</a>, distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.  (In a nutshell, you can do whatever you want with it, so long as it retains the copyright notice.)</p>
-    <p><span style="font-variant: small-caps;">DumpRows</span> leverages the abilities of command-line database utilities to produce HTML output by serving as a wrapper that processes the utility's I/O as needed to respond to an HTTP request.  If the resultset contains geospatial features, they are shown on an interactive map in the resulting web page.  Use cases may include:</p>
+    <p><span style="font-variant: small-caps;">DumpRows</span> leverages the abilities of database utilities to produce HTML output by serving as a wrapper that chooses command line options, processes input, and augments output as needed to respond to HTTP requests.  Use cases may include:</p>
     <ul>
       <li>seeing the results of a spatial query on a map</li>
       <li>saving URLs as bookmarks/favorites in your browser (convenient for viewing the results of frequently run queries)</li>
       <li>sending URLs via email (very useful for sharing queries/resultsets with colleagues)</li>
     </ul>
+    <p><span style="font-variant: small-caps;">DumpRows</span> also provides the ability to generate queries using <i>query templates</i> (parameterized <a href="https://en.wikipedia.org/wiki/Select_(SQL)"><code>SELECT</code></a> statements), which are handy for queries that are essentially the same but have minor differences (e.g., they might query different tables).</p>
     <h2>Usage</h2>
-    <pre>
-dumprows [OPTION]... <i>COMMAND</i></pre>
-    <p><code><i>COMMAND</i></code> is a command line (which may be quoted) that invokes a database utility.  It should include the arguments needed to:</p>
+    <p><span style="font-variant: small-caps;">DumpRows</span> is similar to other applications commonly used with CGI (e.g., <a href="https://perldoc.perl.org/perl">perl</a>) in that it is hosted by a web server, where it functions as the interpreter of a "script" file, which in this case consists of exactly four lines:</p>
+    <ol>
+      <li>an interpreter directive (i.e., a "<a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a>" line)</li>
+      <li>one of the following indicators of which database engine/utility to use:
+        <ul>
+          <li>Oracle</li>
+          <li>PostgreSQL</li>
+          <li>SQLite</li>
+          <li>SpatiaLite</li>
+        </ul>
+      </li>
+      <li>connection information (depends on database engine/utility)</li>
+      <li>a relative path to a query template file, or empty</li>
+    </ol>
+    <p>When the web server receives a request for a CGI script, its filename is passed as an argument to the interpreter (in this case, the <span style="font-variant: small-caps;">DumpRows</span> executable).  The query string of the URL determines what is output.</p>
     <ul>
-      <li>produce HTML output</li>
-      <li>specify a database to connect to</li>
-      <li>provide credentials for the specified database</li>
+      <li>If the query string is empty, <span style="font-variant: small-caps;">DumpRows</span> outputs a web page that prompts for a query, which can be generated using a query template (and then edited if/as desired) or entered directly into the <b>Query</b> text area.  (The web page includes a few built-in templates, and several more are available in the <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>.  To see the web page that prompts for a query, <a href="prompt.html">click here</a>.)</li>
+      <li>Otherwise, the query string should contain a single parameter, <code>q</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL <code>SELECT</code></a> statement.  The query is <a href="https://bobby-tables.com/">validated</a><sup>1</sup>, and the appropriate database utility is executed with the query as input.  If the resulting table has a geometry column with spatial data<sup>2</sup> in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.</li>
     </ul>
-    <p>If the <code>QUERY_STRING</code> environment variable is empty, <span style="font-variant: small-caps;">DumpRows</span> outputs a web page that prompts for a query.  The query can be generated using a <i>query template</i> (parameterized <a href="https://en.wikipedia.org/wiki/Select_(SQL)"><code>SELECT</code></a> statement), or can be entered directly into the <b>Query</b> text area.  (The web page includes a few built-in query templates, and several more sample templates are available in the <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>.  To see the web page that prompts for a query, <a href="prompt.html">click here</a>.)</p>
-    <p>When non-empty, the query string should contain a single parameter, <code>query</code>, whose value is an <a href="https://en.wikipedia.org/wiki/Select_(SQL)">SQL <code>SELECT</code></a> statement.  The query is <a href="https://bobby-tables.com/">validated</a>, and <code><i>COMMAND</i></code> is executed with the query as input.  If the resulting table has a geometry column with spatial data in <a href="https://geojson.org/">GeoJSON</a> format, a <a href="https://leafletjs.com/">Leaflet</a> map (with base data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>) showing the geospatial features is added to the HTML output.  (Coordinates are assumed to be geographic (longitude, latitude), using the <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84">WGS 84</a> spheroid.)</p>
-    <h2>Options</h2>
-    <dl>
-      <dt><code>-h, --help</code></dt>
-      <dd>Output a help message and exit.</dd>
-    </dl>
-    <dl>
-      <dt><code>-k, --keep-files</code></dt>
-      <dd>Do not delete temporary files created for I/O processing.  (By default, they are deleted, but keeping them can be helpful for debugging purposes.)</dd>
-    </dl>
-    <dl>
-      <dt><code>-l, --log</code></dt>
-      <dd>Write a message to the default log file (<code>C:\ProgramData\dumprows.log</code> on Windows, <code>/var/log/dumprows.log</code> on Linux).</dd>
-    </dl>
-    <dl>
-      <dt><code>-t, --template=FILE</code></dt>
-      <dd>Load query templates from FILE.  These templates are included in the web page that prompts for a query (if said page is needed).</dd>
-    </dl>
+    <small>
+      <sup>1</sup> <span style="font-variant: small-caps;">DumpRows</span> implements a crude form of validation that simply checks to make sure the query appears to be a <code>SELECT</code> statement (and not an <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> statement), thus preventing any data modification.  It does not check for valid SQL syntax; the database utility will do that.<br />
+      <sup>2</sup> Coordinates are assumed to be geographic (longitude, latitude), using the <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84">WGS 84</a> spheroid.<br />
+    </small>
+    <p><span style="font-variant: small-caps;">DumpRows</span> can also be run via command line (e.g., for testing purposes) by setting the <code>QUERY_STRING</code> environment variable as follows.</p>
+    <ul>
+      <li>On Windows:<pre>CMD /C "SET QUERY_STRING=<i>string</i>& dumprows <i>file</i>"</pre></li>
+      <li>On Linux:<pre>QUERY_STRING=<i>string</i> sh -c "dumprows <i>file</i>"</pre></li>
+    </ul>
+    <p>where <code><i>string</i></code> is the query string, and <code><i>file</i></code> is the pathname of the CGI script.  (Note that on Windows, <code><i>string</i></code> cannot be empty.)</p>
     <h2>Examples</h2>
-    <p>These examples were tested on <a href="https://ubuntu.com/">Ubuntu</a> running <a href="https://httpd.apache.org/">Apache HTTP Server (httpd)</a>.  CGI was enabled as follows:</p>
-    <pre>
-sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/</pre>
-    <p>Because the directory <code>/var/log/</code> was owned by <code>root</code> (whereas the <a href="https://httpd.apache.org/docs/current/programs/httpd.html">httpd</a> process was owned by <code>www-data</code>), the log file was bootstrapped as follows (in order to be writable by the CGI process at run-time):</p>
-    <pre>
-sudo touch /var/log/dumprows.log
-sudo chown www-data:www-data /var/log/dumprows.log</pre>
-    <p>CGI scripts were created in <code>/usr/lib/cgi-bin/</code>.  The examples below demonstrate different command lines and options when using <span style="font-variant: small-caps;">DumpRows</span> with various database providers and geometry types.</p>
+    <p>The examples below demonstrate different CGI scripts when using <span style="font-variant: small-caps;">DumpRows</span> with various operating systems, databases, and geometry types.  It is assumed that <span style="font-variant: small-caps;">DumpRows</span> is hosted on a machine called <code>GISA</code>.</p>
     <ol>
       <li>
-        <h3>Oracle</h3>
-        <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> (version 12.2 or later, with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>).  The CGI script would invoke <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a> as follows:</p>
+        <h3>Oracle (on Windows)</h3>
+        <p>This example applies to <a href="http://www.oracle.com/technetwork/database/options/spatialandgraph/overview/index.html">Oracle Spatial</a> (version 12.2 or later, with <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/spatl/SDO_UTIL-reference.html#GUID-DB459897-729F-41D6-A2F3-DD39F22D8F63">SDO_UTIL.TO_GEOJSON</a>).  Consider the following script file, called <code>NY_mapper.dumprows</code>:</p>
         <pre>
-#!/bin/sh
-dumprows -lk --template=oracle.json "sqlplus -F -M 'HTML ON' -S <i>username</i>/<i>password</i>@//<i>host</i>:<i>port</i>/<i>service_name</i>"</pre>
-        <p>with <code><i>username</i></code>, <code><i>password</i></code>, <code><i>host</i></code>, <code><i>port</i></code>, and <code><i>service_name</i></code> populated appropriately.  (Note that if the 64-bit version of the Oracle client is installed, the command would be <code>sqlplus64</code> instead of <code>sqlplus</code>.)</p>
+#!C:\Program Files (x86)\dumprows.exe
+Oracle
+MAPPER/maps_20@GISNY
+oracle.json</pre>
+        <p>If the server were to receive the following request, <span style="font-variant: small-caps;">DumpRows</span> would output the web page that prompts for a query, with query templates loaded from the file <code>oracle.json</code>:</p>
+        <pre>http://GISA/cgi-bin/NY_mapper.dumprows</pre>
         <p>Let's say the following query returns a set of point features representing school buildings in Brockport, New York:</p>
         <pre>
 SELECT DESCRIPTION AS "Description", ADDRESS AS "Address", SDO_UTIL.TO_GEOJSON(GEOM) AS "Location"
 FROM BROCKPORT.SCHOOL
 ORDER BY ADDRESS;</pre>
         <p>This query would equate to the following URL:</p>
-        <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+DESCRIPTION+AS+"Description"%2C+ADDRESS+AS+"Address"%2C+SDO_UTIL.TO_GEOJSON%28GEOM%29+AS+"Location"%0D%0AFROM+BROCKPORT.SCHOOL%0D%0AORDER+BY+ADDRESS</pre>
-        <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
-        <p><a href="results1.html">Click here</a> to see the results.</p>
+        <pre>http://GISA/cgi-bin/NY_mapper.dumprows?q=SELECT+DESCRIPTION+AS+"Description"%2C+ADDRESS+AS+"Address"%2C+SDO_UTIL.TO_GEOJSON%28GEOM%29+AS+"Location"%0D%0AFROM+BROCKPORT.SCHOOL%0D%0AORDER+BY+ADDRESS</pre>
+        <p>(This URL would be generated by the web page that prompts for a query.)  If the server were to receive this request, <span style="font-variant: small-caps;">DumpRows</span> would execute <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/sqpug/index.html">SQL*Plus&reg;</a>, connecting to a database called <code>GISNY</code> as user <code>MAPPER</code> with a password of <code>maps_20</code> (with the query as input).  <a href="results1.html">Click here</a> to see the results.</p>
       </li>
       <li>
-        <h3>PostgreSQL</h3>
-        <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  The CGI script would invoke <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a> as follows:</p>
+        <h3>PostgreSQL (on Windows)</h3>
+        <p>This example applies to <a href="https://www.postgresql.org/">PostgreSQL</a> with the <a href="https://postgis.net/">PostGIS</a> extension.  Consider the following script file, called <code>fpm.dumprows</code>:</p>
         <pre>
-#!/bin/sh
-dumprows --log -tpostgresql.json "psql -H 'host=<i>hostname</i> dbname=<i>dbname</i> user=<i>username</i> password=<i>password</i>'"</pre>
-        <p>with <code><i>hostname</i></code>, <code><i>dbname</i></code>, <code><i>username</i></code>, and <code><i>password</i></code> populated appropriately.</p>
+#!C:\Program Files (x86)\dumprows.exe
+PostgreSQL
+"host=GISDB1 dbname=footprint user=mobile password=abc123"
+postgresql.json</pre>
+        <p>If the server were to receive the following request, <span style="font-variant: small-caps;">DumpRows</span> would output the web page that prompts for a query, with query templates loaded from the file <code>postgresql.json</code>:</p>
+        <pre>http://GISA/cgi-bin/fpm.dumprows</pre>
         <p>Let's say the following query returns a set of polygon features representing the coterminous United States:</p>
         <pre>
 SELECT fips_code AS "FIPS", usps_code AS "USPS", name AS "Name", ST_AsGeoJSON(shape) AS "Location"
@@ -101,34 +101,123 @@ FROM states
 WHERE (fips_code::integer &lt; 60) AND (usps_code NOT IN ('AK', 'HI'))
 ORDER BY fips_code;</pre>
         <p>This query would equate to the following URL:</p>
-        <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+fips_code+AS+"FIPS"%2C+usps_code+AS+"USPS"%2C+name+AS+"Name"%2C+ST_AsGeoJSON%28shape%29+AS+"Location"%0D%0AFROM+states%0D%0AWHERE+%28fips_code%3A%3Ainteger+&lt;+60%29+AND+%28usps_code+NOT+IN+%28%27AK%27%2C+%27HI%27%29%29%0D%0AORDER+BY+fips_code</pre>
-        <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
-        <p><a href="results2.html">Click here</a> to see the results.</p>
+        <pre>http://GISA/cgi-bin/fpm.dumprows?q=SELECT+fips_code+AS+"FIPS"%2C+usps_code+AS+"USPS"%2C+name+AS+"Name"%2C+ST_AsGeoJSON%28shape%29+AS+"Location"%0D%0AFROM+states%0D%0AWHERE+%28fips_code%3A%3Ainteger+&lt;+60%29+AND+%28usps_code+NOT+IN+%28%27AK%27%2C+%27HI%27%29%29%0D%0AORDER+BY+fips_code</pre>
+        <p>(This URL would be generated by the web page that prompts for a query.)  If the server were to receive this request, <span style="font-variant: small-caps;">DumpRows</span> would execute <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a>, connecting to a database called <code>footprint</code> (hosted on a machine called <code>GISDB1</code>) as user <code>mobile</code> with a password of <code>abc123</code> (with the query as input).  <a href="results2.html">Click here</a> to see the results.</p>
       </li>
       <li>
-        <h3>SQLite/SpatiaLite</h3>
-        <p>This example applies primarily to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a> (version 5 or later, with the GPKG (GeoPackage) extension module), though it should also work with plain <a href="http://sqlite.org/">SQLite</a>, albeit without the geospatial functionality.  The CGI script would invoke <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a> (or <a href="https://www.sqlite.org/cli.html">sqlite3</a>) as follows:</p>
+        <h3>PostgreSQL (on Linux)</h3>
+        <p>(This example does not require <a href="https://postgis.net/">PostGIS</a>.)  Consider the following script file, called <code>sysadmin.dumprows</code>:</p>
         <pre>
-#!/bin/sh
-dumprows --keep-files "spatialite -header -html -silent -batch <i>FILENAME</i>"</pre>
-        <p>with <code><i>FILENAME</i></code> populated appropriately.  (For plain SQLite (instead of SpatiaLite), substitute <code>sqlite3</code> for <code>spatialite</code>.)</p>
+#!/usr/local/bin/dumprows
+PostgreSQL
+postgresql://admin:vgm2u@DBPG2:10987/sysapps?ssl=true
+</pre>
+        <p>If the server were to receive the following request, <span style="font-variant: small-caps;">DumpRows</span> would output the web page that prompts for a query (without loading any extra query templates):</p>
+        <pre>http://GISA/cgi-bin/sysadmin.dumprows</pre>
+        <p>Let's say the following query returns a resultset indicating how many users of an application live in each state:</p>
+        <pre>
+SELECT states.name AS "State", count(*) AS "Count"
+FROM users LEFT OUTER JOIN states ON (users.state_usps = states.usps_code)
+GROUP BY states.name
+ORDER BY 2 DESC, 1;</pre>
+        <p>This query would equate to the following URL:</p>
+        <pre>http://GISA/cgi-bin/sysadmin.dumprows?q=SELECT+states.name+AS+"State"%2C+count%28*%29+AS+"Count"%0D%0AFROM+users+LEFT+OUTER+JOIN+states+ON+%28users.state_usps+%3D+states.usps_code%29%0D%0AGROUP+BY+states.name%0D%0AORDER+BY+2+DESC%2C+1</pre>
+        <p>(This URL would be generated by the web page that prompts for a query.)  If the server were to receive this request, <span style="font-variant: small-caps;">DumpRows</span> would execute <a href="https://www.postgresql.org/docs/current/app-psql.html">psql</a>, connecting to a database called <code>sysapps</code> (hosted on a machine called <code>DBPG2</code>, via port <code>10987</code>, requiring an SSL connection) as user <code>admin</code> with a password of <code>vgm2u</code> (with the query as input).  <a href="results3.html">Click here</a> to see the results.</p>
+      </li>
+      <li>
+        <h3>SpatiaLite (on Linux)</h3>
+        <p>This example applies to <a href="http://www.gaia-gis.it/gaia-sins/">SpatiaLite</a> (version 5 or later, with the GPKG (GeoPackage) extension module).  Consider the following script file, called <code>pml.dumprows</code>:</p>
+        <pre>
+#!/usr/local/bin/dumprows
+SpatiaLite
+/home/jeff/Downloads/PML-1.0-Official-Sample-Files/PML_Valid_Large01.gpkg
+sqlite.json</pre>
+        <p>If the server were to receive the following request, <span style="font-variant: small-caps;">DumpRows</span> would output the web page that prompts for a query, with query templates loaded from the file <code>sqlite.json</code>:</p>
+        <pre>http://GISA/cgi-bin/pml.dumprows</pre>
         <p>Let's say the following query returns a set of linestring features from a <a href="https://www.geopackage.org/">GeoPackage</a> produced by the <a href="https://pipelineml.org/how-to-install-and-use-the-pipelineml-geopackager/">PipelineML GeoPackager</a>:</p>
         <pre>
 SELECT 'Linepipe' AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Linepipe WHERE (CAST(code AS INTEGER) &gt; 1712042) UNION ALL
 SELECT 'Valve'    AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Valve    WHERE (CAST(code AS INTEGER) &gt;    9276) UNION ALL
 SELECT 'Tee'      AS "Component", CAST(code AS INTEGER) AS "Code", AsGeoJSON(GeomFromGPB(geom)) AS "Location" FROM Tee
 ORDER BY 2;</pre>
-        <p>(For plain SQLite (instead of SpatiaLite), omit the "Location" column, since <code>AsGeoJSON</code> and <code>GeomFromGPB</code> are unavailable.)</p>
         <p>This query would equate to the following URL:</p>
+        <pre>http://GISA/cgi-bin/pml.dumprows?q=SELECT+%27Linepipe%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Linepipe+WHERE+%28CAST%28code+AS+INTEGER%29+>+1712042%29+UNION+ALL%0D%0ASELECT+%27Valve%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Valve+WHERE+%28CAST%28code+AS+INTEGER%29+>+9276%29+UNION+ALL%0D%0ASELECT+%27Tee%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Tee%0D%0AORDER+BY+2</pre>
+        <p>(This URL would be generated by the web page that prompts for a query.)  If the server were to receive this request, <span style="font-variant: small-caps;">DumpRows</span> would execute <a href="https://www.gaia-gis.it/fossil/spatialite-tools/index">spatialite</a>, connecting to a database called <code>PML_Valid_Large01.gpkg</code> (with the query as input).  <a href="results4.html">Click here</a> to see the results.</p>
+      </li>
+      <li>
+        <h3>SQLite (on Linux)</h3>
+        <p>This example is similar to the previous, but applies to plain <a href="http://sqlite.org/">SQLite</a> (without geospatial functionality).  The script file could be identical, except for the database utility (line 2):</p>
         <pre>
-http://<i>host</i>/cgi-bin/<i>script</i>?query=SELECT+%27Linepipe%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Linepipe+WHERE+%28CAST%28code+AS+INTEGER%29+>+1712042%29+UNION+ALL%0D%0ASELECT+%27Valve%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Valve+WHERE+%28CAST%28code+AS+INTEGER%29+>+9276%29+UNION+ALL%0D%0ASELECT+%27Tee%27+AS+"Component"%2C+CAST%28code+AS+INTEGER%29+AS+"Code"%2C+AsGeoJSON%28GeomFromGPB%28geom%29%29+AS+"Location"+FROM+Tee%0D%0AORDER+BY+2</pre>
-        <p>where <code><i>host</i></code> is the name or IP address of the host, and <code><i>script</i></code> is the filename of the CGI script.  (This URL would be generated by the web page that prompts for a query.)</p>
-        <p><a href="results3.html">Click here</a> to see the results.</p>
+#!/usr/local/bin/dumprows
+SQLite
+/home/jeff/Downloads/PML-1.0-Official-Sample-Files/PML_Valid_Large01.gpkg
+sqlite.json</pre>
+        <p>The query could be similar as well, returning instead the total number of features in each table:</p>
+        <pre>
+SELECT 'Linepipe' AS "Component", COUNT(*) AS "Count" FROM Linepipe UNION ALL
+SELECT 'Valve'    AS "Component", COUNT(*) AS "Count" FROM Valve    UNION ALL
+SELECT 'Tee'      AS "Component", COUNT(*) AS "Count" FROM Tee
+ORDER BY 2 DESC;</pre>
+        <p>This query would equate to the following URL:</p>
+        <pre>http://GISA/cgi-bin/pml.dumprows?q=SELECT+%27Linepipe%27+AS+"Component"%2C+COUNT%28*%29+AS+"Count"+FROM+Linepipe+UNION+ALL%0D%0ASELECT+%27Valve%27+AS+"Component"%2C+COUNT%28*%29+AS+"Count"+FROM+Valve+UNION+ALL%0D%0ASELECT+%27Tee%27+AS+"Component"%2C+COUNT%28*%29+AS+"Count"+FROM+Tee%0D%0AORDER+BY+2+DESC</pre>
+        <p>If the server were to receive this request, <span style="font-variant: small-caps;">DumpRows</span> would execute <a href="https://www.sqlite.org/cli.html">sqlite3</a>, again connecting to the database <code>PML_Valid_Large01.gpkg</code> (with the query as input).  <a href="results5.html">Click here</a> to see the results.</p>
       </li>
     </ol>
+    <h2>Setup</h2>
+    <p><span style="font-variant: small-caps;">DumpRows</span> has been tested and is known to work with the following combinations of OS and web server.</p>
+    <h3>Windows and IIS</h3>
+    <ol>
+      <li>Ensure that CGI is installed.  (Exactly how to do that is beyond the scope of this document, however <a href="https://learn.microsoft.com/en-us/iis/configuration/system.webserver/cgi">this article</a> explains it pretty well.)</li>
+      <li>Launch <b>Internet Information Services (IIS) Manager</b>.</li>
+      <li>In the <b>Connections</b> pane, click the machine node (the server name).</li>
+      <li>In the <b>Home</b> pane, double-click <b>ISAPI and CGI Restrictions</b>.</li>
+      <li>In the <b>Actions</b> pane, click <b>Add...</b>.</li>
+      <li>On the <b>Add ISAPI or CGI Restriction</b> dialog:
+        <ol>
+          <li>For <b>ISAPI or CGI path</b>, enter the path to the <span style="font-variant: small-caps;">DumpRows</span> executable, followed by <code>%s</code> (e.g., <code>"C:\Program Files (x86)\dumprows.exe" %s</code>).</li>
+          <li>Check the box for <b>Allow extension path to execute</b>.</li>
+          <li>If desired, enter a <b>Description</b>.</li>
+          <li>Click <b>OK</b>.</li>
+        </ol>
+      </li>
+      <li>In the <b>Connections</b> pane, under the server name, expand <b>Sites</b>.</li>
+      <li>Right-click <b>Default Web Site</b>.</li>
+      <li>On the context menu, click <b>Add Virtual Directory...</b>.</li>
+      <li>On the <b>Add Virtual Directory</b> dialog:
+        <ol>
+          <li>For <b>Alias</b>, enter <code>cgi-bin</code>.</li>
+          <li>For <b>Physical path</b>, enter <code>C:\inetpub\wwwroot\cgi-bin</code>.</li>
+          <li>Click <b>OK</b>.</li>
+        </ol>
+      </li>
+      <li>In the <b>Connections</b> pane, under <b>Default Web Site</b>, click the new virtual directory (<code>cgi-bin</code>).</li>
+      <li>In the <b>Home</b> pane, double-click <b>Handler Mappings</b>.</li>
+      <li>In the <b>Actions</b> pane, click <b>Edit Feature Permissions...</b>.</li>
+      <li>On the <b>Edit Feature Permissions</b> dialog:
+        <ol>
+          <li>Check the box for <b>Execute</b>.</li>
+          <li>Click <b>OK</b>.</li>
+        </ol>
+      </li>
+      <li>In the <b>Handler Mappings</b> pane, double-click <b>CGI-exe</b>.</li>
+      <li>On the <b>Edit Script Map</b> dialog:
+        <ol>
+          <li>For <b>Request path</b>, enter <code>*.dumprows</code>.</li>
+          <li>For <b>Executable</b>, enter the path to the <span style="font-variant: small-caps;">DumpRows</span> executable, followed by <code>%s</code> (e.g., <code>"C:\Program Files (x86)\dumprows.exe" %s</code>).</li>
+          <li>Click <b>OK</b>.</li>
+        </ol>
+      </li>
+    </ol>
+    <p>CGI scripts should be stored in <code>C:\inetpub\wwwroot\cgi-bin\</code>.</p>
+    <h3>Linux and Apache</h3>
+    <ol>
+      <li>Enable CGI:<pre>sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/</pre></li>
+      <li>Restart Apache:<pre>sudo apachectl graceful</pre></li>
+      <li>If using with SQLite or SpatiaLite, ensure that the <a href="https://httpd.apache.org/docs/current/programs/httpd.html">httpd</a> process owner (e.g., <code>www-data</code>) has write access to the directories where the databases are stored.</li>
+    </ol>
+    <p>CGI scripts should be stored in <code>/usr/lib/cgi-bin/</code>.</p>
     <h2>Download</h2>
     <p><span style="font-variant: small-caps;">DumpRows</span> can be downloaded from its <a href="https://github.com/jeffbourdier/dumprows">GitHub repository</a>, where there are instructions on how to build it from source code.</p>
-    <footer>Copyright &copy; 2021 Jeffrey Paul Bourdier</footer>
+    <footer>Copyright &copy; 2021-3 Jeffrey Paul Bourdier</footer>
   </body>
 </html>
