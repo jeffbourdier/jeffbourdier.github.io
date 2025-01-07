@@ -18,7 +18,7 @@ var tableDiv, mapDiv, horizontal, usableWidth, usableHeight, halfWidth, halfHeig
 function initMapping(table, geoColumn)
 {
   /* If appropriate, put the table in a div. */
-  if (table && !table.previousSibling)
+  if (table)
   {
     tableDiv = document.createElement('div');
     tableDiv.style.overflow = 'auto';
